@@ -1,0 +1,2389 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BioNexus - Anatomia umană 3D Interactivă</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="48x48" href="images/favicon-48.png" />
+    <link rel="icon" type="image/png" sizes="64x64" href="images/favicon-64.png" />
+    <link rel="icon" type="image/png" sizes="256x256" href="images/favicon-256.png" />
+    <link rel="shortcut icon" type="image/png" href="images/favicon-32.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="images/favicon-180.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="prefetch" href="models/skeleton.glb" />
+    <link rel="preload" href="images/logo-bionexus-icon.png" as="image" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  </head>
+  <body>
+    <div id="appSplash" class="app-splash">
+      <div class="splash-stage">
+        <div class="splash-logo"><img src="images/favicon-256.png" alt="BioNexus" /></div>
+        <div class="splash-brand">BioNexus</div>
+        <div class="splash-tag">Anatomia umană 3D</div>
+        <div class="splash-bar"><div class="splash-bar-fill"></div></div>
+      </div>
+    </div>
+    <style>
+      .app-splash {
+        position: fixed;
+        inset: 0;
+        z-index: 99999;
+        background:
+          radial-gradient(ellipse at top right, rgba(99, 102, 241, 0.18), transparent 50%),
+          radial-gradient(ellipse at bottom left, rgba(59, 130, 246, 0.14), transparent 50%),
+          linear-gradient(180deg, #0a0e1a 0%, #0d1224 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition:
+          opacity 0.6s ease,
+          visibility 0.6s ease;
+        font-family: "Inter", system-ui, sans-serif;
+      }
+      .app-splash.hidden {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+      }
+      html.app-booting body > *:not(#appSplash) {
+        visibility: hidden !important;
+      }
+      html.app-booting #appSplash {
+        visibility: visible !important;
+      }
+      .splash-stage {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+        animation: splashIn 0.6s cubic-bezier(0.22, 0.61, 0.36, 1);
+      }
+      .splash-logo {
+        width: 120px;
+        height: 120px;
+        border-radius: 24px;
+        overflow: hidden;
+        background: rgba(99, 102, 241, 0.08);
+        box-shadow:
+          0 16px 48px rgba(99, 102, 241, 0.35),
+          0 0 0 1px rgba(99, 102, 241, 0.25) inset;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: splashPulse 2.4s ease-in-out infinite;
+      }
+      .splash-logo img {
+        width: 90%;
+        height: 90%;
+        object-fit: contain;
+        object-position: center center;
+        display: block;
+        margin: auto;
+        filter: drop-shadow(0 6px 18px rgba(139, 92, 246, 0.4));
+      }
+      .splash-brand {
+        font-family: "Space Grotesk", "Inter", system-ui, sans-serif;
+        font-weight: 700;
+        font-size: 34px;
+        letter-spacing: 0.5px;
+        background: linear-gradient(135deg, #fff, #a78bfa);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-top: 8px;
+      }
+      .splash-tag {
+        font-size: 13px;
+        color: #94a3b8;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        margin-top: -4px;
+      }
+      .splash-bar {
+        width: 200px;
+        height: 3px;
+        background: rgba(99, 102, 241, 0.18);
+        border-radius: 99px;
+        overflow: hidden;
+        margin-top: 18px;
+        position: relative;
+      }
+      .splash-bar-fill {
+        position: absolute;
+        top: 0;
+        left: -40%;
+        width: 40%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, #8b5cf6, #ec4899, transparent);
+        border-radius: 99px;
+        animation: splashSlide 1.4s ease-in-out infinite;
+      }
+      @keyframes splashIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px) scale(0.96);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+      @keyframes splashPulse {
+        0%,
+        100% {
+          transform: scale(1);
+          box-shadow:
+            0 16px 48px rgba(99, 102, 241, 0.35),
+            0 0 0 1px rgba(99, 102, 241, 0.25) inset;
+        }
+        50% {
+          transform: scale(1.05);
+          box-shadow:
+            0 22px 60px rgba(139, 92, 246, 0.55),
+            0 0 0 2px rgba(139, 92, 246, 0.4) inset;
+        }
+      }
+      @keyframes splashSlide {
+        0% {
+          left: -40%;
+        }
+        100% {
+          left: 100%;
+        }
+      }
+      html[data-theme="light"] .app-splash {
+        background:
+          radial-gradient(ellipse at top right, rgba(99, 102, 241, 0.12), transparent 50%),
+          linear-gradient(180deg, #f1f5f9 0%, #e2e8f0 100%);
+      }
+      html[data-theme="light"] .splash-tag {
+        color: #64748b;
+      }
+      html[data-theme="light"] .splash-brand {
+        background: linear-gradient(135deg, #1e293b, #6366f1);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+    </style>
+    <script>
+      (function () {
+        document.documentElement.classList.add("app-booting");
+        var SPLASH_MIN_MS = 1400;
+        var SPLASH_GRACE_MS = 400;
+        var SPLASH_MAX_MS = 20000;
+        var startedAt = Date.now();
+        var state = {
+          dom: false,
+          load: false,
+          fonts: false,
+          images: false,
+          model: false,
+          cleanup: false,
+          cleanupCb: false,
+          settled: false,
+        };
+        window.__appLoading = state;
+        function hide() {
+          if (state.settled) return;
+          state.settled = true;
+          var elapsed = Date.now() - startedAt;
+          var wait = Math.max(SPLASH_GRACE_MS, SPLASH_MIN_MS - elapsed);
+          setTimeout(function () {
+            document.documentElement.classList.remove("app-booting");
+            var sp = document.getElementById("appSplash");
+            if (sp) sp.classList.add("hidden");
+            setTimeout(function () {
+              if (sp && sp.parentNode) sp.parentNode.removeChild(sp);
+            }, 700);
+          }, wait);
+        }
+        function check() {
+          if (
+            state.dom &&
+            state.load &&
+            state.fonts &&
+            state.images &&
+            state.model &&
+            state.cleanup &&
+            state.cleanupCb
+          )
+            hide();
+        }
+        function waitForImages() {
+          var imgs = document.images;
+          var pending = 0;
+          function onDone() {
+            pending--;
+            if (pending <= 0) {
+              state.images = true;
+              check();
+            }
+          }
+          for (var i = 0; i < imgs.length; i++) {
+            var im = imgs[i];
+            if (im.complete && im.naturalWidth !== 0) continue;
+            pending++;
+            im.addEventListener("load", onDone, { once: true });
+            im.addEventListener("error", onDone, { once: true });
+          }
+          if (pending === 0) {
+            state.images = true;
+            check();
+          }
+        }
+        function waitForFonts() {
+          if (document.fonts && document.fonts.ready) {
+            document.fonts.ready.then(
+              function () {
+                state.fonts = true;
+                check();
+              },
+              function () {
+                state.fonts = true;
+                check();
+              }
+            );
+          } else {
+            state.fonts = true;
+          }
+        }
+        if (document.readyState === "complete" || document.readyState === "interactive") {
+          state.dom = true;
+          setTimeout(function () {
+            waitForImages();
+            waitForFonts();
+            check();
+          }, 10);
+        } else {
+          document.addEventListener("DOMContentLoaded", function () {
+            state.dom = true;
+            waitForImages();
+            waitForFonts();
+            check();
+          });
+        }
+        window.addEventListener("load", function () {
+          state.load = true;
+          check();
+        });
+        window.__appReady = function (which) {
+          if (which === "model") {
+            state.model = true;
+            check();
+          } else if (which === "cleanup") {
+            state.cleanup = true;
+            check();
+          } else if (which === "cleanup-cb") {
+            state.cleanupCb = true;
+            check();
+          } else if (which === "all") {
+            state.dom = true;
+            state.load = true;
+            state.fonts = true;
+            state.images = true;
+            state.model = true;
+            state.cleanup = true;
+            state.cleanupCb = true;
+            check();
+          }
+        };
+        setTimeout(function () {
+          state.dom = true;
+          state.load = true;
+          state.fonts = true;
+          state.images = true;
+          state.model = true;
+          state.cleanup = true;
+          state.cleanupCb = true;
+          check();
+        }, SPLASH_MAX_MS);
+      })();
+    </script>
+
+    <div class="home-overlay" id="homeOverlay">
+      <div class="home-nav" id="homeNav">
+        <div class="home-brand" onclick="scrollHomeTop()" title="Acasă">
+          <span class="home-logo-mark"
+            ><img
+              src="images/logo-bionexus-icon.png"
+              alt="BioNexus"
+              class="bionexus-logo bionexus-logo-mark"
+              data-clean-bg="light"
+          /></span>
+          <span class="home-brand-text">BioNexus</span>
+        </div>
+        <div class="home-nav-center">
+          <a href="#sisteme" data-i18n="home.nav.systems">Sisteme</a>
+          <a href="#features" data-i18n="home.nav.features">Funcționalități</a>
+          <a href="#invata" data-i18n="home.nav.learn">Învață</a>
+        </div>
+        <div class="home-nav-right">
+          <div class="lang-switch" id="langSwitchHome" title="Schimbă limba">
+            <button class="lang-btn active" data-lang="ro">RO</button>
+            <button class="lang-btn" data-lang="en">EN</button>
+          </div>
+          <button class="home-login-btn" onclick="openLogin()" data-i18n="home.nav.login">
+            Conectare
+          </button>
+          <div class="user-menu" id="userMenu" style="display: none">
+            <button class="user-menu-trigger" onclick="toggleUserMenu(event)">
+              <span class="user-menu-avatar" id="userMenuAvatar">R</span>
+              <span class="user-menu-name" id="userMenuName">ryan</span>
+              <span class="user-menu-caret">&#9662;</span>
+            </button>
+            <div class="user-menu-dropdown" id="userMenuDropdown">
+              <button class="user-menu-item" onclick="goProfile('profil')">
+                <span class="user-menu-ic user-menu-ic-img"
+                  ><img src="images/icon-profile.png" alt="" /></span
+                ><span data-i18n="user.menu.profil">Profil</span>
+              </button>
+              <button class="user-menu-item" onclick="goProfile('setari')">
+                <span class="user-menu-ic user-menu-ic-img"
+                  ><img src="images/icon-settings.png" alt="" /></span
+                ><span data-i18n="user.menu.setari">Setări</span>
+              </button>
+              <div class="user-menu-divider"></div>
+              <button class="user-menu-item user-menu-logout" onclick="doLogout()">
+                <span class="user-menu-ic">&#8629;</span
+                ><span data-i18n="user.menu.logout">Deloghează-te</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <section class="home-hero">
+        <div class="home-hero-inner">
+          <div class="home-hero-badge" data-i18n-html="home.hero.badge">
+            Anatomia umană 3D &nbsp;&middot;&nbsp; <span>România</span>
+          </div>
+          <h1 class="home-hero-title" data-i18n-html="home.hero.title">
+            Toată anatomia umană în <span class="home-hero-grad">3D interactiv</span>
+          </h1>
+          <p class="home-hero-sub" data-i18n="home.hero.sub">
+            Explorează sistematic toate sistemele corpului uman. Acum disponibile: Sistemul Osos cu
+            206 oase modelate fidel și Sistemul Muscular cu peste 350 mușchi. În curând: nervos,
+            cardiovascular și mai mult.
+          </p>
+          <div class="home-hero-cta">
+            <button
+              class="home-cta-primary"
+              onclick="scrollToSection('sisteme')"
+              data-i18n-html="home.hero.ctaPrimary"
+            >
+              Vezi modele 3D
+            </button>
+            <button
+              class="home-cta-secondary"
+              onclick="goBadges()"
+              data-i18n="home.hero.ctaSecondary"
+            >
+              Insignele mele
+            </button>
+          </div>
+          <div class="home-hero-stats">
+            <div class="home-stat-verified">
+              <b><span class="verified-badge" title="Site educațional verificat">&#10003;</span></b
+              ><span data-i18n="home.stats.verified">Site educațional · Verified</span>
+            </div>
+            <div><b>6</b><span data-i18n="home.stats.systems">Sisteme planificate</span></div>
+            <div><b>50+</b><span data-i18n="home.stats.questions">Întrebări quiz</span></div>
+            <div><b>AI</b><span data-i18n="home.stats.assistant">Asistent biologic</span></div>
+          </div>
+        </div>
+        <div class="home-hero-visual">
+          <div class="solar-system" aria-hidden="true">
+            <img src="images/logo-bionexus.png" alt="BioNexus" class="solar-sun" />
+            <div class="orbit orbit-1">
+              <span class="planet planet-img" title="Sistem Osos"
+                ><img src="images/bone.png" alt="Os" data-clean-bg="white-strict"
+              /></span>
+            </div>
+            <div class="orbit orbit-2">
+              <span class="planet planet-img" title="Sistem Muscular"
+                ><img src="images/muscle.png" alt="Mușchi" data-clean-bg="light"
+              /></span>
+            </div>
+            <div class="orbit orbit-3">
+              <span class="planet planet-img" title="Sistem Cardiovascular"
+                ><img src="images/heart.png" alt="Inimă" data-clean-bg="dark"
+              /></span>
+            </div>
+            <div class="orbit orbit-4">
+              <span class="planet planet-img" title="Sistem Nervos"
+                ><img src="images/brain.png" alt="Creier" data-clean-bg="light"
+              /></span>
+            </div>
+            <div class="orbit orbit-5">
+              <span class="planet planet-img" title="Sistem Respirator"
+                ><img src="images/lungs.png" alt="Plămâni" data-clean-bg="light"
+              /></span>
+            </div>
+            <div class="orbit orbit-6">
+              <span class="planet planet-img" title="Sistem Digestiv"
+                ><img src="images/stomach.png" alt="Stomac" data-clean-bg="light"
+              /></span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="home-daily" id="daily" style="display: none">
+        <div class="daily-wrap">
+          <div class="daily-card" id="dailyCard">
+            <div class="daily-head">
+              <div class="daily-flame" id="dailyFlame">&#128293;</div>
+              <div>
+                <div class="daily-title" data-i18n="daily.title">Provocarea zilei</div>
+                <div class="daily-streak">
+                  <span data-i18n="daily.streak">Streak:</span> <b id="dailyStreakNum">0</b>
+                  <span data-i18n="daily.days">zile</span>
+                </div>
+              </div>
+              <div class="daily-status" id="dailyStatus"></div>
+            </div>
+            <div class="daily-body">
+              <div class="daily-task" id="dailyTask">—</div>
+              <div class="daily-progress-wrap">
+                <div class="daily-progress-bar">
+                  <div class="daily-progress-fill" id="dailyProgFill"></div>
+                </div>
+                <span class="daily-progress-txt" id="dailyProgTxt">0 / 1</span>
+              </div>
+              <div class="daily-reward">
+                <span class="daily-reward-ic">&#127942;</span>
+                <span data-i18n="daily.reward">Recompensă:</span> <b id="dailyXp">+30</b> XP
+              </div>
+            </div>
+            <div class="daily-calendar" id="dailyCalendar"></div>
+          </div>
+        </div>
+      </section>
+      <section class="home-systems" id="sisteme">
+        <h2 class="home-section-title" data-i18n-html="home.systems.title">
+          Sisteme <span class="home-hero-grad">anatomice</span>
+        </h2>
+        <p class="home-systems-sub" data-i18n="home.systems.sub">
+          Acoperim sistematic toate sistemele corpului uman. Începem cu sistemul osos, dezvoltarea
+          continuă.
+        </p>
+        <div class="home-systems-grid">
+          <div class="system-card ready" onclick="enterApp('skeleton')">
+            <div
+              class="system-icon system-icon-img"
+              style="background: linear-gradient(135deg, #3b82f6, #06b6d4)"
+            >
+              <img src="images/feat-skull.png" alt="Os" data-clean-bg="checkerboard" />
+            </div>
+            <h3 data-i18n="home.sys.osos.t">Sistem Osos</h3>
+            <p data-i18n="home.sys.osos.d">
+              206 oase modelate 3D, cap · trunchi · membre, quiz interactiv.
+            </p>
+            <span class="system-badge badge-ready" data-i18n="home.sys.badge.ready"
+              >Disponibil acum</span
+            >
+          </div>
+          <div class="system-card ready" onclick="enterApp('muscular')">
+            <div
+              class="system-icon system-icon-img"
+              style="background: linear-gradient(135deg, #ef4444, #b91c1c)"
+            >
+              <img src="images/muscle.png" alt="Mușchi" data-clean-bg="light" />
+            </div>
+            <h3 data-i18n="home.sys.muscular.t">Sistem Muscular</h3>
+            <p data-i18n="home.sys.muscular.d">
+              Mușchi striați și netezi, grupe musculare, inserții și acțiuni.
+            </p>
+            <span class="system-badge badge-ready" data-i18n="home.sys.badge.ready"
+              >Disponibil acum</span
+            >
+          </div>
+          <div class="system-card ready" onclick="enterApp('nervous')">
+            <div
+              class="system-icon system-icon-img"
+              style="background: linear-gradient(135deg, #f59e0b, #b45309)"
+            >
+              <img src="images/brain.png" alt="Creier" data-clean-bg="light" />
+            </div>
+            <h3 data-i18n="home.sys.nervos.t">Sistem Nervos</h3>
+            <p data-i18n="home.sys.nervos.d">
+              Creier, măduvă spinării, nervii periferici, traseele neuronale.
+            </p>
+            <span class="system-badge badge-beta" data-i18n="home.sys.badge.beta">Beta</span>
+          </div>
+          <div class="system-card ready" onclick="enterApp('cardio')">
+            <div
+              class="system-icon system-icon-img"
+              style="background: linear-gradient(135deg, #ec4899, #be185d)"
+            >
+              <img src="images/heart.png" alt="Inimă" data-clean-bg="dark" />
+            </div>
+            <h3 data-i18n="home.sys.cardio.t">Sistem Cardiovascular</h3>
+            <p data-i18n="home.sys.cardio.d">
+              Inima, artere, vene, capilare — circulația mare și mică.
+            </p>
+            <span class="system-badge badge-beta" data-i18n="home.sys.badge.beta">Beta</span>
+          </div>
+          <div class="system-card planned">
+            <div
+              class="system-icon system-icon-img"
+              style="background: linear-gradient(135deg, #10b981, #047857)"
+            >
+              <img src="images/stomach.png" alt="Stomac" data-clean-bg="light" />
+            </div>
+            <h3 data-i18n="home.sys.digestiv.t">Sistem Digestiv</h3>
+            <p data-i18n="home.sys.digestiv.d">
+              Traseu complet: cavitate bucală → esofag → stomac → intestine.
+            </p>
+            <span class="system-badge badge-planned" data-i18n="home.sys.badge.planned"
+              >Planificat</span
+            >
+          </div>
+          <div class="system-card ready" onclick="enterApp('respiratory')">
+            <div
+              class="system-icon system-icon-img"
+              style="background: linear-gradient(135deg, #8b5cf6, #6d28d9)"
+            >
+              <img src="images/lungs.png" alt="Plămâni" data-clean-bg="light" />
+            </div>
+            <h3 data-i18n="home.sys.respirator.t">Sistem Respirator</h3>
+            <p data-i18n="home.sys.respirator.d">
+              Căi respiratorii, plămâni, alveole, mecanica respirației.
+            </p>
+            <span class="system-badge badge-beta" data-i18n="home.sys.badge.beta">Beta</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="home-features" id="features">
+        <h2 class="home-section-title" data-i18n-html="home.features.title">
+          Ce poți face cu <span class="home-hero-grad">BioNexus</span>
+        </h2>
+        <div class="home-features-grid">
+          <div class="home-feat-card home-feat-clickable" onclick="openNotebook()">
+            <div
+              class="home-feat-icon home-feat-icon-img home-feat-icon-white"
+              data-ring="linear-gradient(135deg,#f59e0b,#d97706)"
+            >
+              <img src="images/feat-notebook.png" alt="Notebook" data-clean-bg="light" />
+            </div>
+            <h3 data-i18n="home.feat.notes.t">Notițe & Marcaje</h3>
+            <p data-i18n="home.feat.notes.d">
+              Notează observații personale pe orice os sau mușchi. Marchează ca important, tag-uri
+              color, căutare rapidă, sincronizare cont. Util pentru studenți medicină și pregătire
+              examene.
+            </p>
+            <span class="home-feat-cta" data-i18n-html="home.feat.notes.cta"
+              >Deschide notebook &rarr;</span
+            >
+          </div>
+          <div class="home-feat-card home-feat-clickable" onclick="enterApp('quiz')">
+            <div
+              class="home-feat-icon home-feat-icon-img home-feat-icon-white"
+              data-ring="linear-gradient(135deg,#10b981,#059669)"
+            >
+              <img src="images/feat-minigame.png" alt="Minigame" data-clean-bg="dark" />
+            </div>
+            <h3 data-i18n="home.feat.quiz.t">Minigame: Testul Anatomic</h3>
+            <p data-i18n="home.feat.quiz.d">
+              Pune-ți la încercare cunoștințele. Camera te duce automat la fiecare os, identifică
+              răspunsul corect.
+            </p>
+            <span class="home-feat-cta" data-i18n-html="home.feat.quiz.cta"
+              >Începe minigame &rarr;</span
+            >
+          </div>
+          <div class="home-feat-card home-feat-clickable" onclick="openAIFromFeature()">
+            <div
+              class="home-feat-icon home-feat-icon-img home-feat-icon-white"
+              data-ring="linear-gradient(135deg,#ec4899,#f43f5e)"
+            >
+              <img src="images/feat-ai.png" alt="AI" data-clean-bg="checkerboard" />
+            </div>
+            <h3 data-i18n="home.feat.ai.t">Asistent AI Biologic</h3>
+            <p data-i18n="home.feat.ai.d">
+              Pune întrebări despre orice os sau structură. Răspunsuri instant în chatbox-ul
+              interactiv.
+            </p>
+            <span class="home-feat-cta" data-i18n-html="home.feat.ai.cta"
+              >Deschide chatbox-ul &rarr;</span
+            >
+          </div>
+          <div class="home-feat-card">
+            <div
+              class="home-feat-icon home-feat-icon-img"
+              style="background: linear-gradient(135deg, #8b5cf6, #6366f1)"
+            >
+              <img src="images/feat-search.png" alt="Cautare" data-clean-bg="dark" />
+            </div>
+            <h3 data-i18n="home.feat.search.t">Căutare rapidă</h3>
+            <p data-i18n="home.feat.search.d">
+              Tastează orice os și site-ul te duce instant la el. Categorisare pe secțiuni
+              anatomice.
+            </p>
+          </div>
+          <div class="home-feat-card home-feat-clickable" onclick="openCuriozitati()">
+            <div
+              class="home-feat-icon home-feat-icon-img"
+              style="background: linear-gradient(135deg, #14b8a6, #0ea5e9)"
+            >
+              <img src="images/feat-curio.png" alt="Curiozitati" data-clean-bg="light" />
+            </div>
+            <h3 data-i18n="home.feat.curio.t">Curiozități</h3>
+            <p data-i18n="home.feat.curio.d">
+              Fapte uimitoare despre corpul uman — câte oase, cel mai mic, cel mai puternic mușchi.
+              Răsfoiește o curiozitate aleatoare.
+            </p>
+            <span class="home-feat-cta" data-i18n-html="home.feat.curio.cta"
+              >Vezi o curiozitate &rarr;</span
+            >
+          </div>
+          <div
+            class="home-feat-card home-feat-clickable"
+            onclick="document.getElementById('invata').scrollIntoView({ behavior: 'smooth' })"
+          >
+            <div
+              class="home-feat-icon home-feat-icon-img"
+              style="background: linear-gradient(135deg, #fbbf24, #d97706)"
+            >
+              <img src="images/feat-learn.png" alt="Invata" data-clean-bg="light" />
+            </div>
+            <h3 data-i18n="home.feat.edu.t">Resursă educațională</h3>
+            <p data-i18n="home.feat.edu.d">
+              BioNexus este o platformă educațională deschisă. Manuale universitare oficiale de
+              anatomie umană disponibile direct în secțiunea Învață.
+            </p>
+            <span class="home-feat-cta" data-i18n-html="home.feat.edu.cta"
+              >Vezi manualele &rarr;</span
+            >
+          </div>
+        </div>
+      </section>
+
+      <section class="home-learn" id="invata">
+        <h2 class="home-section-title" data-i18n-html="home.learn.title">
+          Învață cu <span class="home-hero-grad">manualele oficiale</span>
+        </h2>
+        <p class="home-learn-sub" data-i18n="home.learn.sub">
+          Manuale universitare de anatomie umană — referințe oficiale, deschise în filă nouă.
+        </p>
+        <div class="home-learn-grid">
+          <a
+            class="home-learn-card"
+            href="https://library.usmf.md/sites/default/files/2018-10/Anatomia.Stefanet.Vol_1.pdf"
+            target="_blank"
+            rel="noopener"
+          >
+            <div class="home-learn-icon home-learn-cover">
+              <img src="images/manual-vol1.png" alt="Vol I" />
+            </div>
+            <h3 data-i18n="home.learn.m1.t">Anatomia Omului · Volumul I</h3>
+            <p data-i18n="home.learn.m1.d">
+              Stefaneț M. — Osteologie, artrologie, miologie. Fundația aparatului locomotor: oase,
+              articulații, mușchi cu descrieri morfo-funcționale complete.
+            </p>
+            <span class="home-learn-btn" data-i18n-html="home.learn.open"
+              >Deschide manualul &rarr;</span
+            >
+          </a>
+          <a
+            class="home-learn-card"
+            href="https://library.usmf.md/sites/default/files/2018-10/Anatomia%20omului%20vol%202.pdf"
+            target="_blank"
+            rel="noopener"
+          >
+            <div class="home-learn-icon home-learn-cover">
+              <img src="images/manual-vol2.png" alt="Vol II" />
+            </div>
+            <h3 data-i18n="home.learn.m2.t">Anatomia Omului · Volumul II</h3>
+            <p data-i18n="home.learn.m2.d">
+              Stefaneț M. — Splanhnologie: aparatul digestiv, respirator și urogenital. Organele
+              interne explicate sistemic cu schiță topografică.
+            </p>
+            <span class="home-learn-btn" data-i18n-html="home.learn.open"
+              >Deschide manualul &rarr;</span
+            >
+          </a>
+          <a
+            class="home-learn-card"
+            href="https://library.usmf.md/sites/default/files/2020-06/Stefanet_Anatomia_omului_vol_3_2010_Optimized.pdf"
+            target="_blank"
+            rel="noopener"
+          >
+            <div class="home-learn-icon home-learn-cover">
+              <img src="images/manual-vol3.png" alt="Vol III" />
+            </div>
+            <h3 data-i18n="home.learn.m3.t">Anatomia Omului · Volumul III</h3>
+            <p data-i18n="home.learn.m3.d">
+              Stefaneț M. — Sistemul cardiovascular, sistemul nervos central și periferic, organele
+              de simț. Volumul de integrare funcțională.
+            </p>
+            <span class="home-learn-btn" data-i18n-html="home.learn.open"
+              >Deschide manualul &rarr;</span
+            >
+          </a>
+          <a
+            class="home-learn-card"
+            href="manuale/barrons-skeletal-2022.pdf"
+            target="_blank"
+            rel="noopener"
+          >
+            <div class="home-learn-icon home-learn-cover home-learn-cover-barron">
+              <div class="learn-cover-stamp">BARRON'S</div>
+              <div class="learn-cover-title">E-Z<br />Anatomy<br />&amp; Physiology</div>
+              <div class="learn-cover-year">2022</div>
+            </div>
+            <h3 data-i18n="home.learn.m5.t">Barron's · Anatomie și Fiziologie</h3>
+            <p data-i18n-html="home.learn.m5.d">
+              Krumhardt &amp; Alcamo (UMFST 2022) — manual de admitere pentru facultățile de
+              medicină. Capitol detaliat: <b>Oasele și articulațiile</b> (osteogeneză, osteoane,
+              sinartroze, diartroze, remodelare osoasă).
+            </p>
+            <span class="home-learn-btn" data-i18n-html="home.learn.open"
+              >Deschide manualul &rarr;</span
+            >
+          </a>
+        </div>
+        <p class="home-learn-hint" data-i18n-html="home.learn.hint">
+          Manualele se deschid pe site-ul oficial USMF într-o filă nouă a browserului.
+        </p>
+      </section>
+
+      <section class="home-reviews" id="reviews">
+        <div class="reviews-head">
+          <h2 class="home-section-title" data-i18n-html="home.reviews.title">
+            Recenzii <span class="home-hero-grad">de la utilizatori</span>
+          </h2>
+          <p class="home-reviews-sub" data-i18n="home.reviews.sub">
+            Citește experiențele altora sau lasă propria recenzie după ce te conectezi.
+          </p>
+        </div>
+        <div class="reviews-stats" id="reviewsStats">
+          <div class="reviews-avg">
+            <span class="reviews-avg-num" id="reviewsAvgNum">—</span>
+            <div class="reviews-avg-stars" id="reviewsAvgStars"></div>
+            <span class="reviews-avg-count" id="reviewsAvgCount" data-i18n="home.reviews.empty"
+              >0 recenzii</span
+            >
+          </div>
+        </div>
+        <div class="reviews-form-wrap">
+          <div class="reviews-form" id="reviewsForm">
+            <div class="reviews-form-locked" id="reviewsFormLocked">
+              <span class="reviews-lock-ic">&#128274;</span>
+              <p data-i18n="home.reviews.login">Conectează-te pentru a lăsa o recenzie.</p>
+              <button class="reviews-cta" onclick="openLogin()" data-i18n="home.nav.login">
+                Conectare
+              </button>
+            </div>
+            <div class="reviews-form-open" id="reviewsFormOpen" style="display: none">
+              <div class="reviews-form-user">
+                <div class="reviews-form-avatar" id="reviewsFormAvatar">U</div>
+                <div>
+                  <div class="reviews-form-name" id="reviewsFormName">utilizator</div>
+                  <div class="reviews-form-rating" id="reviewsFormRating">
+                    <span class="rev-star" data-val="1">&#9734;</span>
+                    <span class="rev-star" data-val="2">&#9734;</span>
+                    <span class="rev-star" data-val="3">&#9734;</span>
+                    <span class="rev-star" data-val="4">&#9734;</span>
+                    <span class="rev-star" data-val="5">&#9734;</span>
+                  </div>
+                </div>
+              </div>
+              <textarea
+                id="reviewsFormText"
+                maxlength="600"
+                placeholder="Spune-ne ce părere ai despre BioNexus..."
+                data-i18n-ph="home.reviews.ph"
+              ></textarea>
+              <div class="reviews-form-actions">
+                <span class="reviews-form-char" id="reviewsFormChar">0 / 600</span>
+                <button
+                  class="reviews-submit"
+                  onclick="submitReview()"
+                  data-i18n="home.reviews.submit"
+                >
+                  Publică recenzia
+                </button>
+              </div>
+              <div class="reviews-form-msg" id="reviewsFormMsg"></div>
+            </div>
+          </div>
+        </div>
+        <div class="reviews-list" id="reviewsList"></div>
+        <div
+          class="reviews-empty"
+          id="reviewsEmpty"
+          style="display: none"
+          data-i18n="home.reviews.none"
+        >
+          Nicio recenzie încă — fii primul!
+        </div>
+      </section>
+
+      <footer class="home-footer">
+        <div data-i18n="home.footer">BioNexus &middot; Platformă educațională anatomică</div>
+        <div class="home-credit">made by ryan</div>
+      </footer>
+    </div>
+
+    <div class="auth-page" id="loginModal">
+      <button class="auth-back" onclick="closeLogin()" title="Înapoi">
+        &larr; <span data-i18n="auth.back">Înapoi</span>
+      </button>
+      <div class="auth-card-wrap">
+        <div class="auth-card-new">
+          <div class="auth-card-logo">
+            <span class="auth-card-logo-mark"
+              ><img
+                src="images/logo-bionexus-icon.png"
+                alt="BioNexus"
+                class="bionexus-logo bionexus-logo-mark"
+                data-clean-bg="light"
+            /></span>
+          </div>
+          <div class="auth-card-body" id="authBodyLogin">
+            <h1 class="auth-card-h" data-i18n="login.welcome">Bine ai revenit</h1>
+            <p class="auth-card-sub" data-i18n="login.sub">Conectează-te în contul tău</p>
+            <div class="auth-field-new">
+              <label data-i18n="login.user">Email sau utilizator</label>
+              <input
+                type="text"
+                id="loginUser"
+                placeholder="ex: ryan@bionexus.ro"
+                autocomplete="username"
+              />
+            </div>
+            <div class="auth-field-new">
+              <div class="auth-field-row">
+                <label data-i18n="login.pass">Parolă</label>
+                <a class="auth-forgot" onclick="forgotPass()" data-i18n="login.forgot"
+                  >Ai uitat parola?</a
+                >
+              </div>
+              <input
+                type="password"
+                id="loginPass"
+                placeholder="Introdu parola"
+                autocomplete="current-password"
+              />
+            </div>
+            <div class="auth-error" id="loginError"></div>
+            <button
+              class="auth-submit-new"
+              id="loginSubmitBtn"
+              onclick="doLogin()"
+              data-i18n="login.submit"
+            >
+              Conectare
+            </button>
+            <div class="auth-switch-line" data-i18n-html="login.noAccount">
+              Nu ai cont? <a onclick="showAuthMode('register')">Creează un cont</a>
+            </div>
+            <div class="auth-divider-new"><span data-i18n="auth.or">sau</span></div>
+            <button class="auth-secondary-new" onclick="closeLogin()" data-i18n="auth.guest">
+              Continuă ca vizitator
+            </button>
+          </div>
+          <div class="auth-card-body" id="authBodyRegister" style="display: none">
+            <h1 class="auth-card-h" data-i18n="reg.title">Creează un cont</h1>
+            <p class="auth-card-sub" data-i18n="reg.sub">Alătură-te BioNexus astăzi</p>
+            <div class="auth-field-new">
+              <label data-i18n="reg.user">Nume utilizator</label>
+              <input type="text" id="regUser" autocomplete="username" />
+            </div>
+            <div class="auth-field-new">
+              <label data-i18n="reg.email">Adresă de email</label>
+              <input type="email" id="regEmail" autocomplete="email" />
+            </div>
+            <div class="auth-field-new">
+              <label data-i18n="reg.pass">Parolă</label>
+              <input type="password" id="regPass" autocomplete="new-password" />
+              <div class="auth-hint" data-i18n="reg.passHint">Minim 8 caractere</div>
+            </div>
+            <div class="auth-field-new">
+              <label data-i18n="reg.passConf">Confirmă parola</label>
+              <input type="password" id="regPassConf" autocomplete="new-password" />
+            </div>
+            <label class="auth-checkbox-line">
+              <input type="checkbox" id="regTerms" />
+              <span data-i18n-html="reg.termsAccept"
+                >Sunt de acord cu
+                <a
+                  class="auth-link"
+                  onclick="
+                    event.preventDefault();
+                    showTerms('terms');
+                  "
+                  >Termenii</a
+                >
+                și
+                <a
+                  class="auth-link"
+                  onclick="
+                    event.preventDefault();
+                    showTerms('privacy');
+                  "
+                  >Confidențialitatea</a
+                ></span
+              >
+            </label>
+            <input
+              type="text"
+              class="auth-honeypot"
+              id="regWebsite"
+              name="website"
+              tabindex="-1"
+              autocomplete="off"
+              aria-hidden="true"
+            />
+            <div class="auth-captcha-real" id="authCaptchaReal">
+              <div class="auth-captcha-head">
+                <span class="auth-captcha-logo">&#128274;</span>
+                <span class="auth-captcha-title" data-i18n="reg.captcha.title"
+                  >Verificare securitate</span
+                >
+                <button
+                  type="button"
+                  class="auth-captcha-refresh"
+                  id="captchaRefresh"
+                  title="Reîncarcă"
+                  aria-label="Reîncarcă"
+                >
+                  &#8635;
+                </button>
+              </div>
+              <div class="auth-captcha-challenge">
+                <span class="auth-captcha-q" id="captchaQ">3 + 4 = ?</span>
+                <input
+                  type="text"
+                  id="captchaA"
+                  class="auth-captcha-input"
+                  inputmode="numeric"
+                  maxlength="4"
+                  autocomplete="off"
+                />
+              </div>
+              <input type="hidden" id="regHuman" value="0" />
+              <div class="auth-captcha-status" id="captchaStatus"></div>
+            </div>
+            <div class="auth-error" id="regError"></div>
+            <button
+              class="auth-submit-new"
+              id="regSubmitBtn"
+              onclick="doRegister()"
+              data-i18n="reg.submit"
+            >
+              Creează cont
+            </button>
+            <div class="auth-switch-line" data-i18n-html="reg.haveAccount">
+              Ai deja un cont? <a onclick="showAuthMode('login')">Conectează-te</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="terms-modal"
+      id="termsModal"
+      style="display: none"
+      onclick="if (event.target === this) closeTerms();"
+    >
+      <div class="terms-card">
+        <button class="terms-close" onclick="closeTerms()">&times;</button>
+        <h2 id="termsTitle">Termeni</h2>
+        <div class="terms-body" id="termsBody"></div>
+      </div>
+    </div>
+
+    <div class="reset-pass-modal" id="forgotPassModal" style="display: none">
+      <div class="reset-pass-card">
+        <button class="forgot-close" onclick="closeForgotModal()" title="Închide">&times;</button>
+        <div class="reset-pass-logo">
+          <img
+            src="images/logo-bionexus-icon.png"
+            class="bionexus-logo bionexus-logo-mark"
+            alt="BioNexus"
+            data-clean-bg="light"
+          />
+        </div>
+        <h2 data-i18n="forgot.title">Recuperare parolă</h2>
+        <p data-i18n="forgot.sub">
+          Introdu adresa de email asociată contului tău. Îți vom trimite un link prin care îți poți
+          seta o parolă nouă.
+        </p>
+        <div class="auth-field-new">
+          <label data-i18n="forgot.email">Adresă de email</label>
+          <input type="email" id="forgotEmail" placeholder="tu@email.com" autocomplete="email" />
+        </div>
+        <div class="auth-error" id="forgotMsg"></div>
+        <button
+          class="auth-submit-new"
+          id="forgotSubmitBtn"
+          onclick="sendForgotEmail()"
+          data-i18n="forgot.send"
+        >
+          Trimite linkul de resetare
+        </button>
+        <div class="auth-switch-line">
+          <a onclick="closeForgotModal()" data-i18n="forgot.back">&larr; Înapoi la conectare</a>
+        </div>
+      </div>
+    </div>
+    <div class="notebook-modal" id="notebookModal" style="display: none">
+      <div class="notebook-overlay" onclick="closeNotebook()"></div>
+      <div class="notebook-card">
+        <div class="notebook-head">
+          <div class="notebook-title-wrap">
+            <span class="notebook-icon">📝</span>
+            <h2 data-i18n="notebook.title">Notebook BioNexus</h2>
+            <span class="notebook-count" id="notebookCount">0 notițe</span>
+          </div>
+          <button class="notebook-close" onclick="closeNotebook()" title="Închide">&times;</button>
+        </div>
+        <div class="notebook-toolbar">
+          <div class="notebook-search-wrap">
+            <span class="notebook-search-ic">🔍</span>
+            <input
+              type="text"
+              id="notebookSearch"
+              placeholder="Caută în notițe..."
+              data-i18n-ph="notebook.search"
+            />
+          </div>
+          <div class="notebook-filters">
+            <button class="nb-filter active" data-nb-filter="all" data-i18n="notebook.filter.all">
+              Toate
+            </button>
+            <button
+              class="nb-filter"
+              data-nb-filter="starred"
+              data-i18n-html="notebook.filter.starred"
+            >
+              ⭐ Importante
+            </button>
+            <button class="nb-filter" data-nb-filter="bone" data-i18n-html="notebook.filter.bone">
+              🦴 Oase
+            </button>
+            <button
+              class="nb-filter"
+              data-nb-filter="muscle"
+              data-i18n-html="notebook.filter.muscle"
+            >
+              💪 Mușchi
+            </button>
+          </div>
+          <div class="notebook-tags-wrap" id="notebookTagsWrap"></div>
+        </div>
+        <div class="notebook-body">
+          <div class="notebook-empty" id="notebookEmpty">
+            <div class="notebook-empty-icon">📚</div>
+            <h3 data-i18n="notebook.empty.title">Nicio notiță încă</h3>
+            <p data-i18n-html="notebook.empty.desc">
+              Adaugă prima ta notiță apăsând <b>+ Notiță nouă</b> sau din viewer-ul 3D când
+              selectezi un os sau mușchi.
+            </p>
+            <button
+              class="notebook-add-first"
+              onclick="openNotebookEditor()"
+              data-i18n="notebook.empty.cta"
+            >
+              + Adaugă prima notiță
+            </button>
+          </div>
+          <div class="notebook-list" id="notebookList"></div>
+        </div>
+        <button class="notebook-add-fab" onclick="openNotebookEditor()" title="Notiță nouă">
+          +
+        </button>
+      </div>
+    </div>
+
+    <div class="notebook-editor-modal" id="notebookEditorModal" style="display: none">
+      <div class="notebook-overlay" onclick="closeNotebookEditor()"></div>
+      <div class="notebook-editor-card">
+        <div class="notebook-editor-head">
+          <h3 id="notebookEditorTitle" data-i18n="notebook.editor.new">Notiță nouă</h3>
+          <button class="notebook-close" onclick="closeNotebookEditor()">&times;</button>
+        </div>
+        <div class="notebook-editor-body">
+          <label class="nb-label" data-i18n="notebook.lbl.title">Titlu</label>
+          <input
+            type="text"
+            id="nbTitle"
+            placeholder="ex: Femur — origine ischiogambieri"
+            data-i18n-ph="notebook.ph.title"
+            maxlength="120"
+          />
+          <div class="nb-row">
+            <div class="nb-field" style="flex: 1">
+              <label class="nb-label" data-i18n="notebook.lbl.category">Categorie</label>
+              <select id="nbCategory">
+                <option value="bone" data-i18n-html="notebook.cat.bone">🦴 Os</option>
+                <option value="muscle" data-i18n-html="notebook.cat.muscle">💪 Mușchi</option>
+                <option value="general" data-i18n-html="notebook.cat.general">📌 General</option>
+              </select>
+            </div>
+            <div class="nb-field" style="flex: 2">
+              <label class="nb-label" data-i18n="notebook.lbl.subject">Subiect (opțional)</label>
+              <input
+                type="text"
+                id="nbSubject"
+                placeholder="ex: Femur, Biceps brahial, articulația umărului"
+                data-i18n-ph="notebook.ph.subject"
+                maxlength="80"
+              />
+            </div>
+          </div>
+          <label class="nb-label" data-i18n="notebook.lbl.content">Conținut</label>
+          <textarea
+            id="nbContent"
+            rows="8"
+            placeholder="Scrie observații, definiții, mnemotehnici..."
+            data-i18n-ph="notebook.ph.content"
+            maxlength="4000"
+          ></textarea>
+          <div class="nb-row">
+            <div class="nb-field" style="flex: 2">
+              <label class="nb-label" data-i18n="notebook.lbl.tags"
+                >Tag-uri (separate cu virgulă)</label
+              >
+              <input
+                type="text"
+                id="nbTags"
+                placeholder="ex: examen, anatomie 1, important"
+                data-i18n-ph="notebook.ph.tags"
+                maxlength="200"
+              />
+            </div>
+            <div class="nb-field">
+              <label class="nb-label" data-i18n="notebook.lbl.color">Culoare</label>
+              <div class="nb-color-picker" id="nbColorPicker">
+                <button
+                  class="nb-color"
+                  data-color="default"
+                  style="background: #1e293b"
+                  title="Default"
+                ></button>
+                <button
+                  class="nb-color"
+                  data-color="red"
+                  style="background: #ef4444"
+                  title="Roșu"
+                ></button>
+                <button
+                  class="nb-color"
+                  data-color="orange"
+                  style="background: #f97316"
+                  title="Portocaliu"
+                ></button>
+                <button
+                  class="nb-color"
+                  data-color="yellow"
+                  style="background: #eab308"
+                  title="Galben"
+                ></button>
+                <button
+                  class="nb-color"
+                  data-color="green"
+                  style="background: #22c55e"
+                  title="Verde"
+                ></button>
+                <button
+                  class="nb-color"
+                  data-color="blue"
+                  style="background: #3b82f6"
+                  title="Albastru"
+                ></button>
+                <button
+                  class="nb-color"
+                  data-color="purple"
+                  style="background: #a855f7"
+                  title="Violet"
+                ></button>
+              </div>
+            </div>
+          </div>
+          <label class="nb-checkbox">
+            <input type="checkbox" id="nbStarred" />
+            <span data-i18n-html="notebook.lbl.starred">Marchează ca important ⭐</span>
+          </label>
+        </div>
+        <div class="notebook-editor-footer">
+          <button
+            class="nb-btn nb-btn-secondary"
+            onclick="closeNotebookEditor()"
+            data-i18n="notebook.btn.cancel"
+          >
+            Anulează
+          </button>
+          <button
+            class="nb-btn nb-btn-danger"
+            id="nbDeleteBtn"
+            onclick="deleteNote()"
+            style="display: none"
+            data-i18n-html="notebook.btn.delete"
+          >
+            🗑 Șterge
+          </button>
+          <button
+            class="nb-btn nb-btn-primary"
+            onclick="saveNote()"
+            data-i18n-html="notebook.btn.save"
+          >
+            💾 Salvează
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="reset-pass-modal" id="resetPassModal" style="display: none">
+      <div class="reset-pass-card">
+        <div class="reset-pass-logo">
+          <img
+            src="images/logo-bionexus-icon.png"
+            class="bionexus-logo bionexus-logo-mark"
+            alt="BioNexus"
+            data-clean-bg="light"
+          />
+        </div>
+        <h2 data-i18n="reset.title">Setează o parolă nouă</h2>
+        <p data-i18n="reset.sub">Introdu noua ta parolă pentru a-ți recupera contul.</p>
+        <div class="auth-field-new">
+          <label data-i18n="reset.newPass">Parolă nouă</label>
+          <input type="password" id="resetNewPass" placeholder="Minim 8 caractere" />
+        </div>
+        <div class="auth-field-new">
+          <label data-i18n="reset.confPass">Confirmă parola</label>
+          <input type="password" id="resetConfPass" placeholder="Reintrodu parola" />
+        </div>
+        <div class="auth-error" id="resetMsg"></div>
+        <button
+          class="auth-submit-new"
+          id="resetSubmitBtn"
+          onclick="performReset()"
+          data-i18n="reset.save"
+        >
+          Salvează parola nouă
+        </button>
+        <div class="auth-switch-line">
+          <a onclick="cancelReset()" data-i18n="reset.cancel">Anulează</a>
+        </div>
+      </div>
+    </div>
+    <div class="chatbox-widget" id="chatboxWidget">
+      <button class="chatbox-toggle" id="chatboxToggle" onclick="toggleChatbox()">
+        <span class="chatbox-toggle-icon"><img src="images/chat-icon.png" alt="AI" /></span>
+        <span class="chatbox-toggle-pulse"></span>
+      </button>
+      <div class="chatbox-panel" id="chatboxPanel">
+        <div class="chatbox-header">
+          <div class="chatbox-title-wrap">
+            <span class="chatbox-avatar"><img src="images/chat-icon.png" alt="AI" /></span>
+            <div>
+              <div class="chatbox-title">BioNexus AI</div>
+              <div class="chatbox-status">
+                <span class="chatbox-dot"></span
+                ><span data-i18n="chat.status">Asistent biologic online</span>
+              </div>
+            </div>
+          </div>
+          <button class="chatbox-close" onclick="toggleChatbox()">&times;</button>
+        </div>
+        <div class="chatbox-messages" id="chatMessages">
+          <div class="chat-msg chat-bot">
+            <div class="chat-bubble" data-i18n="chat.welcome">
+              Salut! Sunt asistentul BioNexus. Te ajut atât cu anatomie cât și cu folosirea
+              site-ului. Întreabă-mă orice sau folosește scurtăturile de mai jos.
+            </div>
+          </div>
+          <div class="chat-msg chat-bot">
+            <div class="chat-chips" id="chatChips">
+              <button class="chat-chip" data-chat-action="open-quiz">Pornește quiz</button>
+              <button class="chat-chip" data-chat-action="open-learn">Manuale</button>
+              <button class="chat-chip" data-chat-action="ask:Cum folosesc site-ul?">
+                Cum folosesc site-ul
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="chatbox-input-row">
+          <input
+            type="text"
+            id="chatInput"
+            placeholder="Scrie o întrebare despre anatomie..."
+            data-i18n-ph="chat.placeholder"
+            onkeydown="if (event.key === 'Enter') sendChat();"
+          />
+          <button class="chatbox-send" onclick="sendChat()">&#10148;</button>
+        </div>
+      </div>
+    </div>
+    <header class="header">
+      <button
+        class="app-back-btn"
+        onclick="goBackFromApp()"
+        title="Înapoi la pagina principală"
+        aria-label="Înapoi"
+      >
+        <span class="app-back-arrow">&larr;</span>
+        <span class="app-back-txt" data-i18n="header.back">Înapoi</span>
+      </button>
+      <div
+        class="header-left header-brand-link"
+        onclick="showHome()"
+        title="Înapoi la pagina principală"
+      >
+        <div class="logo-icon">
+          <img
+            src="images/logo-bionexus-icon.png"
+            alt="BioNexus"
+            class="bionexus-logo bionexus-logo-mark"
+            data-clean-bg="light"
+          />
+        </div>
+        <div>
+          <h1>BioNexus</h1>
+          <div class="header-sub" data-i18n="header.sub">Anatomia umană 3D</div>
+        </div>
+      </div>
+      <nav class="nav-tabs" id="navTabs">
+        <button class="nav-tab active" data-section="all" data-i18n="nav.all">Toate Oasele</button>
+        <button class="nav-tab" data-section="cap" data-i18n="nav.cap">Scheletul Capului</button>
+        <button class="nav-tab" data-section="trunchi" data-i18n="nav.trunchi">
+          Scheletul Trunchiului
+        </button>
+        <button class="nav-tab" data-section="membre" data-i18n="nav.membre">
+          Membre Superioare
+        </button>
+        <button class="nav-tab" data-section="inferioare" data-i18n="nav.inferioare">
+          Membre Inferioare
+        </button>
+      </nav>
+      <nav class="nav-tabs nav-tabs-muscle" id="navTabsMuscle" style="display: none">
+        <button class="nav-tab active" data-mu-section="all" data-i18n="nav.muAll">
+          Toți Mușchii
+        </button>
+        <button class="nav-tab" data-mu-section="cap" data-i18n="nav.muCap">Cap & Gât</button>
+        <button class="nav-tab" data-mu-section="trunchi" data-i18n="nav.muTrunchi">Trunchi</button>
+        <button class="nav-tab" data-mu-section="membre" data-i18n="nav.muMembre">
+          Membre Superioare
+        </button>
+        <button class="nav-tab" data-mu-section="inferioare" data-i18n="nav.muInferioare">
+          Membre Inferioare
+        </button>
+      </nav>
+      <nav class="nav-tabs nav-tabs-extra" id="navTabsExtra" style="display: none"></nav>
+      <div class="header-right">
+        <div class="lang-switch" id="langSwitchApp" title="Schimbă limba">
+          <button class="lang-btn active" data-lang="ro">RO</button>
+          <button class="lang-btn" data-lang="en">EN</button>
+        </div>
+      </div>
+    </header>
+
+    <div class="app">
+      <aside class="sidebar">
+        <div class="sb-head">
+          <h2 data-i18n="sb.bones">Oase</h2>
+          <div class="search-box">
+            <span style="color: var(--t3)">&#128269;</span
+            ><input
+              type="text"
+              id="bone-search"
+              placeholder="Caută un os..."
+              data-i18n-ph="sb.search"
+            />
+          </div>
+        </div>
+        <div class="sb-scroll">
+          <div class="search-count" id="search-count"></div>
+          <div id="bone-list"></div>
+          <div id="comp-list" style="display: none"></div>
+        </div>
+        <div class="sb-foot">
+          <span data-i18n="sb.foot">Scheletul uman:</span> <span>206</span>
+          <span data-i18n="sb.bonesWord">oase</span>
+          <div style="margin-top: 6px; font-size: 9px; color: #334155; letter-spacing: 0.5px">
+            made by ryan
+          </div>
+        </div>
+      </aside>
+
+      <main class="viewer" id="viewer">
+        <canvas id="canvas3d"></canvas>
+        <div class="load-overlay" id="loader">
+          <div class="spinner"></div>
+          <div class="load-text" id="load-text" data-i18n="load.text">Se încarcă modelul 3D...</div>
+          <div class="load-bar"><div class="load-fill" id="load-fill"></div></div>
+          <div class="load-error" id="load-error" data-i18n-html="load.error">
+            Nu s-a putut încărca modelul 3D.<br />Asigură-te că folderul conține fișierele
+            lib/three.min.js, lib/OrbitControls.js și lib/GLTFLoader.js
+          </div>
+        </div>
+        <div class="view-label">
+          <div class="vl-title" data-i18n="view.title">Vizualizare</div>
+          <div class="vl-name" id="cur-label" data-i18n="view.complete">Scheletul complet</div>
+        </div>
+        <div class="vctrls vctrls-left">
+          <button
+            class="vbtn"
+            id="sidebarToggleBtn"
+            onclick="toggleSidebar()"
+            title="Ascunde / arată panoul de oase"
+          >
+            &#8592;
+          </button>
+        </div>
+        <div class="vctrls">
+          <button class="vbtn" onclick="resetCam()" title="Resetează camera">&#8634;</button>
+          <button
+            class="vbtn"
+            id="infoToggleBtn"
+            onclick="toggleInfoPanel()"
+            title="Ascunde / arată panoul de informații"
+          >
+            &#8594;
+          </button>
+        </div>
+        <div id="tooltip"><span id="tip-text"></span></div>
+        <div class="bone-name-overlay" id="boneNameOverlay">
+          <div class="bno-name" id="bnoName"></div>
+          <div class="bno-cat" id="bnoCat"></div>
+        </div>
+        <div
+          class="viewer-credit"
+          style="
+            position: absolute;
+            bottom: 22px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 5;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.55);
+            letter-spacing: 1.5px;
+            font-family: &quot;Space Grotesk&quot;, sans-serif;
+            pointer-events: none;
+            line-height: 1.4;
+            padding: 2px 4px;
+          "
+        >
+          made by ryan
+        </div>
+
+        <div class="quiz-backdrop" id="quizBackdrop"></div>
+        <div class="quiz-panel" id="quizPanel">
+          <div class="quiz-header" id="quizHeader">
+            <div class="quiz-title-wrap">
+              <span class="quiz-icon">&#129504;</span>
+              <span class="quiz-title" data-i18n="quiz.title">Minigame: Testul Anatomic</span>
+              <span class="quiz-drag-hint">&#9776;</span>
+            </div>
+            <div class="quiz-header-actions">
+              <button
+                class="quiz-exit"
+                id="quizExit"
+                onclick="exitQuizMode()"
+                title="Ieși din minigame"
+              >
+                &times;
+              </button>
+              <button class="quiz-fold" id="quizFold" onclick="toggleQuiz()">&#9650;</button>
+            </div>
+          </div>
+          <div class="quiz-body" id="quizBody">
+            <div class="quiz-stage" id="quizSystemPick">
+              <div class="quiz-intro-icon">&#127919;</div>
+              <h3 data-i18n="quiz.sys.h">Alege sistemul anatomic</h3>
+              <p data-i18n="quiz.sys.p">Pentru ce sistem vrei să te testezi?</p>
+              <div class="quiz-modes">
+                <button class="quiz-mode-card" onclick="pickQuizSystem('osos')">
+                  <div class="quiz-mode-icon quiz-mode-icon-emoji">&#129463;</div>
+                  <div class="quiz-mode-info">
+                    <div class="quiz-mode-title" data-i18n="quiz.sys.osos.t">Sistem Osos</div>
+                    <div class="quiz-mode-sub" data-i18n="quiz.sys.osos.d">
+                      206 oase pe cap, trunchi, membre. Întrebări vizuale și de cunoștințe +
+                      manualele Stefaneț (Greu).
+                    </div>
+                  </div>
+                </button>
+                <button class="quiz-mode-card" onclick="pickQuizSystem('muscular')">
+                  <div class="quiz-mode-icon quiz-mode-icon-emoji">&#128170;</div>
+                  <div class="quiz-mode-info">
+                    <div class="quiz-mode-title" data-i18n="quiz.sys.muscular.t">
+                      Sistem Muscular
+                    </div>
+                    <div class="quiz-mode-sub" data-i18n="quiz.sys.muscular.d">
+                      350+ mușchi striați cu denumiri RO/latină, origini, inserții și acțiuni.
+                    </div>
+                  </div>
+                </button>
+              </div>
+            </div>
+
+            <div class="quiz-stage" id="quizPick" style="display: none">
+              <button class="quiz-back-pick" onclick="backToSystemPick()">
+                &larr; <span data-i18n="quiz.back">Înapoi</span>
+              </button>
+              <div class="quiz-intro-icon">&#127919;</div>
+              <h3 data-i18n="quiz.pick.h">Alege tipul de test</h3>
+              <p data-i18n="quiz.pick.p">Două moduri disponibile — alege cum vrei să te testezi.</p>
+              <div class="quiz-modes">
+                <button class="quiz-mode-card" onclick="pickQuizMode('visual')">
+                  <div class="quiz-mode-icon quiz-mode-icon-emoji" id="quizModeVisualIcon">
+                    &#129463;
+                  </div>
+                  <div class="quiz-mode-info">
+                    <div
+                      class="quiz-mode-title"
+                      id="quizModeVisualTitle"
+                      data-i18n="quiz.mode.visual.t"
+                    >
+                      Identifică Osul
+                    </div>
+                    <div
+                      class="quiz-mode-sub"
+                      id="quizModeVisualDesc"
+                      data-i18n="quiz.mode.visual.d"
+                    >
+                      Vezi un os evidențiat cu albastru pe schelet și alegi numele corect din 4
+                      variante.
+                    </div>
+                  </div>
+                </button>
+                <button class="quiz-mode-card" onclick="pickQuizMode('knowledge')">
+                  <div class="quiz-mode-icon quiz-mode-icon-img">
+                    <img src="images/quiz-books.png" alt="Cunoștințe" data-clean-bg="light" />
+                  </div>
+                  <div class="quiz-mode-info">
+                    <div class="quiz-mode-title" data-i18n="quiz.mode.know.t">
+                      Test de Cunoștințe
+                    </div>
+                    <div class="quiz-mode-sub" id="quizModeKnowDesc" data-i18n="quiz.mode.know.d">
+                      Întrebări despre descrieri, articulații și detalii.
+                    </div>
+                  </div>
+                </button>
+                <button
+                  class="quiz-mode-card quiz-mode-duel"
+                  onclick="pickQuizMode('duel')"
+                  id="quizModeDuelCard"
+                >
+                  <div class="quiz-mode-icon quiz-mode-icon-img">
+                    <img src="images/quiz-aiduel.png" alt="AI Duel" data-clean-bg="light" />
+                  </div>
+                  <div class="quiz-mode-info">
+                    <div class="quiz-mode-title" data-i18n="quiz.mode.duel.t">AI Duel</div>
+                    <div class="quiz-mode-sub" data-i18n="quiz.mode.duel.d">
+                      AI-ul îți dă afirmații despre anatomie — unele corecte, altele cu greșeli
+                      subtile.
+                    </div>
+                  </div>
+                </button>
+              </div>
+            </div>
+
+            <div class="quiz-stage" id="quizStart" style="display: none">
+              <button class="quiz-back-pick" onclick="backToQuizPick()">
+                &larr; <span data-i18n="quiz.back">Înapoi</span>
+              </button>
+              <div class="quiz-intro-icon" id="quizStartIcon">&#127919;</div>
+              <h3 id="quizStartTitle" data-i18n="quiz.start.h">Cunoști scheletul?</h3>
+              <p id="quizStartDesc" data-i18n="quiz.start.p">
+                Identifică osul evidențiat din 4 variante. Camera te duce automat la fiecare os.
+                Adună puncte și obține medalia!
+              </p>
+              <div class="quiz-diff-row">
+                <button class="quiz-diff" data-diff="easy" data-i18n="quiz.diff.easy">Ușor</button>
+                <button class="quiz-diff active" data-diff="medium" data-i18n="quiz.diff.medium">
+                  Mediu
+                </button>
+                <button class="quiz-diff" data-diff="hard" data-i18n="quiz.diff.hard">Greu</button>
+              </div>
+              <button class="quiz-start-btn" onclick="startQuiz()" data-i18n="quiz.start.btn">
+                Începe Quiz-ul
+              </button>
+            </div>
+
+            <div class="quiz-stage" id="quizQuestion" style="display: none">
+              <div class="quiz-meta">
+                <div class="quiz-progress-info">
+                  <span
+                    ><span data-i18n="quiz.q">Întrebarea</span> <b id="qNum">1</b>/<b id="qTotal"
+                      >10</b
+                    ></span
+                  >
+                  <span class="quiz-score-pill"
+                    ><span data-i18n="quiz.score">Scor:</span> <b id="qScore">0</b></span
+                  >
+                </div>
+                <div class="quiz-progress-bar">
+                  <div class="quiz-progress-fill" id="qProgFill"></div>
+                </div>
+              </div>
+              <h3 class="quiz-q-text" data-i18n-html="quiz.q.text">
+                Cum se numește osul evidențiat în <span style="color: #3b82f6">albastru</span>?
+              </h3>
+              <div class="quiz-options" id="qOptions"></div>
+              <div class="quiz-feedback" id="qFeedback" style="display: none"></div>
+              <div class="quiz-actions">
+                <button class="quiz-skip-btn" onclick="skipQuiz()" data-i18n="quiz.skip">
+                  Sare peste
+                </button>
+                <button
+                  class="quiz-next-btn"
+                  id="qNextBtn"
+                  onclick="nextQuiz()"
+                  style="display: none"
+                  data-i18n-html="quiz.next"
+                >
+                  Următoarea &#8594;
+                </button>
+              </div>
+            </div>
+
+            <div class="quiz-stage" id="quizEnd" style="display: none">
+              <div class="quiz-end-badge" id="qBadge">&#129351;</div>
+              <h3 id="qEndTitle" data-i18n="quiz.end.title">Felicitări!</h3>
+              <div class="quiz-final-score">
+                <b id="qFinalScore">0</b><span>/<b id="qFinalTotal">10</b></span>
+              </div>
+              <div class="quiz-end-msg" id="qEndMsg" data-i18n="quiz.end.msg">Bine!</div>
+              <div class="quiz-time" id="qTime"></div>
+              <button class="quiz-start-btn" onclick="restartQuiz()" data-i18n="quiz.end.retry">
+                Încearcă din nou
+              </button>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <aside class="info-panel">
+        <div class="ip-head"><h3 id="info-title" data-i18n="info.title">Informații Os</h3></div>
+        <div class="ip-body">
+          <div class="ip-ph" id="ip-ph">
+            <img
+              src="images/logo-bionexus-icon.png"
+              alt="BioNexus"
+              class="ph-icon bionexus-logo bionexus-logo-mark"
+              data-clean-bg="light"
+            />
+            <p data-i18n-html="info.placeholder">
+              Selectează un os din model<br />sau din lista din stânga
+            </p>
+          </div>
+          <div id="info-ct" style="display: none"></div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="app app-muscular" id="appMuscular" style="display: none">
+      <aside class="sidebar">
+        <div class="sb-head">
+          <h2 data-i18n="sb.muscles">Mușchi</h2>
+          <div class="search-box">
+            <span style="color: var(--t3)">&#128269;</span
+            ><input
+              type="text"
+              id="mu-search"
+              placeholder="Caută un mușchi..."
+              data-i18n-ph="sb.searchMuscle"
+            />
+          </div>
+        </div>
+        <div class="sb-scroll">
+          <div class="search-count" id="mu-search-count"></div>
+          <div id="mu-list"></div>
+        </div>
+        <div class="sb-foot">
+          <span data-i18n="sb.footMuscle">Sistem muscular:</span> <span id="mu-count">0</span>
+          <span data-i18n="sb.musclesWord">mușchi</span>
+          <div style="margin-top: 6px; font-size: 9px; color: #334155; letter-spacing: 0.5px">
+            made by ryan
+          </div>
+        </div>
+      </aside>
+
+      <main class="viewer" id="mu-viewer">
+        <canvas id="mu-canvas3d"></canvas>
+        <div class="load-overlay mu-load-splash" id="mu-loader">
+          <div class="mu-splash-stage">
+            <div class="mu-splash-logo"><img src="images/favicon-256.png" alt="BioNexus" /></div>
+            <div class="mu-splash-brand">BioNexus</div>
+            <div class="mu-splash-tag" id="mu-load-text" data-i18n="load.muscleText">
+              Se încarcă sistemul muscular...
+            </div>
+            <div class="mu-splash-bar">
+              <div class="mu-splash-bar-fill" id="mu-load-fill"></div>
+            </div>
+          </div>
+          <div class="load-error" id="mu-load-error" style="display: none">Eroare la încărcare</div>
+        </div>
+        <div class="view-label">
+          <div class="vl-title" data-i18n="view.title">Vizualizare</div>
+          <div class="vl-name" id="mu-cur-label" data-i18n="view.muscleComplete">
+            Sistem muscular
+          </div>
+        </div>
+        <div class="vctrls">
+          <button class="vbtn" onclick="resetMuCam()" title="Resetează camera">&#8634;</button>
+        </div>
+        <div id="mu-tooltip" class="muscle-tooltip"><span id="mu-tip-text"></span></div>
+        <div class="bone-name-overlay" id="muNameOverlay">
+          <div class="bno-name" id="muBnoName"></div>
+          <div class="bno-cat" id="muBnoCat"></div>
+        </div>
+        <div
+          class="viewer-credit"
+          style="
+            position: absolute;
+            bottom: 22px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 5;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.55);
+            letter-spacing: 1.5px;
+            font-family: &quot;Space Grotesk&quot;, sans-serif;
+            pointer-events: none;
+            line-height: 1.4;
+            padding: 2px 4px;
+          "
+        >
+          made by ryan
+        </div>
+      </main>
+
+      <aside class="info-panel">
+        <div class="ip-head">
+          <h3 id="mu-info-title" data-i18n="info.muscleTitle">Informații Mușchi</h3>
+        </div>
+        <div class="ip-body">
+          <div class="ip-ph" id="mu-ip-ph">
+            <img
+              src="images/logo-bionexus-icon.png"
+              alt="BioNexus"
+              class="ph-icon bionexus-logo bionexus-logo-mark"
+              data-clean-bg="light"
+            />
+            <p data-i18n-html="info.musclePlaceholder">
+              Selectează un mușchi din model<br />sau din lista din stânga
+            </p>
+          </div>
+          <div id="mu-info-ct" style="display: none"></div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="app app-extra app-cardio" id="appCardio" style="display: none">
+      <aside class="sidebar">
+        <div class="sb-head">
+          <h2 data-i18n="sb.cardio">Structuri cardiovasculare</h2>
+          <div class="search-box">
+            <span style="color: var(--t3)">&#128269;</span
+            ><input
+              type="text"
+              id="cardio-search"
+              placeholder="Caută o structură..."
+              data-i18n-ph="sb.searchCardio"
+            />
+          </div>
+        </div>
+        <div class="sb-scroll">
+          <div class="search-count" id="cardio-search-count"></div>
+          <div id="cardio-list"></div>
+        </div>
+        <div class="sb-foot">
+          <span data-i18n="sb.footCardio">Sistem cardiovascular:</span>
+          <span id="cardio-count">0</span> <span data-i18n="sb.structuresWord">structuri</span>
+          <div style="margin-top: 6px; font-size: 9px; color: #334155; letter-spacing: 0.5px">
+            made by ryan
+          </div>
+        </div>
+      </aside>
+
+      <main class="viewer" id="cardio-viewer">
+        <canvas id="cardio-canvas3d"></canvas>
+        <div class="load-overlay extra-load-splash" id="cardio-loader">
+          <div class="mu-splash-stage">
+            <div class="mu-splash-logo"><img src="images/favicon-256.png" alt="BioNexus" /></div>
+            <div class="mu-splash-brand">BioNexus</div>
+            <div class="mu-splash-tag" id="cardio-load-text" data-i18n="load.cardioText">
+              Se încarcă sistemul cardiovascular...
+            </div>
+            <div class="mu-splash-bar">
+              <div class="mu-splash-bar-fill" id="cardio-load-fill"></div>
+            </div>
+          </div>
+          <div class="load-error" id="cardio-load-error" style="display: none">
+            Eroare la încărcare
+          </div>
+        </div>
+        <div class="view-label">
+          <div class="vl-title" data-i18n="view.title">Vizualizare</div>
+          <div class="vl-name" id="cardio-cur-label" data-i18n="view.cardioComplete">
+            Sistem cardiovascular
+          </div>
+        </div>
+        <div class="vctrls">
+          <button class="vbtn" onclick="window.__extraResetCam('cardio')" title="Resetează camera">
+            &#8634;
+          </button>
+        </div>
+        <div class="bone-name-overlay" id="cardioNameOverlay">
+          <div class="bno-name" id="cardioBnoName"></div>
+          <div class="bno-cat" id="cardioBnoCat"></div>
+        </div>
+        <div
+          class="viewer-credit"
+          style="
+            position: absolute;
+            bottom: 22px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 5;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.55);
+            letter-spacing: 1.5px;
+            font-family: &quot;Space Grotesk&quot;, sans-serif;
+            pointer-events: none;
+            line-height: 1.4;
+            padding: 2px 4px;
+          "
+        >
+          made by ryan
+        </div>
+      </main>
+
+      <aside class="info-panel">
+        <div class="ip-head">
+          <h3 id="cardio-info-title" data-i18n="info.cardioTitle">Informații Structură</h3>
+        </div>
+        <div class="ip-body">
+          <div class="ip-ph" id="cardio-ip-ph">
+            <img
+              src="images/logo-bionexus-icon.png"
+              alt="BioNexus"
+              class="ph-icon bionexus-logo bionexus-logo-mark"
+              data-clean-bg="light"
+            />
+            <p data-i18n-html="info.cardioPlaceholder">
+              Selectează o structură din model<br />sau din lista din stânga
+            </p>
+          </div>
+          <div id="cardio-info-ct" style="display: none"></div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="app app-extra app-nervous" id="appNervous" style="display: none">
+      <aside class="sidebar">
+        <div class="sb-head">
+          <h2 data-i18n="sb.nervous">Structuri nervoase</h2>
+          <div class="search-box">
+            <span style="color: var(--t3)">&#128269;</span
+            ><input
+              type="text"
+              id="nervous-search"
+              placeholder="Caută o structură..."
+              data-i18n-ph="sb.searchNervous"
+            />
+          </div>
+        </div>
+        <div class="sb-scroll">
+          <div class="search-count" id="nervous-search-count"></div>
+          <div id="nervous-list"></div>
+        </div>
+        <div class="sb-foot">
+          <span data-i18n="sb.footNervous">Sistem nervos:</span> <span id="nervous-count">0</span>
+          <span data-i18n="sb.structuresWord">structuri</span>
+          <div style="margin-top: 6px; font-size: 9px; color: #334155; letter-spacing: 0.5px">
+            made by ryan
+          </div>
+        </div>
+      </aside>
+
+      <main class="viewer" id="nervous-viewer">
+        <canvas id="nervous-canvas3d"></canvas>
+        <div class="load-overlay extra-load-splash" id="nervous-loader">
+          <div class="mu-splash-stage">
+            <div class="mu-splash-logo"><img src="images/favicon-256.png" alt="BioNexus" /></div>
+            <div class="mu-splash-brand">BioNexus</div>
+            <div class="mu-splash-tag" id="nervous-load-text" data-i18n="load.nervousText">
+              Se încarcă sistemul nervos...
+            </div>
+            <div class="mu-splash-bar">
+              <div class="mu-splash-bar-fill" id="nervous-load-fill"></div>
+            </div>
+          </div>
+          <div class="load-error" id="nervous-load-error" style="display: none">
+            Eroare la încărcare
+          </div>
+        </div>
+        <div class="view-label">
+          <div class="vl-title" data-i18n="view.title">Vizualizare</div>
+          <div class="vl-name" id="nervous-cur-label" data-i18n="view.nervousComplete">
+            Sistem nervos
+          </div>
+        </div>
+        <div class="vctrls">
+          <button class="vbtn" onclick="window.__extraResetCam('nervous')" title="Resetează camera">
+            &#8634;
+          </button>
+        </div>
+        <div class="bone-name-overlay" id="nervousNameOverlay">
+          <div class="bno-name" id="nervousBnoName"></div>
+          <div class="bno-cat" id="nervousBnoCat"></div>
+        </div>
+        <div
+          class="viewer-credit"
+          style="
+            position: absolute;
+            bottom: 22px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 5;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.55);
+            letter-spacing: 1.5px;
+            font-family: &quot;Space Grotesk&quot;, sans-serif;
+            pointer-events: none;
+            line-height: 1.4;
+            padding: 2px 4px;
+          "
+        >
+          made by ryan
+        </div>
+      </main>
+
+      <aside class="info-panel">
+        <div class="ip-head">
+          <h3 id="nervous-info-title" data-i18n="info.nervousTitle">Informații Structură</h3>
+        </div>
+        <div class="ip-body">
+          <div class="ip-ph" id="nervous-ip-ph">
+            <img
+              src="images/logo-bionexus-icon.png"
+              alt="BioNexus"
+              class="ph-icon bionexus-logo bionexus-logo-mark"
+              data-clean-bg="light"
+            />
+            <p data-i18n-html="info.nervousPlaceholder">
+              Selectează o structură din model<br />sau din lista din stânga
+            </p>
+          </div>
+          <div id="nervous-info-ct" style="display: none"></div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="app app-extra app-respiratory" id="appRespiratory" style="display: none">
+      <aside class="sidebar">
+        <div class="sb-head">
+          <h2 data-i18n="sb.resp">Structuri respiratorii</h2>
+          <div class="search-box">
+            <span style="color: var(--t3)">&#128269;</span
+            ><input
+              type="text"
+              id="resp-search"
+              placeholder="Caută o structură..."
+              data-i18n-ph="sb.searchResp"
+            />
+          </div>
+        </div>
+        <div class="sb-scroll">
+          <div class="search-count" id="resp-search-count"></div>
+          <div id="resp-list"></div>
+        </div>
+        <div class="sb-foot">
+          <span data-i18n="sb.footResp">Sistem respirator:</span> <span id="resp-count">0</span>
+          <span data-i18n="sb.structuresWord">structuri</span>
+          <div style="margin-top: 6px; font-size: 9px; color: #334155; letter-spacing: 0.5px">
+            made by ryan
+          </div>
+        </div>
+      </aside>
+
+      <main class="viewer" id="resp-viewer">
+        <canvas id="resp-canvas3d"></canvas>
+        <div class="load-overlay extra-load-splash" id="resp-loader">
+          <div class="mu-splash-stage">
+            <div class="mu-splash-logo"><img src="images/favicon-256.png" alt="BioNexus" /></div>
+            <div class="mu-splash-brand">BioNexus</div>
+            <div class="mu-splash-tag" id="resp-load-text" data-i18n="load.respText">
+              Se încarcă sistemul respirator...
+            </div>
+            <div class="mu-splash-bar">
+              <div class="mu-splash-bar-fill" id="resp-load-fill"></div>
+            </div>
+          </div>
+          <div class="load-error" id="resp-load-error" style="display: none">
+            Eroare la încărcare
+          </div>
+        </div>
+        <div class="view-label">
+          <div class="vl-title" data-i18n="view.title">Vizualizare</div>
+          <div class="vl-name" id="resp-cur-label" data-i18n="view.respComplete">
+            Sistem respirator
+          </div>
+        </div>
+        <div class="vctrls">
+          <button
+            class="vbtn"
+            onclick="window.__extraResetCam('respiratory')"
+            title="Resetează camera"
+          >
+            &#8634;
+          </button>
+        </div>
+        <div class="bone-name-overlay" id="respNameOverlay">
+          <div class="bno-name" id="respBnoName"></div>
+          <div class="bno-cat" id="respBnoCat"></div>
+        </div>
+        <div
+          class="viewer-credit"
+          style="
+            position: absolute;
+            bottom: 22px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 5;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.55);
+            letter-spacing: 1.5px;
+            font-family: &quot;Space Grotesk&quot;, sans-serif;
+            pointer-events: none;
+            line-height: 1.4;
+            padding: 2px 4px;
+          "
+        >
+          made by ryan
+        </div>
+      </main>
+
+      <aside class="info-panel">
+        <div class="ip-head">
+          <h3 id="resp-info-title" data-i18n="info.respTitle">Informații Structură</h3>
+        </div>
+        <div class="ip-body">
+          <div class="ip-ph" id="resp-ip-ph">
+            <img
+              src="images/logo-bionexus-icon.png"
+              alt="BioNexus"
+              class="ph-icon bionexus-logo bionexus-logo-mark"
+              data-clean-bg="light"
+            />
+            <p data-i18n-html="info.respPlaceholder">
+              Selectează o structură din model<br />sau din lista din stânga
+            </p>
+          </div>
+          <div id="resp-info-ct" style="display: none"></div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="admin-modal" id="adminModal" style="display: none">
+      <div class="admin-card">
+        <button class="admin-close" onclick="closeAdmin()">&times;</button>
+        <h2 data-i18n="admin.title">Mod Administrator — Editor de Conținut</h2>
+        <p class="admin-sub" data-i18n="admin.sub">
+          Aici poți edita descrierile, categoriile și detaliile fiecărui os. Modificările se
+          salvează local și pot fi exportate.
+        </p>
+        <div class="admin-auth" id="adminAuth">
+          <label data-i18n="admin.pass">Parolă administrator</label>
+          <input type="password" id="adminPass" placeholder="••••••••" />
+          <button onclick="adminLogin()" data-i18n="admin.login">Autentificare</button>
+          <div class="admin-err" id="adminErr"></div>
+        </div>
+        <div class="admin-editor" id="adminEditor" style="display: none">
+          <div class="admin-bone-pick">
+            <label data-i18n="admin.pickBone">Selectează osul:</label>
+            <select id="adminBoneSel"></select>
+          </div>
+          <div class="admin-fields">
+            <label data-i18n="admin.fld.name">Nume</label>
+            <input type="text" id="adminName" />
+            <label data-i18n="admin.fld.cat">Categorie</label>
+            <input type="text" id="adminCat" />
+            <label data-i18n="admin.fld.type">Tip</label>
+            <input type="text" id="adminType" />
+            <label data-i18n="admin.fld.desc">Descriere</label>
+            <textarea id="adminDesc" rows="4"></textarea>
+            <label data-i18n="admin.fld.art">Articulații (separate prin virgulă)</label>
+            <input type="text" id="adminArt" />
+            <label data-i18n="admin.fld.det">Detalii suplimentare</label>
+            <textarea id="adminDet" rows="3"></textarea>
+          </div>
+          <div class="admin-actions">
+            <button onclick="adminSave()" data-i18n="admin.save">Salvează modificările</button>
+            <button onclick="adminExport()" data-i18n="admin.export">Exportă JSON</button>
+            <button onclick="adminReset()" class="admin-danger" data-i18n="admin.reset">
+              Resetează la valori implicite
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="zoom-overlay" id="zoomOv">
+      <div class="zoom-content">
+        <button class="zoom-close" onclick="closeZoom()">&#10005;</button>
+        <h2 class="zoom-title" id="zTitle"></h2>
+        <div class="zoom-sub" id="zSub"></div>
+        <div class="zoom-desc" id="zDesc"></div>
+      </div>
+    </div>
+
+    <script src="lib/three.min.js"></script>
+    <script src="lib/OrbitControls.js"></script>
+    <script src="lib/GLTFLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/DRACOLoader.js"></script>
+    <div class="profile-page" id="profilePage">
+      <button class="profile-back" onclick="closeProfile()">
+        &larr; <span data-i18n="profile.back">Înapoi</span>
+      </button>
+      <nav class="profile-tabs profile-tabs-top">
+        <button
+          class="profile-tab active"
+          data-section="profil"
+          onclick="switchProfileTab('profil')"
+        >
+          <span class="profile-tab-ic profile-tab-ic-img"
+            ><img src="images/icon-profile.png" alt=""
+          /></span>
+          <span data-i18n="user.menu.profil">Profil</span>
+        </button>
+        <button class="profile-tab" data-section="setari" onclick="switchProfileTab('setari')">
+          <span class="profile-tab-ic profile-tab-ic-img"
+            ><img src="images/icon-settings.png" alt=""
+          /></span>
+          <span data-i18n="user.menu.setari">Setări</span>
+        </button>
+      </nav>
+      <main class="profile-body">
+        <section class="profile-section active" id="profileSec-profil">
+          <div class="profile-hero">
+            <div
+              class="profile-avatar-wrap"
+              onclick="document.getElementById('avatarInput').click()"
+              title="Click pentru a schimba poza"
+            >
+              <div class="profile-avatar-big" id="profileAvatar">R</div>
+              <div class="profile-avatar-edit">&#128247;</div>
+              <input
+                type="file"
+                id="avatarInput"
+                accept="image/*"
+                style="display: none"
+                onchange="onAvatarPick(event)"
+              />
+            </div>
+            <div class="profile-hero-info">
+              <div class="profile-name-row">
+                <h1 class="profile-name" id="profileName">Utilizator</h1>
+                <button class="profile-name-edit" onclick="startEditName()" title="Editează numele">
+                  &#9998;
+                </button>
+              </div>
+              <div class="profile-name-edit-row" id="profileNameEditRow" style="display: none">
+                <input
+                  type="text"
+                  id="profileNameInput"
+                  maxlength="24"
+                  placeholder="Nume utilizator"
+                />
+                <button class="profile-name-save" onclick="saveName()" data-i18n="profile.save">
+                  Salvează
+                </button>
+                <button
+                  class="profile-name-cancel"
+                  onclick="cancelEditName()"
+                  data-i18n="profile.cancel"
+                >
+                  Anulează
+                </button>
+              </div>
+              <div class="profile-level-block">
+                <div class="profile-level-head">
+                  <span class="profile-level-label" data-i18n="profile.level">LEVEL</span>
+                  <span class="profile-level-num" id="profileLevel">1</span>
+                  <span class="profile-level-pct" id="profileLevelPct">0%</span>
+                  <span class="profile-level-crown">&#128081;</span>
+                </div>
+                <div class="profile-level-bar">
+                  <div class="profile-level-fill" id="profileLevelFill" style="width: 0%"></div>
+                </div>
+                <div class="profile-level-xp" id="profileLevelXp">0 / 100 XP</div>
+              </div>
+            </div>
+          </div>
+          <div class="profile-badges-wrap">
+            <div class="profile-badges-head">
+              <span class="profile-badges-ic">&#127942;</span>
+              <h2 class="profile-badges-title" data-i18n="profile.insigne.h">INSIGNELE MELE</h2>
+              <div class="profile-badges-count">
+                <b id="profileBadgesAchieved">0</b
+                ><span data-i18n="profile.achieved">Achieved</span>
+              </div>
+            </div>
+            <div class="profile-badges-grid" id="profileBadgesGrid"></div>
+          </div>
+        </section>
+        <section class="profile-section" id="profileSec-setari">
+          <div class="settings-block">
+            <h3 class="settings-block-title" data-i18n="settings.account">Cont</h3>
+            <div class="settings-row">
+              <label data-i18n="settings.email">Email</label>
+              <div class="settings-readonly" id="settingsEmail">—</div>
+            </div>
+          </div>
+          <div class="settings-block">
+            <h3 class="settings-block-title" data-i18n="settings.security">Securitate</h3>
+            <div class="settings-row">
+              <label data-i18n="settings.curPass">Parola actuală</label>
+              <input type="password" id="settingsCurPass" placeholder="••••••••" />
+            </div>
+            <div class="settings-row">
+              <label data-i18n="settings.newPass">Parolă nouă (min. 4)</label>
+              <input type="password" id="settingsNewPass" placeholder="••••••••" />
+            </div>
+            <div class="settings-row">
+              <label data-i18n="settings.confPass">Confirmă parola nouă</label>
+              <input type="password" id="settingsConfPass" placeholder="••••••••" />
+            </div>
+            <div class="settings-msg" id="settingsPassMsg"></div>
+            <button
+              class="settings-save-btn"
+              onclick="changePassword()"
+              data-i18n="settings.changePass"
+            >
+              Schimbă parola
+            </button>
+          </div>
+          <div class="settings-block">
+            <h3 class="settings-block-title" data-i18n="settings.adminH">Mod Administrator</h3>
+            <p class="settings-block-sub" data-i18n="settings.adminSub">
+              Acces la editorul de conținut (descrieri os, categorii, export JSON). Necesită
+              autentificare.
+            </p>
+            <button class="settings-save-btn" onclick="toggleAdmin()" data-i18n="settings.adminBtn">
+              Deschide panoul Admin
+            </button>
+          </div>
+          <div class="settings-block">
+            <h3 class="settings-block-title" data-i18n="settings.theme">THEME</h3>
+            <div class="settings-theme-pill">
+              <button class="settings-theme-opt" data-set-theme="light" onclick="setTheme('light')">
+                <span data-i18n="settings.theme.light">Light</span>
+              </button>
+              <button class="settings-theme-opt" data-set-theme="dark" onclick="setTheme('dark')">
+                <span data-i18n="settings.theme.dark">Dark</span>
+              </button>
+              <button
+                class="settings-theme-opt"
+                data-set-theme="system"
+                onclick="setTheme('system')"
+              >
+                <span data-i18n="settings.theme.system">System</span>
+              </button>
+              <button
+                class="settings-theme-opt"
+                data-set-theme="custom"
+                onclick="setTheme('custom')"
+              >
+                <span data-i18n="settings.theme.custom">Custom</span>
+              </button>
+            </div>
+            <div class="settings-custom-block" id="settingsCustomBlock" style="display: none">
+              <div class="custom-color-row">
+                <label data-i18n="settings.custom.bg">Sidebar Background</label>
+                <div class="custom-color-inputs">
+                  <div
+                    class="custom-swatch"
+                    id="customSwatch1"
+                    onclick="openColorPicker('1')"
+                  ></div>
+                  <input type="text" id="customHex1" value="#0a0e1a" onchange="onHexChange('1')" />
+                </div>
+              </div>
+              <div class="custom-color-row">
+                <label data-i18n="settings.custom.chat">Chat Background</label>
+                <div class="custom-color-inputs">
+                  <div
+                    class="custom-swatch"
+                    id="customSwatch2"
+                    onclick="openColorPicker('2')"
+                  ></div>
+                  <input type="text" id="customHex2" value="#1a2035" onchange="onHexChange('2')" />
+                </div>
+              </div>
+              <div class="custom-color-row">
+                <label data-i18n="settings.custom.acc">Accent</label>
+                <div class="custom-color-inputs">
+                  <div
+                    class="custom-swatch"
+                    id="customSwatch3"
+                    onclick="openColorPicker('3')"
+                  ></div>
+                  <input type="text" id="customHex3" value="#6366f1" onchange="onHexChange('3')" />
+                </div>
+              </div>
+              <div class="custom-color-row">
+                <label data-i18n="settings.custom.text">Text</label>
+                <div class="custom-color-inputs">
+                  <div
+                    class="custom-swatch"
+                    id="customSwatch4"
+                    onclick="openColorPicker('4')"
+                  ></div>
+                  <input type="text" id="customHex4" value="#f1f5f9" onchange="onHexChange('4')" />
+                </div>
+              </div>
+              <button
+                class="settings-custom-reset"
+                onclick="resetCustom()"
+                data-i18n="settings.custom.reset"
+              >
+                Resetează
+              </button>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+    <div class="color-picker-popover" id="colorPickerPop" style="display: none">
+      <div class="cp-area" id="cpArea">
+        <div class="cp-sat"></div>
+        <div class="cp-cursor" id="cpCursor"></div>
+      </div>
+      <div class="cp-hue-row">
+        <div class="cp-eyedrop">&#128301;</div>
+        <div class="cp-preview" id="cpPreview"></div>
+        <div class="cp-hue" id="cpHue"><div class="cp-hue-thumb" id="cpHueThumb"></div></div>
+      </div>
+      <div class="cp-rgb-row">
+        <div class="cp-rgb-cell">
+          <input type="number" id="cpR" min="0" max="255" value="0" /><label>R</label>
+        </div>
+        <div class="cp-rgb-cell">
+          <input type="number" id="cpG" min="0" max="255" value="0" /><label>G</label>
+        </div>
+        <div class="cp-rgb-cell">
+          <input type="number" id="cpB" min="0" max="255" value="0" /><label>B</label>
+        </div>
+      </div>
+    </div>
+    <script src="logo-cleanup.js"></script>
+    <script src="ai-config.js"></script>
+    <script src="script.js"></script>
+    <script src="supabase-integration.js"></script>
+  </body>
+</html>

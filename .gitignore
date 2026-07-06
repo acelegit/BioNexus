@@ -1,0 +1,16 @@
+# Secrete — NU comite cheile API
+.env
+ai-config.js
+
+# Dependențe / tooling
+node_modules/
+
+# Backup local (formatare)
+_backup_preformat/
+
+# OS / editor
+Thumbs.db
+.DS_Store
+
+# Claude Code local settings
+.claude/settings.local.json

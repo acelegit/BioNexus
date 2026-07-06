@@ -1,0 +1,10 @@
+lib/
+models/
+textures/
+images/
+manuale/
+node_modules/
+_backup_preformat/
+_bone_structure_backup.js
+.env
+package-lock.json
