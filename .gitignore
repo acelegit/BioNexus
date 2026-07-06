@@ -14,3 +14,6 @@ Thumbs.db
 
 # Claude Code local settings
 .claude/settings.local.json
+
+# PDF prea mare pentru Cloudflare Pages (limita 25 MiB) — se servesc extern
+manuale/*.pdf
