@@ -2614,18 +2614,21 @@ function addBotBubble() {
 }
 
 function aiConfigured() {
-  var c = window.BIONEXUS_AI;
-  return !!(c && c.apiKey && c.baseUrl && typeof fetch !== "undefined" && window.ReadableStream);
+
+  return typeof fetch !== "undefined" && !!window.ReadableStream;
 }
 
 async function streamAI(messages, onDelta) {
-  var cfg = window.BIONEXUS_AI;
-  var url = cfg.baseUrl.replace(/\/+$/, "") + "/chat/completions";
+  var cfg = window.BIONEXUS_AI || {};
+  var direct = !!(cfg.apiKey && cfg.baseUrl);
+  var url = direct ? cfg.baseUrl.replace(/\/+$/, "") + "/chat/completions" : "/api/chat";
+  var headers = { "Content-Type": "application/json" };
+  if (direct) headers.Authorization = "Bearer " + cfg.apiKey;
   var resp = await fetch(url, {
     method: "POST",
-    headers: { "Content-Type": "application/json", Authorization: "Bearer " + cfg.apiKey },
+    headers: headers,
     body: JSON.stringify({
-      model: cfg.model || "gpt-5.4-mini",
+      model: (direct && cfg.model) || "gpt-5.4-mini",
       stream: true,
       temperature: 0.6,
       max_tokens: 900,
