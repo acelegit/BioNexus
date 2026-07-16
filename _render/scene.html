@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      html, body { margin: 0; background: #140a0a; overflow: hidden; }
+      #c { display: block; }
+    </style>
+  </head>
+  <body>
+    <canvas id="c"></canvas>
+    <script src="../lib/three.min.js"></script>
+    <script src="../lib/OrbitControls.js"></script>
+    <script src="../lib/GLTFLoader.js"></script>
+    <script>
+      const qs = new URLSearchParams(location.search);
+      const MODEL = qs.get("model") || "nervous.glb";
+      const YAW = parseFloat(qs.get("yaw") || "0"); // extra rotation (radians)
+      const ZOOM = parseFloat(qs.get("zoom") || "1.35"); // camera distance multiplier
+      const TY = parseFloat(qs.get("ty") || "0"); // target Y fraction offset
+      const W = 760, H = 900;
+      const canvas = document.getElementById("c");
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
+      renderer.setSize(W, H);
+      if (THREE.sRGBEncoding !== undefined) renderer.outputEncoding = THREE.sRGBEncoding;
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x140a0a);
+      scene.add(new THREE.AmbientLight(0xffe9c4, 0.6));
+      const k = new THREE.DirectionalLight(0xffffff, 0.9); k.position.set(2, 4, 3); scene.add(k);
+      const f = new THREE.DirectionalLight(0xfbbf24, 0.4); f.position.set(-3, 2, -2); scene.add(f);
+      const r = new THREE.DirectionalLight(0xf59e0b, 0.3); r.position.set(0, 2, -4); scene.add(r);
+      const camera = new THREE.PerspectiveCamera(45, W / H, 0.01, 200);
+
+      const base = "../textures/";
+      function tex(file, isData) {
+        const t = new THREE.TextureLoader().load(base + file);
+        t.flipY = false;
+        if (!isData && THREE.SRGBColorSpace !== undefined) t.colorSpace = THREE.SRGBColorSpace;
+        return t;
+      }
+      function matFor(name) {
+        if (/_Brain_mtl_/i.test(name))
+          return new THREE.MeshStandardMaterial({ map: tex("tex_brain_cortex.jpg"), normalMap: tex("tex_brain_cortex_n.jpg", true), roughness: 0.7, metalness: 0.05, side: THREE.DoubleSide });
+        if (/_Nervous_Membrane_mtl_/i.test(name))
+          return new THREE.MeshStandardMaterial({ map: tex("tex_nervous_membrane.jpg"), roughness: 0.6, metalness: 0.05 });
+        if (/_Maters_mtl_|_Spinal_Cord_material_/i.test(name))
+          return new THREE.MeshStandardMaterial({ color: 0xdfd6c2, roughness: 0.6, metalness: 0.05, side: THREE.DoubleSide });
+        if (/_Nervous_mtl_/i.test(name))
+          return new THREE.MeshStandardMaterial({ color: 0xe3b23c, roughness: 0.55, metalness: 0.05 });
+        return new THREE.MeshStandardMaterial({ color: 0xcc8877, roughness: 0.6 });
+      }
+
+      const loader = new THREE.GLTFLoader();
+      loader.load(
+        "../models/" + MODEL,
+        function (gltf) {
+          const model = gltf.scene;
+          model.traverse(function (o) { if (o.isMesh) o.material = matFor(o.name || ""); });
+          if (YAW) model.rotation.y += YAW;
+          scene.add(model);
+          const box = new THREE.Box3().setFromObject(model);
+          const c = new THREE.Vector3(); box.getCenter(c);
+          const size = new THREE.Vector3(); box.getSize(size);
+          const maxDim = Math.max(size.x, size.y, size.z);
+          const dist = (maxDim / 2 / Math.tan((camera.fov * Math.PI) / 180 / 2)) * ZOOM;
+          const ty = c.y + size.y * TY;
+          camera.position.set(c.x, ty, c.z + dist);
+          camera.lookAt(c.x, ty, c.z);
+          renderer.render(scene, camera);
+          requestAnimationFrame(function () {
+            renderer.render(scene, camera);
+            window.__done = true;
+          });
+        },
+        undefined,
+        function (err) { window.__error = String(err && err.message || err); window.__done = true; }
+      );
+    </script>
+  </body>
+</html>
