@@ -14877,6 +14877,81 @@ window.scrollToSection = function (id) {
   };
   var STATES = {};
 
+  var GROUP_DESC = {
+    "nervous.brain": {
+      ro: "Creierul (encefalul) este centrul de comandă al sistemului nervos. Cuprinde cele două emisfere cerebrale cu scoarța cutată (girusuri și șanțuri), cerebelul — care coordonează mișcarea și echilibrul — și trunchiul cerebral, care controlează funcțiile vitale. Conține ~86 miliarde de neuroni.",
+      en: "The brain (encephalon) is the command center of the nervous system: two cerebral hemispheres with a folded cortex (gyri and sulci), the cerebellum (movement and balance), and the brainstem (vital functions). It holds ~86 billion neurons.",
+    },
+    "nervous.membrane": {
+      ro: "Meningele sunt cele trei membrane (dura mater, arahnoida, pia mater) care învelesc și protejează creierul și măduva spinării. Între arahnoidă și pia mater circulă lichidul cefalorahidian, care amortizează șocurile.",
+      en: "The meninges are three membranes (dura, arachnoid, pia mater) that wrap and protect the brain and spinal cord. Cerebrospinal fluid circulates between the arachnoid and pia, cushioning the tissue.",
+    },
+    "nervous.spinal": {
+      ro: "Măduva spinării este cordonul nervos din canalul vertebral, întins de la bulb până la ~L1 (conul medular). Conduce informația între creier și corp și coordonează reflexele. Are regiunile cervicală, toracică, lombară și sacrală.",
+      en: "The spinal cord is the neural cable in the vertebral canal, running from the medulla to about L1 (the conus medullaris). It relays signals between brain and body and coordinates reflexes. It has cervical, thoracic, lumbar and sacral regions.",
+    },
+    "nervous.nerves": {
+      ro: "Nervii periferici — 12 perechi de nervi cranieni și 31 de perechi de nervi spinali — conectează sistemul nervos central la mușchi, piele și organe. Anterior se organizează în plexuri (cervical, brahial, lombosacral).",
+      en: "The peripheral nerves — 12 pairs of cranial nerves and 31 pairs of spinal nerves — connect the central nervous system to muscles, skin and organs, interweaving into plexuses (cervical, brachial, lumbosacral).",
+    },
+    "cardio.arteries": {
+      ro: "Arterele duc sângele oxigenat de la inimă spre țesuturi (excepție: arterele pulmonare). Au pereți groși și elastici care rezistă la presiunea pompei cardiace. Aorta este cea mai mare arteră a corpului.",
+      en: "Arteries carry oxygen-rich blood from the heart to the tissues (except the pulmonary arteries). Their thick elastic walls withstand the heart's pressure. The aorta is the body's largest artery.",
+    },
+    "cardio.veins": {
+      ro: "Venele aduc sângele înapoi la inimă (excepție: venele pulmonare, care aduc sânge oxigenat). Au pereți mai subțiri și valve care împiedică refluxul. Venele cave superioară și inferioară sunt cele mai mari.",
+      en: "Veins return blood to the heart (except the pulmonary veins, which carry oxygenated blood). Their thinner walls have valves that prevent backflow. The superior and inferior venae cavae are the largest.",
+    },
+    "cardio.heart": {
+      ro: "Inima este un organ muscular cu 4 camere (2 atrii, 2 ventricule) care pompează sângele în tot corpul. Valvele (aortică, mitrală, tricuspidă, pulmonară) mențin circulația într-un singur sens. Bate ~100.000 de ori pe zi.",
+      en: "The heart is a 4-chambered muscular pump (2 atria, 2 ventricles) that drives blood through the body. Its valves (aortic, mitral, tricuspid, pulmonary) keep flow one-way. It beats ~100,000 times a day.",
+    },
+    "respiratory.diaphragm": {
+      ro: "Diafragma este mușchiul principal al respirației — o cupolă care separă toracele de abdomen. La inspir coboară și mărește cutia toracică, atrăgând aerul în plămâni; la expir se relaxează.",
+      en: "The diaphragm is the main breathing muscle — a dome separating chest from abdomen. On inhalation it descends and expands the chest, drawing air into the lungs; on exhalation it relaxes.",
+    },
+    "respiratory.airways": {
+      ro: "Căile aeriene — traheea și bronhiile — conduc aerul spre plămâni, ramificându-se în bronhiole tot mai fine până la alveole. Inelele de cartilaj mențin căile deschise.",
+      en: "The airways — trachea and bronchi — conduct air to the lungs, branching into ever-finer bronchioles down to the alveoli. Cartilage rings keep the passages open.",
+    },
+    "respiratory.lungs": {
+      ro: "Plămânii sunt organele schimbului de gaze. Aerul ajunge la ~300 de milioane de alveole (~70 m²) unde oxigenul trece în sânge, iar dioxidul de carbon iese. Plămânul drept are 3 lobi, cel stâng 2.",
+      en: "The lungs are the organs of gas exchange. Air reaches ~300 million alveoli (~70 m²) where oxygen enters the blood and carbon dioxide leaves. The right lung has 3 lobes, the left 2.",
+    },
+    "respiratory.larynx": {
+      ro: "Laringele este organul vocii, la intrarea în trahee. Cartilajele sale (tiroid, cricoid, aritenoide, epiglota) susțin corzile vocale și protejează căile aeriene la înghițire.",
+      en: "The larynx is the voice organ at the top of the trachea. Its cartilages (thyroid, cricoid, arytenoids, epiglottis) support the vocal folds and protect the airway during swallowing.",
+    },
+    "digestive.oral": {
+      ro: "Cavitatea bucală și faringele reprezintă începutul tubului digestiv. Aici alimentele sunt mărunțite de dinți, umezite cu salivă și transformate în bol alimentar înainte de înghițire.",
+      en: "The oral cavity and pharynx begin the digestive tract. Here food is broken down by the teeth, moistened with saliva and formed into a bolus before swallowing.",
+    },
+    "digestive.tongue": {
+      ro: "Limba este un mușchi mobil care amestecă alimentele, participă la vorbire și conține papilele gustative. Împinge bolul alimentar spre faringe la înghițire.",
+      en: "The tongue is a mobile muscle that mixes food, aids speech and carries the taste buds. It pushes the bolus toward the pharynx when swallowing.",
+    },
+    "digestive.stomach": {
+      ro: "Esofagul transportă bolul din faringe în stomac; stomacul îl amestecă cu suc gastric acid și enzime, transformându-l în chim. Cardia și pilorul sunt orificiile sale de intrare și ieșire.",
+      en: "The esophagus carries the bolus from the pharynx to the stomach, which mixes it with acidic gastric juice and enzymes to form chyme. The cardia and pylorus are its inlet and outlet.",
+    },
+    "digestive.smallint": {
+      ro: "Intestinul subțire (~6 m: duoden, jejun, ileon) este locul principal al digestiei și absorbției nutrienților, datorită vilozităților care măresc enorm suprafața de contact.",
+      en: "The small intestine (~6 m: duodenum, jejunum, ileum) is the main site of digestion and nutrient absorption, thanks to villi that hugely increase its surface area.",
+    },
+    "digestive.largeint": {
+      ro: "Intestinul gros (cec, colon, rect) absoarbe apa și sărurile din reziduuri și formează materiile fecale. Găzduiește flora bacteriană intestinală, care ajută digestia.",
+      en: "The large intestine (cecum, colon, rectum) absorbs water and salts from residues and forms feces. It hosts the gut microbiota that assists digestion.",
+    },
+    "digestive.liver": {
+      ro: "Ficatul este cea mai mare glandă a corpului. Produce bila (pentru digestia grăsimilor), depozitează glicogen, detoxifică sângele și sintetizează proteine. Are un lob drept și unul stâng.",
+      en: "The liver is the body's largest gland. It makes bile (for fat digestion), stores glycogen, detoxifies blood and synthesizes proteins. It has a right and a left lobe.",
+    },
+    "digestive.pancreas": {
+      ro: "Pancreasul secretă enzime digestive și hormoni (insulina, glucagonul), iar vezica biliară stochează și eliberează bila produsă de ficat, vărsând-o în duoden.",
+      en: "The pancreas secretes digestive enzymes and hormones (insulin, glucagon), while the gallbladder stores and releases the bile made by the liver into the duodenum.",
+    },
+  };
+
   var EXTRA_NAMES = {
     Cerebrum: { ro: "Creier (encefal)", la: "Encephalon" },
     "Cerebrum (dreapta)": { ro: "Emisferă cerebrală dreaptă", la: "Hemispherium cerebri dextrum" },
@@ -15473,6 +15548,17 @@ window.scrollToSection = function (id) {
             " " +
             escapeHTML(groupLabel(grp)) +
             "</p></div>"
+          : "") +
+        (grp && GROUP_DESC[cfg.mode + "." + grp.key]
+          ? '<div class="info-section"><h4>' +
+            (lang() === "en" ? "Description" : "Descriere") +
+            "</h4><p>" +
+            escapeHTML(
+              lang() === "en"
+                ? GROUP_DESC[cfg.mode + "." + grp.key].en
+                : GROUP_DESC[cfg.mode + "." + grp.key].ro
+            ) +
+            "</p></div>"
           : "");
     }
     var title = document.getElementById(ids.infoTitle);
@@ -15733,6 +15819,32 @@ window.scrollToSection = function (id) {
 
   window.__extraInit = initSystem;
   window.__extraStates = STATES;
+
+  window.__extraToggleSidebar = function () {
+    var sys = window.APP_MODE;
+    var S = STATES[sys];
+    if (!S) return;
+    var app = document.getElementById(S.cfg.app);
+    if (!app) return;
+    var sb = app.querySelector(".sidebar");
+    if (!sb) return;
+    sb.classList.toggle("collapsed");
+    var hidden = sb.classList.contains("collapsed");
+    var btn = app.querySelector(".vctrls-left .vbtn");
+    if (btn) {
+      btn.innerHTML = hidden ? "→" : "←";
+      btn.title = hidden
+        ? lang() === "en"
+          ? "Show panel"
+          : "Arată panoul"
+        : lang() === "en"
+          ? "Hide panel"
+          : "Ascunde panoul";
+    }
+    setTimeout(function () {
+      if (S.resize) S.resize();
+    }, 340);
+  };
   window.__extraNames = EXTRA_NAMES;
   window.__extraConfigs = CONFIGS;
   window.__extraBuildList = function (sys) {
