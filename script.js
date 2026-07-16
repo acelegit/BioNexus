@@ -14669,10 +14669,13 @@ window.scrollToSection = function (id) {
 
           key: "brain",
           match: /_Brain_mtl_/i,
-          tex: "tex_brain_cortex.jpg",
-          nrm: "tex_brain_cortex_n.jpg",
-          normalScale: 1.0,
-          roughness: 0.7,
+          tex: "tex_brain_tile.jpg",
+          nrm: "tex_brain_tile_n.jpg",
+          wrap: "mirror",
+          repeat: [6, 6],
+          normalScale: 2.6,
+          color: 0xf7cabf,
+          roughness: 0.68,
           doubleSide: true,
           ro: "Creier",
           en: "Brain",
@@ -14875,6 +14878,7 @@ window.scrollToSection = function (id) {
   var STATES = {};
 
   var EXTRA_NAMES = {
+    Cerebrum: { ro: "Creier (encefal)", la: "Encephalon" },
     "Cerebrum (dreapta)": { ro: "Emisferă cerebrală dreaptă", la: "Hemispherium cerebri dextrum" },
     "Cerebrum (stânga)": { ro: "Emisferă cerebrală stângă", la: "Hemispherium cerebri sinistrum" },
     "Cerebellum (dreapta)": {
