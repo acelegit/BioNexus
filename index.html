@@ -368,8 +368,8 @@
             Toată anatomia umană în <span class="home-hero-grad">3D interactiv</span>
           </h1>
           <p class="home-hero-sub" data-i18n="home.hero.sub">
-            Explorează sistematic toate sistemele corpului uman. Acum disponibile: osos, muscular,
-            nervos, cardiovascular și respirator. În curând: sistemul digestiv.
+            Explorează sistematic toate sistemele corpului uman. Acum disponibile toate cele 6:
+            osos, muscular, nervos, cardiovascular, respirator și digestiv.
           </p>
           <div class="home-hero-cta">
             <button
@@ -532,7 +532,7 @@
               >Disponibil acum</span
             >
           </div>
-          <div class="system-card planned">
+          <div class="system-card ready" onclick="enterApp('digestive')">
             <div
               class="system-icon system-icon-img"
               style="background: linear-gradient(135deg, #10b981, #047857)"
@@ -543,8 +543,8 @@
             <p data-i18n="home.sys.digestiv.d">
               Traseu complet: cavitate bucală → esofag → stomac → intestine.
             </p>
-            <span class="system-badge badge-planned" data-i18n="home.sys.badge.planned"
-              >Planificat</span
+            <span class="system-badge badge-ready" data-i18n="home.sys.badge.ready"
+              >Disponibil acum</span
             >
           </div>
           <div class="system-card ready" onclick="enterApp('respiratory')">
@@ -1507,6 +1507,48 @@
                     </div>
                   </div>
                 </button>
+                <button class="quiz-mode-card" onclick="pickQuizSystem('nervous')">
+                  <div class="quiz-mode-icon quiz-mode-icon-emoji">&#129504;</div>
+                  <div class="quiz-mode-info">
+                    <div class="quiz-mode-title" data-i18n="quiz.sys.nervous.t">Sistem Nervos</div>
+                    <div class="quiz-mode-sub" data-i18n="quiz.sys.nervous.d">
+                      Creier, măduva spinării, nervi periferici — nume RO + latină.
+                    </div>
+                  </div>
+                </button>
+                <button class="quiz-mode-card" onclick="pickQuizSystem('cardio')">
+                  <div class="quiz-mode-icon quiz-mode-icon-emoji">&#10084;&#65039;</div>
+                  <div class="quiz-mode-info">
+                    <div class="quiz-mode-title" data-i18n="quiz.sys.cardio.t">
+                      Sistem Cardiovascular
+                    </div>
+                    <div class="quiz-mode-sub" data-i18n="quiz.sys.cardio.d">
+                      Inimă, artere, vene — identifică structurile și denumirile latine.
+                    </div>
+                  </div>
+                </button>
+                <button class="quiz-mode-card" onclick="pickQuizSystem('respiratory')">
+                  <div class="quiz-mode-icon quiz-mode-icon-emoji">&#128168;</div>
+                  <div class="quiz-mode-info">
+                    <div class="quiz-mode-title" data-i18n="quiz.sys.respiratory.t">
+                      Sistem Respirator
+                    </div>
+                    <div class="quiz-mode-sub" data-i18n="quiz.sys.respiratory.d">
+                      Căi aeriene, plămâni, laringe, diafragmă — nume RO + latină.
+                    </div>
+                  </div>
+                </button>
+                <button class="quiz-mode-card" onclick="pickQuizSystem('digestive')">
+                  <div class="quiz-mode-icon quiz-mode-icon-emoji">&#127869;</div>
+                  <div class="quiz-mode-info">
+                    <div class="quiz-mode-title" data-i18n="quiz.sys.digestive.t">
+                      Sistem Digestiv
+                    </div>
+                    <div class="quiz-mode-sub" data-i18n="quiz.sys.digestive.d">
+                      Stomac, ficat, intestine, pancreas — identifică organele digestive.
+                    </div>
+                  </div>
+                </button>
               </div>
             </div>
 
@@ -2071,13 +2113,117 @@
       </aside>
     </div>
 
+    <div class="app app-extra app-digestive" id="appDigestive" style="display: none">
+      <aside class="sidebar">
+        <div class="sb-head">
+          <h2 data-i18n="sb.dig">Structuri digestive</h2>
+          <div class="search-box">
+            <span style="color: var(--t3)">&#128269;</span
+            ><input
+              type="text"
+              id="dig-search"
+              placeholder="Caută o structură..."
+              data-i18n-ph="sb.searchDig"
+            />
+          </div>
+        </div>
+        <div class="sb-scroll">
+          <div class="search-count" id="dig-search-count"></div>
+          <div id="dig-list"></div>
+        </div>
+        <div class="sb-foot">
+          <span data-i18n="sb.footDig">Sistem digestiv:</span> <span id="dig-count">0</span>
+          <span data-i18n="sb.structuresWord">structuri</span>
+          <div style="margin-top: 6px; font-size: 9px; color: #334155; letter-spacing: 0.5px">
+            made by ryan
+          </div>
+        </div>
+      </aside>
+
+      <main class="viewer" id="dig-viewer">
+        <canvas id="dig-canvas3d"></canvas>
+        <div class="load-overlay extra-load-splash" id="dig-loader">
+          <div class="mu-splash-stage">
+            <div class="mu-splash-logo"><img src="images/favicon-256.png" alt="BioNexus" /></div>
+            <div class="mu-splash-brand">BioNexus</div>
+            <div class="mu-splash-tag" id="dig-load-text" data-i18n="load.digText">
+              Se încarcă sistemul digestiv...
+            </div>
+            <div class="mu-splash-bar">
+              <div class="mu-splash-bar-fill" id="dig-load-fill"></div>
+            </div>
+          </div>
+          <div class="load-error" id="dig-load-error" style="display: none">
+            Eroare la încărcare
+          </div>
+        </div>
+        <div class="view-label">
+          <div class="vl-title" data-i18n="view.title">Vizualizare</div>
+          <div class="vl-name" id="dig-cur-label" data-i18n="view.digComplete">Sistem digestiv</div>
+        </div>
+        <div class="vctrls">
+          <button
+            class="vbtn"
+            onclick="window.__extraResetCam('digestive')"
+            title="Resetează camera"
+          >
+            &#8634;
+          </button>
+        </div>
+        <div class="bone-name-overlay" id="digNameOverlay">
+          <div class="bno-name" id="digBnoName"></div>
+          <div class="bno-cat" id="digBnoCat"></div>
+        </div>
+        <div
+          class="viewer-credit"
+          style="
+            position: absolute;
+            bottom: 22px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 5;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.55);
+            letter-spacing: 1.5px;
+            font-family: &quot;Space Grotesk&quot;, sans-serif;
+            pointer-events: none;
+            line-height: 1.4;
+            padding: 2px 4px;
+          "
+        >
+          made by ryan
+        </div>
+      </main>
+
+      <aside class="info-panel">
+        <div class="ip-head">
+          <h3 id="dig-info-title" data-i18n="info.digTitle">Informații Structură</h3>
+        </div>
+        <div class="ip-body">
+          <div class="ip-ph" id="dig-ip-ph">
+            <img
+              src="images/logo-bionexus-icon.png"
+              alt="BioNexus"
+              class="ph-icon bionexus-logo bionexus-logo-mark"
+              data-clean-bg="light"
+            />
+            <p data-i18n-html="info.digPlaceholder">
+              Selectează o structură din model<br />sau din lista din stânga
+            </p>
+          </div>
+          <div id="dig-info-ct" style="display: none"></div>
+        </div>
+      </aside>
+    </div>
+
     <div class="admin-modal" id="adminModal" style="display: none">
       <div class="admin-card">
         <button class="admin-close" onclick="closeAdmin()">&times;</button>
         <h2 data-i18n="admin.title">Mod Administrator — Editor de Conținut</h2>
         <p class="admin-sub" data-i18n="admin.sub">
-          Aici poți edita descrierile, categoriile și detaliile fiecărui os. Modificările se
-          salvează local și pot fi exportate.
+          Editează conținutul întregului site — oase, mușchi, structurile sistemelor nervos,
+          cardiovascular, respirator și digestiv, precum și prompt-ul asistentului AI. Modificările
+          se salvează local și pot fi exportate.
         </p>
         <div class="admin-auth" id="adminAuth">
           <label data-i18n="admin.pass">Parolă administrator</label>
@@ -2087,22 +2233,35 @@
         </div>
         <div class="admin-editor" id="adminEditor" style="display: none">
           <div class="admin-bone-pick">
-            <label data-i18n="admin.pickBone">Selectează osul:</label>
-            <select id="adminBoneSel"></select>
+            <label data-i18n="admin.pickSys">Sistem / secțiune:</label>
+            <select id="adminSysSel"></select>
           </div>
-          <div class="admin-fields">
-            <label data-i18n="admin.fld.name">Nume</label>
-            <input type="text" id="adminName" />
-            <label data-i18n="admin.fld.cat">Categorie</label>
-            <input type="text" id="adminCat" />
-            <label data-i18n="admin.fld.type">Tip</label>
-            <input type="text" id="adminType" />
-            <label data-i18n="admin.fld.desc">Descriere</label>
-            <textarea id="adminDesc" rows="4"></textarea>
-            <label data-i18n="admin.fld.art">Articulații (separate prin virgulă)</label>
-            <input type="text" id="adminArt" />
-            <label data-i18n="admin.fld.det">Detalii suplimentare</label>
-            <textarea id="adminDet" rows="3"></textarea>
+          <div class="admin-bone-pick" id="adminStructRow">
+            <label data-i18n="admin.pickStruct">Structură:</label>
+            <select id="adminStructSel"></select>
+            <div
+              id="adminStructHint"
+              style="font-size: 11px; color: #64748b; margin-top: 4px"
+            ></div>
+          </div>
+          <div class="admin-fields" id="adminFields"></div>
+          <div class="admin-prompt-wrap" id="adminPromptWrap" style="display: none">
+            <label data-i18n="admin.prompt"
+              >Prompt-ul sistem al asistentului AI (BioNexus AI):</label
+            >
+            <textarea
+              id="adminPromptText"
+              rows="18"
+              style="
+                width: 100%;
+                font-family: &quot;SF Mono&quot;, Consolas, monospace;
+                font-size: 12px;
+                line-height: 1.5;
+              "
+            ></textarea>
+            <div style="font-size: 11px; color: #64748b; margin-top: 4px">
+              Se salvează local și se aplică imediat la următorul mesaj către AI.
+            </div>
           </div>
           <div class="admin-actions">
             <button onclick="adminSave()" data-i18n="admin.save">Salvează modificările</button>

@@ -8756,17 +8756,20 @@ body.mode-skeleton #navTabsMuscle {
 }
 body.mode-cardio #navTabs,
 body.mode-nervous #navTabs,
-body.mode-respiratory #navTabs {
+body.mode-respiratory #navTabs,
+body.mode-digestive #navTabs {
   display: none !important;
 }
 body.mode-cardio #navTabsMuscle,
 body.mode-nervous #navTabsMuscle,
-body.mode-respiratory #navTabsMuscle {
+body.mode-respiratory #navTabsMuscle,
+body.mode-digestive #navTabsMuscle {
   display: none !important;
 }
 body.mode-cardio #navTabsExtra,
 body.mode-nervous #navTabsExtra,
-body.mode-respiratory #navTabsExtra {
+body.mode-respiratory #navTabsExtra,
+body.mode-digestive #navTabsExtra {
   display: flex !important;
 }
 body:not(.mode-muscular) #appMuscular {
@@ -9000,17 +9003,20 @@ body:not(.mode-muscular) #appMuscular {
 }
 body.mode-cardio .app-cardio,
 body.mode-nervous .app-nervous,
-body.mode-respiratory .app-respiratory {
+body.mode-respiratory .app-respiratory,
+body.mode-digestive .app-digestive {
   display: flex !important;
 }
 body.mode-cardio .app:not(.app-extra),
 body.mode-nervous .app:not(.app-extra),
-body.mode-respiratory .app:not(.app-extra) {
+body.mode-respiratory .app:not(.app-extra),
+body.mode-digestive .app:not(.app-extra) {
   display: none !important;
 }
 body:not(.mode-cardio) #appCardio,
 body:not(.mode-nervous) #appNervous,
-body:not(.mode-respiratory) #appRespiratory {
+body:not(.mode-respiratory) #appRespiratory,
+body:not(.mode-digestive) #appDigestive {
   display: none !important;
 }
 .app-extra .viewer {

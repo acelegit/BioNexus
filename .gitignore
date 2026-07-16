@@ -17,3 +17,4 @@ Thumbs.db
 
 # PDF prea mare pentru Cloudflare Pages (limita 25 MiB) — se servesc extern
 manuale/*.pdf
+_render/

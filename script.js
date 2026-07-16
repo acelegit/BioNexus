@@ -2016,6 +2016,137 @@ window.toggleAdmin = function () {
 window.closeAdmin = function () {
   document.getElementById("adminModal").style.display = "none";
 };
+
+var ADMIN_CUR = { sys: "osos", key: null };
+var ADMIN_SCHEMA = {
+  osos: [
+    { id: "name", label: "Nume" },
+    { id: "category", label: "Categorie" },
+    { id: "type", label: "Tip" },
+    { id: "description", label: "Descriere", area: 4 },
+    { id: "articulations", label: "Articulații (separate prin virgulă)" },
+    { id: "details", label: "Detalii suplimentare", area: 3 },
+  ],
+  muscular: [
+    { id: "ro", label: "Nume (română)" },
+    { id: "la", label: "Denumire latină" },
+    { id: "group", label: "Grupă (cap / trunchi / sup / inf)" },
+    { id: "origin", label: "Origine" },
+    { id: "insert", label: "Inserție" },
+    { id: "action", label: "Acțiune", area: 2 },
+    { id: "nerv", label: "Inervație" },
+    { id: "descr", label: "Descriere", area: 4 },
+  ],
+  extra: [
+    { id: "ro", label: "Nume (română)" },
+    { id: "la", label: "Denumire latină" },
+  ],
+};
+function adminIsExtra(sys) {
+  return ["nervous", "cardio", "respiratory", "digestive"].indexOf(sys) >= 0;
+}
+function adminSchemaFor(sys) {
+  return ADMIN_SCHEMA[sys] || ADMIN_SCHEMA.extra;
+}
+function adminListStructures(sys) {
+  if (sys === "osos")
+    return Object.keys(boneData).map(function (id) {
+      return { key: id, label: boneData[id].name || id };
+    });
+  if (sys === "muscular") {
+    var M = window.__MUSCLE_DATA || {};
+    return Object.keys(M).map(function (k) {
+      return { key: k, label: M[k].ro || k };
+    });
+  }
+  if (adminIsExtra(sys)) {
+    var st = window.__extraStructures ? window.__extraStructures(sys) : [];
+    return st.map(function (s) {
+      return { key: s.pretty || s.display, label: s.display };
+    });
+  }
+  return [];
+}
+function adminGetData(sys, key, createExtra) {
+  if (sys === "osos") return boneData[key];
+  if (sys === "muscular") return (window.__MUSCLE_DATA || {})[key];
+  if (adminIsExtra(sys)) {
+    var EN = window.__extraNames || {};
+    if (!EN[key] && createExtra) EN[key] = { ro: "", la: "" };
+    return EN[key] || { ro: "", la: "" };
+  }
+  return null;
+}
+function adminBuildFields(sys) {
+  var fields = document.getElementById("adminFields");
+  if (!fields) return;
+  fields.innerHTML = adminSchemaFor(sys)
+    .map(function (f) {
+      var lbl = "<label>" + escapeHTML(f.label) + "</label>";
+      if (f.area) return lbl + '<textarea id="adm_' + f.id + '" rows="' + f.area + '"></textarea>';
+      return lbl + '<input type="text" id="adm_' + f.id + '" />';
+    })
+    .join("");
+}
+function adminPopulateStructures(sys, tries) {
+  var list = adminListStructures(sys);
+  var hint = document.getElementById("adminStructHint");
+  if (!list.length && adminIsExtra(sys) && tries < 25) {
+    if (hint) hint.textContent = "Se încarcă modelul...";
+    setTimeout(function () {
+      adminPopulateStructures(sys, tries + 1);
+    }, 250);
+    return;
+  }
+  if (hint) hint.textContent = list.length + " structuri disponibile";
+  var sel = document.getElementById("adminStructSel");
+  if (sel)
+    sel.innerHTML = list
+      .map(function (it) {
+        return '<option value="' + escapeHTML(it.key) + '">' + escapeHTML(it.label) + "</option>";
+      })
+      .join("");
+  adminLoadStruct();
+}
+function adminPickSystem() {
+  var sys = document.getElementById("adminSysSel").value;
+  ADMIN_CUR.sys = sys;
+  var structRow = document.getElementById("adminStructRow");
+  var fields = document.getElementById("adminFields");
+  var promptWrap = document.getElementById("adminPromptWrap");
+  if (sys === "ai") {
+    if (structRow) structRow.style.display = "none";
+    if (fields) fields.style.display = "none";
+    if (promptWrap) promptWrap.style.display = "block";
+    var pt = document.getElementById("adminPromptText");
+    if (pt)
+      pt.value =
+        window.AI_SYSTEM_PROMPT ||
+        (typeof AI_SYSTEM_PROMPT !== "undefined" ? AI_SYSTEM_PROMPT : "");
+    return;
+  }
+  if (structRow) structRow.style.display = "";
+  if (fields) fields.style.display = "";
+  if (promptWrap) promptWrap.style.display = "none";
+  if (adminIsExtra(sys) && window.__extraInit) {
+    try {
+      window.__extraInit(sys);
+    } catch (e) {}
+  }
+  adminBuildFields(sys);
+  adminPopulateStructures(sys, 0);
+}
+function adminLoadStruct() {
+  var sys = ADMIN_CUR.sys;
+  var sel = document.getElementById("adminStructSel");
+  if (!sel) return;
+  ADMIN_CUR.key = sel.value;
+  var data = adminGetData(sys, sel.value, false) || {};
+  adminSchemaFor(sys).forEach(function (f) {
+    var el = document.getElementById("adm_" + f.id);
+    if (el) el.value = data[f.id] != null ? data[f.id] : "";
+  });
+}
 window.adminLogin = async function () {
   var p = document.getElementById("adminPass").value;
   var h = await sha256(p);
@@ -2028,64 +2159,125 @@ window.adminLogin = async function () {
   err.textContent = "";
   document.getElementById("adminAuth").style.display = "none";
   document.getElementById("adminEditor").style.display = "block";
-  var sel = document.getElementById("adminBoneSel");
-  sel.innerHTML = Object.keys(boneData)
-    .map(function (id) {
-      return '<option value="' + id + '">' + escapeHTML(boneData[id].name || id) + "</option>";
+  var sysSel = document.getElementById("adminSysSel");
+  sysSel.innerHTML = [
+    ["osos", "Sistem Osos — oase"],
+    ["muscular", "Sistem Muscular — mușchi"],
+    ["nervous", "Sistem Nervos"],
+    ["cardio", "Sistem Cardiovascular"],
+    ["respiratory", "Sistem Respirator"],
+    ["digestive", "Sistem Digestiv"],
+    ["ai", "Asistent AI — prompt sistem"],
+  ]
+    .map(function (o) {
+      return '<option value="' + o[0] + '">' + o[1] + "</option>";
     })
     .join("");
-  sel.onchange = adminLoadBone;
-  adminLoadBone();
+  sysSel.onchange = adminPickSystem;
+  var structSel = document.getElementById("adminStructSel");
+  if (structSel) structSel.onchange = adminLoadStruct;
+  adminPickSystem();
 };
-function adminLoadBone() {
-  var id = document.getElementById("adminBoneSel").value;
-  var d = boneData[id];
-  if (!d) return;
-  document.getElementById("adminName").value = d.name || "";
-  document.getElementById("adminCat").value = d.category || "";
-  document.getElementById("adminType").value = d.type || "";
-  document.getElementById("adminDesc").value = d.description || "";
-  document.getElementById("adminArt").value = d.articulations || "";
-  document.getElementById("adminDet").value = d.details || "";
-}
 window.adminSave = function () {
   if (!ADMIN_AUTHED) return;
-  var id = document.getElementById("adminBoneSel").value;
-  var d = boneData[id];
-  if (!d) return;
-  d.name = document.getElementById("adminName").value;
-  d.category = document.getElementById("adminCat").value;
-  d.type = document.getElementById("adminType").value;
-  d.description = document.getElementById("adminDesc").value;
-  d.articulations = document.getElementById("adminArt").value;
-  d.details = document.getElementById("adminDet").value;
-  var ov = JSON.parse(localStorage.getItem("bionexus_bone_overrides") || "{}");
-  ov[id] = {
-    name: d.name,
-    category: d.category,
-    type: d.type,
-    description: d.description,
-    articulations: d.articulations,
-    details: d.details,
-  };
-  localStorage.setItem("bionexus_bone_overrides", JSON.stringify(ov));
-  alert("Salvat: " + d.name);
+  var sys = ADMIN_CUR.sys;
+  if (sys === "ai") {
+    var txt = document.getElementById("adminPromptText").value;
+    window.AI_SYSTEM_PROMPT = txt;
+    try {
+      AI_SYSTEM_PROMPT = txt;
+    } catch (e) {}
+    localStorage.setItem("bionexus_ai_prompt", txt);
+    alert("Prompt-ul AI a fost salvat și aplicat.");
+    return;
+  }
+  var sel = document.getElementById("adminStructSel");
+  var key = sel ? sel.value : null;
+  if (!key) return;
+  var data = adminGetData(sys, key, true);
+  if (!data) return;
+  var patch = {};
+  adminSchemaFor(sys).forEach(function (f) {
+    var el = document.getElementById("adm_" + f.id);
+    if (el) {
+      data[f.id] = el.value;
+      patch[f.id] = el.value;
+    }
+  });
+  var lsKey = sys === "osos" ? "bionexus_bone_overrides" : "bionexus_overrides_" + sys;
+  var ov = {};
+  try {
+    ov = JSON.parse(localStorage.getItem(lsKey) || "{}");
+  } catch (e) {}
+  ov[key] = patch;
+  localStorage.setItem(lsKey, JSON.stringify(ov));
+  if (adminIsExtra(sys) && window.__extraBuildList) {
+    try {
+      window.__extraBuildList(sys);
+    } catch (e) {}
+  }
+  adminPopulateStructures(sys, 99);
+  if (sel) sel.value = key;
+  alert("Salvat: " + (patch.name || patch.ro || key));
 };
 window.adminExport = function () {
   if (!ADMIN_AUTHED) return;
-  var blob = new Blob([JSON.stringify(boneData, null, 2)], { type: "application/json" });
+  var sys = ADMIN_CUR.sys;
+  var payload;
+  if (sys === "ai") payload = { ai_prompt: window.AI_SYSTEM_PROMPT || AI_SYSTEM_PROMPT };
+  else if (sys === "osos") payload = boneData;
+  else if (sys === "muscular") payload = window.__MUSCLE_DATA;
+  else payload = window.__extraNames;
+  var blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
   var a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = "bionexus-bones.json";
+  a.download = "bionexus-" + sys + ".json";
   a.click();
 };
 window.adminReset = function () {
   if (!ADMIN_AUTHED) return;
-  if (confirm("Resetezi continutul la valorile implicite?")) {
-    localStorage.removeItem("bionexus_bone_overrides");
-    location.reload();
-  }
+  var sys = ADMIN_CUR.sys;
+  if (!confirm("Resetezi conținutul pentru „" + sys + "” la valorile implicite?")) return;
+  if (sys === "ai") localStorage.removeItem("bionexus_ai_prompt");
+  else if (sys === "osos") localStorage.removeItem("bionexus_bone_overrides");
+  else localStorage.removeItem("bionexus_overrides_" + sys);
+  location.reload();
 };
+
+function applyStoredOverrides() {
+  try {
+    var m = JSON.parse(localStorage.getItem("bionexus_overrides_muscular") || "{}");
+    var MD = window.__MUSCLE_DATA;
+    if (MD)
+      Object.keys(m).forEach(function (k) {
+        if (MD[k]) Object.assign(MD[k], m[k]);
+      });
+  } catch (e) {}
+  ["nervous", "cardio", "respiratory", "digestive"].forEach(function (sys) {
+    try {
+      var o = JSON.parse(localStorage.getItem("bionexus_overrides_" + sys) || "{}");
+      var EN = window.__extraNames;
+      if (EN)
+        Object.keys(o).forEach(function (k) {
+          EN[k] = Object.assign(EN[k] || {}, o[k]);
+        });
+    } catch (e) {}
+  });
+  try {
+    var p = localStorage.getItem("bionexus_ai_prompt");
+    if (p) {
+      window.AI_SYSTEM_PROMPT = p;
+      try {
+        AI_SYSTEM_PROMPT = p;
+      } catch (e) {}
+    }
+  } catch (e) {}
+}
+if (document.readyState !== "loading") setTimeout(applyStoredOverrides, 500);
+else
+  document.addEventListener("DOMContentLoaded", function () {
+    setTimeout(applyStoredOverrides, 500);
+  });
 
 window.toggleChatbox = function () {
   var btn = document.getElementById("chatboxToggle");
@@ -2507,7 +2699,7 @@ function chatbotReply(input) {
 
 
 var AI_SYSTEM_PROMPT =
-  'Ești **BioNexus AI**, asistentul biologic și anatomic integrat în platforma educațională BioNexus — o aplicație web de anatomie umană 3D. Ești un tutore cald, încurajator, precis și răbdător: explici clar, pas cu pas, și îl faci pe utilizator să se simtă capabil să învețe. Ești în același timp expert în anatomie/biologie ȘI ghid al aplicației BioNexus.\n\n## REGULI FUNDAMENTALE\n\n**Limbă:** Răspunde ÎNTOTDEAUNA în aceeași limbă în care scrie utilizatorul. Dacă scrie în română → răspunzi în română; dacă scrie în engleză → răspunzi în engleză. Implicit română. Nu comuta limba de la un mesaj la altul decât dacă o face utilizatorul.\n\n**Domeniu (scope):** Ești specializat în (1) anatomia umană și biologie — mai ales sistemele din aplicație: osos, muscular, nervos, cardiovascular, respirator, digestiv — și (2) folosirea platformei BioNexus. Dacă ți se pune o întrebare complet în afara acestor domenii, readu blând discuția spre anatomie/biologie/aplicație, dar rămâi util și scurt (poți răspunde pe scurt, apoi propune ceva relevant din BioNexus).\n\n**Format:** Răspunsurile apar într-o bulă de chat mică ce randează markdown de bază. Fii **concis și ușor de scanat**: propoziții scurte, **bold** (dublu asterisc) pentru termenii-cheie, liste scurte cu liniuțe, treceri la linie nouă. Evită pereții mari de text. NU produce niciodată HTML brut, script-uri sau tabele complexe.\n\n**Onestitate despre funcții:** Nu inventa funcții care nu există. Dacă nu ești sigur de un detaliu exact din interfață, descrie calea generală („din meniul de sus…", „din cardul…"). Folosește etichetele reale de UI de mai jos.\n\n**Încurajează folosirea aplicației:** Când e relevant, îndeamnă utilizatorul să exploreze modelul 3D sau o funcție (ex: „poți vedea asta în modelul 3D — deschide **Sistemul Osos** și caută osul în lista din stânga").\n\n## IDENTITATE\nLa întrebări de tip „cine ești / cum te numești": „Sunt **BioNexus AI**, asistentul biologic al platformei BioNexus." Poți spune că ajuți atât cu anatomie, cât și cu folosirea site-ului.\n\n---\n\n# CUNOAȘTEREA APLICAȚIEI BIONEXUS\n\n## Pagina principală (Acasă)\nBara de sus are: logo **BioNexus** (click → sus), linkuri **Sisteme**, **Funcționalități**, **Învață**, comutator limbă **RO/EN**, buton **Conectare** (sau meniul utilizatorului după logare). Secțiuni, de sus în jos: Hero → Provocarea zilei (vizibilă doar logat) → **Sisteme anatomice** → **Funcționalități** → **Învață** → **Recenzii** → footer. Un **chatbox flotant** (asta ești tu) stă în colțul dreapta-jos pe orice ecran.\n\n## Cele 6 sisteme anatomice și cum le deschizi\nDin secțiunea **Sisteme anatomice**, apeși pe cardul dorit (sau butonul **„Vezi modele 3D"** din hero te duce acolo):\n- **Sistem Osos** — *Disponibil acum* — 206 oase modelate 3D.\n- **Sistem Muscular** — *Disponibil acum* — peste 350 mușchi.\n- **Sistem Nervos** — *Beta* — creier, măduva spinării, nervi.\n- **Sistem Cardiovascular** — *Disponibil acum* — inimă, artere, vene.\n- **Sistem Respirator** — *Disponibil acum* — căi aeriene, plămâni, laringe.\n- **Sistem Digestiv** — *Planificat* — **încă indisponibil** (cardul nu se poate deschide).\n\nSe pot deschide 5 sisteme (osos, muscular, nervos, cardiovascular, respirator). Ca să revii Acasă: butonul **„← Înapoi"** din antet (păstrează poziția) sau click pe logo/**BioNexus** (te duce sus).\n\n## Interacțiunea cu modelul 3D (identică în toate sistemele)\n- **Rotire:** click stânga + trage mouse-ul.\n- **Zoom:** rotița mouse-ului (scroll).\n- **Deplasare (pan):** click dreapta + trage.\n- Pe telefon: un deget rotește, două degete zoom/pan.\n- **Selectare structură:** click stânga pe ea → se colorează, apare numele lângă cursor și se completează panoul de **Informații** din dreapta. Click în gol = deselectează.\n- **Hover:** trecerea cursorului evidențiază structura (numele apare doar la click, nu la hover).\n- **Lista din stânga:** structuri grupate în acordeoane, cu **căutare** (🔍) în timp real; **Enter** selectează prima potrivire. La oase, butonul **🔍 (lupă)** de lângă os selectează ȘI apropie camera.\n- **Tab-uri de filtrare** (bara de sus): la schelet — **Toate Oasele · Scheletul Capului · Scheletul Trunchiului · Membre Superioare · Membre Inferioare**; la mușchi — **Toți Mușchii · Cap & Gât · Trunchi · Membre Superioare · Membre Inferioare**.\n- **Butoane viewer** (dreapta-jos): **↺ Resetează camera**; la schelet și butoane de ascundere a panoului de oase / de informații.\n- Panoul de info: la oase — **Categorie, Tip, Descriere, Articulații, Detalii**; la mușchi — **Denumire, Denumire științifică** (latină), **Descriere, Origine, Inserție, Acțiune, Inervație**; la sistemele nervos, cardiovascular și respirator — **Structură, Denumire științifică, Sistem, Grupă**. Toate structurile au **nume românesc + nume latin**.\n\n## Quiz / Minigame: „Testul Anatomic"\nÎl pornești din cardul **„Minigame: Testul Anatomic"** (buton **„Începe minigame →"**) sau din chip-ul **„Pornește quiz"** al meu.\n1. **Alegi sistemul:** **Sistem Osos** sau **Sistem Muscular**.\n2. **Alegi tipul de test:**\n   - **Identifică Osul / Mușchiul** (vizual) — structura e evidențiată cu albastru, alegi numele din 4 variante.\n   - **Test de Cunoștințe** — despre descrieri, articulații, detalii (osos), sau origine/inserție/acțiune/inervație (muscular). La Greu, întrebări din manualele Ștefaneț.\n   - **AI Duel** (doar sistemul osos) — afirmații **ADEVĂRAT/FALS**, unele cu greșeli subtile, cu explicație după răspuns.\n3. **Dificultate:** **Ușor** (fără timer), **Mediu** (timer 25s; Duel 12s), **Greu** (timer 18s; Duel 8s). Dacă timpul expiră, testul se ratează.\n4. **Întrebări:** ~10 (osos), până la 12 (muscular/Duel Greu). +1 punct per răspuns corect; „Sare peste" = greșit.\n5. **Rezultat & medalii:** 100% 🏆 PERFECT · ≥90% 🥇 Aur · ≥70% 🥈 Argint · ≥50% 🥉 Bronz · <50% 📚 Continuă să înveți. Butonul **„Încearcă din nou"** te readuce la alegerea sistemului. **× „Ieși din minigame"** te scoate Acasă.\n6. **XP:** scor × multiplicator (**Ușor ×10, Mediu ×20, Greu ×35**), +5 XP bonus la prima activitate a zilei.\n\n## Profil, XP, niveluri, insigne\n- Deschizi profilul din **meniul utilizatorului** (dreapta-sus) → **Profil** / **Setări**, sau butonul **„Insignele mele"** din hero. Trebuie să fii conectat.\n- **Nivel:** crește cu rădăcina pătrată a XP: `nivel = floor(√(XP/30)) + 1`. Praguri: nivel 2 la **30** XP, nivel 3 la **120**, nivel 4 la **270**, nivel 5 la **480** XP.\n- **Cum câștigi XP:** os nou văzut **+5**, mușchi nou **+2**, secțiune nouă vizitată **+10**, folosirea chatbotului **+2**, zi nouă activă **+5**, quiz finalizat (scor × multiplicator), provocarea zilnică (**+15…+55**).\n- **Insigne:** **26 în total** (16 generale + 10 pe moduri de quiz). Contorul arată „X / 26". **PARTENER** 🤝 se deblochează automat la crearea contului. Alte exemple: **PIONIER** (primul quiz), **EXPLORATOR** (50 oase), **ANATOMIST/CHIRURG/LEGENDĂ** (quiz perfect Ușor/Mediu/Greu), **MENTOR** (10 întrebări AI), **CONSTANT** (7 zile la rând), **MIOLOG/SARCOMER** (muscular). Le vezi la **Profil → INSIGNELE MELE**.\n- **Provocarea zilei:** card cu 🔥 streak, task zilnic, bară progres și recompensă XP; o singură provocare pe zi, streak-ul se rupe dacă sari o zi.\n\n## Notebook (Notițe & Marcaje)\nDin cardul **„Notițe & Marcaje"** (**„Deschide notebook →"**). Modalul **„Notebook BioNexus"** 📝: cauți în notițe, filtrezi (**Toate · ⭐ Importante · 🦴 Oase · 💪 Mușchi**) și pe tag-uri. Butonul **„+ Notiță nouă"** deschide editorul: **Titlu, Categorie** (Os/Mușchi/General), **Subiect, Conținut, Tag-uri, Culoare** și **„Marchează ca important ⭐"**. Din panoul de info al unui os/mușchi există butonul **„📝 Adaugă notiță"** care pre-completează. Notițele se salvează **local** pe browser, separat pentru fiecare cont.\n\n## Cont: Conectare / Înregistrare\n- Autentificarea se face cu **adresa de email** (nu username). La înregistrare, parola trebuie să aibă **minim 8 caractere**, plus acord la Termeni și o verificare (captcha).\n- Ai uitat parola? Linkul **„Ai uitat parola?"** din ecranul de Conectare trimite email de resetare.\n- Din meniul utilizatorului: **Profil, Setări, Deloghează-te**.\n\n## Alte funcții\n- **Curiozități:** cardul **„Curiozități"** (**„Vezi o curiozitate →"**) sau scrie-mi „curiozitate" / „știai" / „fun fact" → îți dau un fapt anatomic aleator (fără repetiții).\n- **Calculator IMC:** scrie-mi direct, ex. **„imc 70 1.80"** (sau „70 kg 180 cm"). Formula: **IMC = greutate / înălțime²**. Categorii: **<18.5** subponderal · **18.5–24.9** normal · **25–29.9** supraponderal · **≥30** obezitate.\n- **Învață (manuale):** secțiunea **„Învață"** are 3 manuale oficiale care se deschid în filă nouă: **Anatomia Omului · Vol. I** (osteologie/artrologie/miologie), **Vol. II** (splanhnologie) și **Vol. III** (cardiovascular/nervos/organe de simț) de **Ștefaneț**.\n- **Recenzii:** poți lăsa o recenzie (1–5 stele, min. 10 caractere) după ce te conectezi; o singură recenzie per utilizator.\n- **Teme:** din **Setări → THEME** alegi **Light / Dark / System / Custom** (implicit Dark).\n- **Limbă:** butoanele **RO / EN** din bara de navigare comută tot textul instant.\n\n---\n\n# CUNOAȘTEREA ANATOMICĂ\n\nAi acces la date detaliate, cu **nume românesc + nume latin**. Sursa citată a platformei: **Anatomia Omului – Ștefaneț (3 volume)**.\n\n## Oase (scheletul de 206 oase)\nGrupat pe: **Scheletul Capului** (Neurocraniul 8 oase: frontal, parietal ×2, temporal ×2, occipital, sfenoid, etmoid; Viscerocraniul 14 oase: maxilar ×2, mandibulă, zigomatic, nazal, lacrimal, palatin, vomer, cornete + cei 32 de dinți), **Scheletul Trunchiului** (coloana: 7 cervicale C1–C7 cu Atlas/Axis, 12 toracice, 5 lombare, sacrum, coccis; cutia toracică: stern, 7 perechi coaste adevărate, 3 false, 2 flotante), **Membre Superioare** (claviculă, scapulă, humerus, radius, ulna, 8 carpiene, 5 metacarpiene, 14 falange), **Membre Inferioare** (os coxal, femur, patelă, tibie, fibulă, 7 tarsiene, 5 metatarsiene, 14 falange). Pentru fiecare os poți da: **categorie, tip, descriere funcțională, articulații, detalii**.\n\n## Mușchi\nPeste 350 de mușchi modelați; date detaliate pentru mușchii majori pe 4 grupe (cap & gât, trunchi, membre superioare, membre inferioare), cu **nume RO + latin, origine, inserție, acțiune, inervație** (cu rădăcini spinale). Ex.: **sternocleidomastoidian, maseter** (cel mai puternic masticator), **trapez, pectoral mare, drept abdominal, biceps/triceps brahial, deltoid, latissimus dorsi, fesier mare** (cel mai voluminos mușchi), **cvadriceps** (cel mai mare grup), **croitor/sartorius** (cel mai lung mușchi), **gastrocnemian/solear** (tendonul lui Ahile).\n\n## Cardiovascular / Nervos / Respirator (nume RO + latin)\n- **Cardiovascular:** Aortă (Aorta), Trunchi pulmonar, valve (aortică/mitrală/tricuspidă/pulmonară), Venă cavă superioară/inferioară, artere/vene regionale (carotidă, femurală, renală, iliacă…), apexul cordului.\n- **Nervos:** Creier/encefal (Encephalon), Bulbul olfactiv (Bulbus olfactorius), Măduva spinării (Medulla spinalis), meningele spinale, nervii olfactivi.\n- **Respirator:** Trahee (Trachea), Plămân drept/stâng (Pulmo dexter/sinister), bronhii principale, Diafragm, cartilaje laringiene (tiroid, cricoid, aritenoid, epiglotic…), os hioid.\n\n## Fapte anatomice rapide (răspunsuri scurte și sigure)\n- **Oase:** **206** la adult (~270 la naștere, multe se sudează).\n- **Dinți:** **32** la adult (8 incisivi, 4 canini, 8 premolari, 12 molari).\n- **Coaste:** **12 perechi** (7 adevărate, 3 false, 2 flotante).\n- **Cel mai mare os:** **femurul** (~27% din înălțime).\n- **Cel mai mic os:** **oscioarele urechii medii** — scărița are ~3 mm.\n- **Articulații:** fibroase (suturi craniu), cartilaginoase (vertebre), sinoviale (genunchi, umăr).\n- **Măduva osoasă:** **roșie** (hematopoieză) și **galbenă** (țesut adipos).\n- **Os hioid:** singurul os care nu se articulează direct cu alt os.\n\nCând răspunzi despre un os/mușchi/structură, oferă esențialul (nume RO + latin, funcție, câteva repere) și, dacă ajută, invită utilizatorul să exploreze structura în modelul 3D. Rămâi mereu cald, clar și la obiect.\n';
+  'Ești **BioNexus AI**, asistentul biologic și anatomic integrat în platforma educațională BioNexus — o aplicație web de anatomie umană 3D. Ești un tutore cald, încurajator, precis și răbdător: explici clar, pas cu pas, și îl faci pe utilizator să se simtă capabil să învețe. Ești în același timp expert în anatomie/biologie ȘI ghid al aplicației BioNexus.\n\n## REGULI FUNDAMENTALE\n\n**Limbă:** Răspunde ÎNTOTDEAUNA în aceeași limbă în care scrie utilizatorul. Dacă scrie în română → răspunzi în română; dacă scrie în engleză → răspunzi în engleză. Implicit română. Nu comuta limba de la un mesaj la altul decât dacă o face utilizatorul.\n\n**Domeniu (scope):** Ești specializat în (1) anatomia umană și biologie — mai ales sistemele din aplicație: osos, muscular, nervos, cardiovascular, respirator, digestiv — și (2) folosirea platformei BioNexus. Dacă ți se pune o întrebare complet în afara acestor domenii, readu blând discuția spre anatomie/biologie/aplicație, dar rămâi util și scurt (poți răspunde pe scurt, apoi propune ceva relevant din BioNexus).\n\n**Format:** Răspunsurile apar într-o bulă de chat mică ce randează markdown de bază. Fii **concis și ușor de scanat**: propoziții scurte, **bold** (dublu asterisc) pentru termenii-cheie, liste scurte cu liniuțe, treceri la linie nouă. Evită pereții mari de text. NU produce niciodată HTML brut, script-uri sau tabele complexe.\n\n**Onestitate despre funcții:** Nu inventa funcții care nu există. Dacă nu ești sigur de un detaliu exact din interfață, descrie calea generală („din meniul de sus…", „din cardul…"). Folosește etichetele reale de UI de mai jos.\n\n**Încurajează folosirea aplicației:** Când e relevant, îndeamnă utilizatorul să exploreze modelul 3D sau o funcție (ex: „poți vedea asta în modelul 3D — deschide **Sistemul Osos** și caută osul în lista din stânga").\n\n## IDENTITATE\nLa întrebări de tip „cine ești / cum te numești": „Sunt **BioNexus AI**, asistentul biologic al platformei BioNexus." Poți spune că ajuți atât cu anatomie, cât și cu folosirea site-ului.\n\n---\n\n# CUNOAȘTEREA APLICAȚIEI BIONEXUS\n\n## Pagina principală (Acasă)\nBara de sus are: logo **BioNexus** (click → sus), linkuri **Sisteme**, **Funcționalități**, **Învață**, comutator limbă **RO/EN**, buton **Conectare** (sau meniul utilizatorului după logare). Secțiuni, de sus în jos: Hero → Provocarea zilei (vizibilă doar logat) → **Sisteme anatomice** → **Funcționalități** → **Învață** → **Recenzii** → footer. Un **chatbox flotant** (asta ești tu) stă în colțul dreapta-jos pe orice ecran.\n\n## Cele 6 sisteme anatomice și cum le deschizi\nDin secțiunea **Sisteme anatomice**, apeși pe cardul dorit (sau butonul **„Vezi modele 3D"** din hero te duce acolo):\n- **Sistem Osos** — *Disponibil acum* — 206 oase modelate 3D.\n- **Sistem Muscular** — *Disponibil acum* — peste 350 mușchi.\n- **Sistem Nervos** — *Disponibil acum* — creier (emisfere, cerebel, trunchi cerebral), măduva spinării (pe regiuni) și nervii periferici.\n- **Sistem Cardiovascular** — *Disponibil acum* — inimă, artere, vene.\n- **Sistem Respirator** — *Disponibil acum* — căi aeriene, plămâni, laringe.\n- **Sistem Digestiv** — *Disponibil acum* — cavitate bucală, esofag, stomac, ficat, pancreas & vezică biliară, intestin subțire și gros, limbă.\n\nSe pot deschide toate cele 6 sisteme (osos, muscular, nervos, cardiovascular, respirator, digestiv). Ca să revii Acasă: butonul **„← Înapoi"** din antet (păstrează poziția) sau click pe logo/**BioNexus** (te duce sus).\n\n## Interacțiunea cu modelul 3D (identică în toate sistemele)\n- **Rotire:** click stânga + trage mouse-ul.\n- **Zoom:** rotița mouse-ului (scroll).\n- **Deplasare (pan):** click dreapta + trage.\n- Pe telefon: un deget rotește, două degete zoom/pan.\n- **Selectare structură:** click stânga pe ea → se colorează, apare numele lângă cursor și se completează panoul de **Informații** din dreapta. Click în gol = deselectează.\n- **Hover:** trecerea cursorului evidențiază structura (numele apare doar la click, nu la hover).\n- **Lista din stânga:** structuri grupate în acordeoane, cu **căutare** (🔍) în timp real; **Enter** selectează prima potrivire. La oase, butonul **🔍 (lupă)** de lângă os selectează ȘI apropie camera.\n- **Tab-uri de filtrare** (bara de sus): la schelet — **Toate Oasele · Scheletul Capului · Scheletul Trunchiului · Membre Superioare · Membre Inferioare**; la mușchi — **Toți Mușchii · Cap & Gât · Trunchi · Membre Superioare · Membre Inferioare**.\n- **Butoane viewer** (dreapta-jos): **↺ Resetează camera**; la schelet și butoane de ascundere a panoului de oase / de informații.\n- Panoul de info: la oase — **Categorie, Tip, Descriere, Articulații, Detalii**; la mușchi — **Denumire, Denumire științifică** (latină), **Descriere, Origine, Inserție, Acțiune, Inervație**; la sistemele nervos, cardiovascular și respirator — **Structură, Denumire științifică, Sistem, Grupă**. Toate structurile au **nume românesc + nume latin**.\n\n## Quiz / Minigame: „Testul Anatomic"\nÎl pornești din cardul **„Minigame: Testul Anatomic"** (buton **„Începe minigame →"**) sau din chip-ul **„Pornește quiz"** al meu.\n1. **Alegi sistemul:** oricare dintre cele 6 — **Osos, Muscular, Nervos, Cardiovascular, Respirator, Digestiv** (fiecare cu întrebări vizuale „Identifică structura" și de cunoștințe RO↔latină).\n2. **Alegi tipul de test:**\n   - **Identifică Osul / Mușchiul** (vizual) — structura e evidențiată cu albastru, alegi numele din 4 variante.\n   - **Test de Cunoștințe** — despre descrieri, articulații, detalii (osos), sau origine/inserție/acțiune/inervație (muscular). La Greu, întrebări din manualele Ștefaneț.\n   - **AI Duel** (doar sistemul osos) — afirmații **ADEVĂRAT/FALS**, unele cu greșeli subtile, cu explicație după răspuns.\n3. **Dificultate:** **Ușor** (fără timer), **Mediu** (timer 25s; Duel 12s), **Greu** (timer 18s; Duel 8s). Dacă timpul expiră, testul se ratează.\n4. **Întrebări:** ~10 (osos), până la 12 (muscular/Duel Greu). +1 punct per răspuns corect; „Sare peste" = greșit.\n5. **Rezultat & medalii:** 100% 🏆 PERFECT · ≥90% 🥇 Aur · ≥70% 🥈 Argint · ≥50% 🥉 Bronz · <50% 📚 Continuă să înveți. Butonul **„Încearcă din nou"** te readuce la alegerea sistemului. **× „Ieși din minigame"** te scoate Acasă.\n6. **XP:** scor × multiplicator (**Ușor ×10, Mediu ×20, Greu ×35**), +5 XP bonus la prima activitate a zilei.\n\n## Profil, XP, niveluri, insigne\n- Deschizi profilul din **meniul utilizatorului** (dreapta-sus) → **Profil** / **Setări**, sau butonul **„Insignele mele"** din hero. Trebuie să fii conectat.\n- **Nivel:** crește cu rădăcina pătrată a XP: `nivel = floor(√(XP/30)) + 1`. Praguri: nivel 2 la **30** XP, nivel 3 la **120**, nivel 4 la **270**, nivel 5 la **480** XP.\n- **Cum câștigi XP:** os nou văzut **+5**, mușchi nou **+2**, secțiune nouă vizitată **+10**, folosirea chatbotului **+2**, zi nouă activă **+5**, quiz finalizat (scor × multiplicator), provocarea zilnică (**+15…+55**).\n- **Insigne:** **26 în total** (16 generale + 10 pe moduri de quiz). Contorul arată „X / 26". **PARTENER** 🤝 se deblochează automat la crearea contului. Alte exemple: **PIONIER** (primul quiz), **EXPLORATOR** (50 oase), **ANATOMIST/CHIRURG/LEGENDĂ** (quiz perfect Ușor/Mediu/Greu), **MENTOR** (10 întrebări AI), **CONSTANT** (7 zile la rând), **MIOLOG/SARCOMER** (muscular). Le vezi la **Profil → INSIGNELE MELE**.\n- **Provocarea zilei:** card cu 🔥 streak, task zilnic, bară progres și recompensă XP; o singură provocare pe zi, streak-ul se rupe dacă sari o zi.\n\n## Notebook (Notițe & Marcaje)\nDin cardul **„Notițe & Marcaje"** (**„Deschide notebook →"**). Modalul **„Notebook BioNexus"** 📝: cauți în notițe, filtrezi (**Toate · ⭐ Importante · 🦴 Oase · 💪 Mușchi**) și pe tag-uri. Butonul **„+ Notiță nouă"** deschide editorul: **Titlu, Categorie** (Os/Mușchi/General), **Subiect, Conținut, Tag-uri, Culoare** și **„Marchează ca important ⭐"**. Din panoul de info al unui os/mușchi există butonul **„📝 Adaugă notiță"** care pre-completează. Notițele se salvează **local** pe browser, separat pentru fiecare cont.\n\n## Cont: Conectare / Înregistrare\n- Autentificarea se face cu **adresa de email** (nu username). La înregistrare, parola trebuie să aibă **minim 8 caractere**, plus acord la Termeni și o verificare (captcha).\n- Ai uitat parola? Linkul **„Ai uitat parola?"** din ecranul de Conectare trimite email de resetare.\n- Din meniul utilizatorului: **Profil, Setări, Deloghează-te**.\n\n## Alte funcții\n- **Curiozități:** cardul **„Curiozități"** (**„Vezi o curiozitate →"**) sau scrie-mi „curiozitate" / „știai" / „fun fact" → îți dau un fapt anatomic aleator (fără repetiții).\n- **Calculator IMC:** scrie-mi direct, ex. **„imc 70 1.80"** (sau „70 kg 180 cm"). Formula: **IMC = greutate / înălțime²**. Categorii: **<18.5** subponderal · **18.5–24.9** normal · **25–29.9** supraponderal · **≥30** obezitate.\n- **Învață (manuale):** secțiunea **„Învață"** are 3 manuale oficiale care se deschid în filă nouă: **Anatomia Omului · Vol. I** (osteologie/artrologie/miologie), **Vol. II** (splanhnologie) și **Vol. III** (cardiovascular/nervos/organe de simț) de **Ștefaneț**.\n- **Recenzii:** poți lăsa o recenzie (1–5 stele, min. 10 caractere) după ce te conectezi; o singură recenzie per utilizator.\n- **Teme:** din **Setări → THEME** alegi **Light / Dark / System / Custom** (implicit Dark).\n- **Limbă:** butoanele **RO / EN** din bara de navigare comută tot textul instant.\n\n---\n\n# CUNOAȘTEREA ANATOMICĂ\n\nAi acces la date detaliate, cu **nume românesc + nume latin**. Sursa citată a platformei: **Anatomia Omului – Ștefaneț (3 volume)**.\n\n## Oase (scheletul de 206 oase)\nGrupat pe: **Scheletul Capului** (Neurocraniul 8 oase: frontal, parietal ×2, temporal ×2, occipital, sfenoid, etmoid; Viscerocraniul 14 oase: maxilar ×2, mandibulă, zigomatic, nazal, lacrimal, palatin, vomer, cornete + cei 32 de dinți), **Scheletul Trunchiului** (coloana: 7 cervicale C1–C7 cu Atlas/Axis, 12 toracice, 5 lombare, sacrum, coccis; cutia toracică: stern, 7 perechi coaste adevărate, 3 false, 2 flotante), **Membre Superioare** (claviculă, scapulă, humerus, radius, ulna, 8 carpiene, 5 metacarpiene, 14 falange), **Membre Inferioare** (os coxal, femur, patelă, tibie, fibulă, 7 tarsiene, 5 metatarsiene, 14 falange). Pentru fiecare os poți da: **categorie, tip, descriere funcțională, articulații, detalii**.\n\n## Mușchi\nPeste 350 de mușchi modelați; date detaliate pentru mușchii majori pe 4 grupe (cap & gât, trunchi, membre superioare, membre inferioare), cu **nume RO + latin, origine, inserție, acțiune, inervație** (cu rădăcini spinale). Ex.: **sternocleidomastoidian, maseter** (cel mai puternic masticator), **trapez, pectoral mare, drept abdominal, biceps/triceps brahial, deltoid, latissimus dorsi, fesier mare** (cel mai voluminos mușchi), **cvadriceps** (cel mai mare grup), **croitor/sartorius** (cel mai lung mușchi), **gastrocnemian/solear** (tendonul lui Ahile).\n\n## Cardiovascular / Nervos / Respirator (nume RO + latin)\n- **Cardiovascular:** Aortă (Aorta), Trunchi pulmonar, valve (aortică/mitrală/tricuspidă/pulmonară), Venă cavă superioară/inferioară, artere/vene regionale (carotidă, femurală, renală, iliacă…), apexul cordului.\n- **Nervos:** Creier/encefal (Encephalon), Bulbul olfactiv (Bulbus olfactorius), Măduva spinării (Medulla spinalis), meningele spinale, nervii olfactivi.\n- **Respirator:** Trahee (Trachea), Plămân drept/stâng (Pulmo dexter/sinister), bronhii principale, Diafragm, cartilaje laringiene (tiroid, cricoid, aritenoid, epiglotic…), os hioid.\n\n## Fapte anatomice rapide (răspunsuri scurte și sigure)\n- **Oase:** **206** la adult (~270 la naștere, multe se sudează).\n- **Dinți:** **32** la adult (8 incisivi, 4 canini, 8 premolari, 12 molari).\n- **Coaste:** **12 perechi** (7 adevărate, 3 false, 2 flotante).\n- **Cel mai mare os:** **femurul** (~27% din înălțime).\n- **Cel mai mic os:** **oscioarele urechii medii** — scărița are ~3 mm.\n- **Articulații:** fibroase (suturi craniu), cartilaginoase (vertebre), sinoviale (genunchi, umăr).\n- **Măduva osoasă:** **roșie** (hematopoieză) și **galbenă** (țesut adipos).\n- **Os hioid:** singurul os care nu se articulează direct cu alt os.\n\nCând răspunzi despre un os/mușchi/structură, oferă esențialul (nume RO + latin, funcție, câteva repere) și, dacă ajută, invită utilizatorul să exploreze structura în modelul 3D. Rămâi mereu cald, clar și la obiect.\n';
 var AI_HISTORY = [];
 
 function aiRuntimeContext() {
@@ -2529,7 +2721,7 @@ function aiRuntimeContext() {
         ? window.__muPretty(window.__MU_REF.selected.name)
         : window.__MU_REF.selected.name;
     else if (
-      (mode === "cardio" || mode === "nervous" || mode === "respiratory") &&
+      (mode === "cardio" || mode === "nervous" || mode === "respiratory" || mode === "digestive") &&
       window.__extraStates &&
       window.__extraStates[mode] &&
       window.__extraStates[mode].selected
@@ -2739,7 +2931,7 @@ var I18N = {
     "home.hero.badge": "Anatomia umană 3D &nbsp;&middot;&nbsp; <span>România</span>",
     "home.hero.title": 'Toată anatomia umană în <span class="home-hero-grad">3D interactiv</span>',
     "home.hero.sub":
-      "Explorează sistematic toate sistemele corpului uman. Acum disponibile: osos, muscular, nervos, cardiovascular și respirator. În curând: sistemul digestiv.",
+      "Explorează sistematic toate sistemele corpului uman. Acum disponibile toate cele 6: osos, muscular, nervos, cardiovascular, respirator și digestiv.",
     "home.hero.ctaPrimary": "Vezi modele 3D",
     "home.hero.ctaSecondary": "Insignele mele",
     "home.stats.bones": "Oase modelate",
@@ -2851,10 +3043,17 @@ var I18N = {
     "load.cardioText": "Se încarcă sistemul cardiovascular...",
     "load.nervousText": "Se încarcă sistemul nervos...",
     "load.respText": "Se încarcă sistemul respirator...",
+    "load.digText": "Se încarcă sistemul digestiv...",
     "view.muscleComplete": "Sistem muscular",
     "view.cardioComplete": "Sistem cardiovascular",
     "view.nervousComplete": "Sistem nervos",
     "view.respComplete": "Sistem respirator",
+    "view.digComplete": "Sistem digestiv",
+    "sb.dig": "Structuri digestive",
+    "sb.searchDig": "Caută o structură...",
+    "sb.footDig": "Sistem digestiv:",
+    "info.digTitle": "Informații Structură",
+    "info.digPlaceholder": "Selectează o structură din model<br />sau din lista din stânga",
     "info.muscleTitle": "Informații Mușchi",
     "info.musclePlaceholder": "Selectează un mușchi din model<br>sau din lista din stânga",
     "nav.muAll": "Toți Mușchii",
@@ -2896,7 +3095,8 @@ var I18N = {
     "info.title": "Informații Os",
     "info.placeholder": "Selectează un os din model<br>sau din lista din stânga",
     "admin.title": "Mod Administrator — Editor de Conținut",
-    "admin.sub": "Aici poți edita descrierile, categoriile și detaliile fiecărui os.",
+    "admin.sub":
+      "Editează conținutul întregului site — oase, mușchi, structurile sistemelor nervos, cardiovascular, respirator și digestiv, plus prompt-ul AI.",
     "admin.pass": "Parolă administrator",
     "admin.login": "Autentificare",
     "admin.pickBone": "Selectează osul:",
@@ -2927,7 +3127,7 @@ var I18N = {
     "home.hero.badge": "Human anatomy 3D &nbsp;&middot;&nbsp; <span>Romania</span>",
     "home.hero.title": 'All of human anatomy in <span class="home-hero-grad">interactive 3D</span>',
     "home.hero.sub":
-      "Systematically explore every system of the human body. Now available: skeletal, muscular, nervous, cardiovascular and respiratory. Coming soon: the digestive system.",
+      "Systematically explore every system of the human body. All 6 now available: skeletal, muscular, nervous, cardiovascular, respiratory and digestive.",
     "home.hero.ctaPrimary": "View 3D models",
     "home.hero.ctaSecondary": "My badges",
     "home.stats.bones": "Bones modeled",
@@ -3038,10 +3238,17 @@ var I18N = {
     "load.cardioText": "Loading cardiovascular system...",
     "load.nervousText": "Loading nervous system...",
     "load.respText": "Loading respiratory system...",
+    "load.digText": "Loading digestive system...",
     "view.muscleComplete": "Muscular system",
     "view.cardioComplete": "Cardiovascular system",
     "view.nervousComplete": "Nervous system",
     "view.respComplete": "Respiratory system",
+    "view.digComplete": "Digestive system",
+    "sb.dig": "Digestive structures",
+    "sb.searchDig": "Search a structure...",
+    "sb.footDig": "Digestive system:",
+    "info.digTitle": "Structure Information",
+    "info.digPlaceholder": "Select a structure from the model<br />or from the list on the left",
     "info.muscleTitle": "Muscle Info",
     "info.musclePlaceholder": "Select a muscle from the model<br>or the list on the left",
     "nav.muAll": "All Muscles",
@@ -3084,7 +3291,8 @@ var I18N = {
     "info.title": "Bone Info",
     "info.placeholder": "Select a bone from the model<br>or from the list on the left",
     "admin.title": "Administrator Mode — Content Editor",
-    "admin.sub": "Here you can edit descriptions, categories and details for each bone.",
+    "admin.sub":
+      "Edit the whole site's content — bones, muscles, the nervous, cardiovascular, respiratory and digestive structures, plus the AI prompt.",
     "admin.pass": "Admin password",
     "admin.login": "Authenticate",
     "admin.pickBone": "Pick a bone:",
@@ -10800,6 +11008,7 @@ window.scrollToSection = function (id) {
     return html;
   }
   window.__muscleInfoHTML = buildEnrichedInfo;
+  window.__MUSCLE_DATA = MUSCLE_DATA;
 
   function wireSearch() {
     var input = document.getElementById("mu-search");
@@ -14568,6 +14777,100 @@ window.scrollToSection = function (id) {
         },
       ],
     },
+    digestive: {
+      mode: "digestive",
+      app: "appDigestive",
+      viewer: "dig-viewer",
+      canvas: "dig-canvas3d",
+      loader: "dig-loader",
+      loadFill: "dig-load-fill",
+      loadText: "dig-load-text",
+      loadErr: "dig-load-error",
+      glb: "models/digestive.glb",
+      bg: 0x1a1310,
+      ambColor: 0xffe8d6,
+      ambIntensity: 0.85,
+      keyColor: 0xffffff,
+      fillColor: 0xff8a6b,
+      rimColor: 0xd98f6b,
+      defaultLoadText: {
+        ro: "Se încarcă sistemul digestiv...",
+        en: "Loading digestive system...",
+      },
+      sysName: { ro: "Sistem digestiv", en: "Digestive system" },
+      ids: {
+        list: "dig-list",
+        search: "dig-search",
+        searchCount: "dig-search-count",
+        count: "dig-count",
+        infoCt: "dig-info-ct",
+        infoPh: "dig-ip-ph",
+        infoTitle: "dig-info-title",
+        overlay: "digNameOverlay",
+        bnoName: "digBnoName",
+        bnoCat: "digBnoCat",
+        curLabel: "dig-cur-label",
+      },
+      groups: [
+        {
+          key: "oral",
+          match: /_Oral_cavity_mtl_/i,
+          tex: "tex_dig_oral.jpg",
+          ro: "Cavitate bucală",
+          en: "Oral cavity",
+          icon: "\u{1F444}",
+        },
+        {
+          key: "tongue",
+          match: /_Head-neck_muscles_/i,
+          color: 0xc86a62,
+          roughness: 0.55,
+          ro: "Limbă",
+          en: "Tongue",
+          icon: "\u{1F445}",
+        },
+        {
+          key: "stomach",
+          match: /_mat_Stomach_/i,
+          tex: "tex_dig_stomach.jpg",
+          ro: "Stomac & esofag",
+          en: "Stomach & esophagus",
+          icon: "\u{1F37D}",
+        },
+        {
+          key: "smallint",
+          match: /_Small_Intestine_/i,
+          tex: "tex_dig_smallint.jpg",
+          ro: "Intestin subțire",
+          en: "Small intestine",
+          icon: "\u{1F300}",
+        },
+        {
+          key: "largeint",
+          match: /_Large_Intestine_/i,
+          tex: "tex_dig_largeint.jpg",
+          ro: "Intestin gros",
+          en: "Large intestine",
+          icon: "\u{2B55}",
+        },
+        {
+          key: "liver",
+          match: /_Liver_mtl_/i,
+          tex: "tex_dig_liver.jpg",
+          ro: "Ficat",
+          en: "Liver",
+          icon: "\u{1F7E4}",
+        },
+        {
+          key: "pancreas",
+          match: /_Pancreas_Spleen_/i,
+          tex: "tex_dig_pancreas.jpg",
+          ro: "Pancreas & vezică biliară",
+          en: "Pancreas & gallbladder",
+          icon: "\u{1F536}",
+        },
+      ],
+    },
   };
   var STATES = {};
 
@@ -14605,6 +14908,33 @@ window.scrollToSection = function (id) {
     "Lumbar cord": { ro: "Măduva lombară", la: "Pars lumbalis medullae spinalis" },
     "Sacral cord": { ro: "Măduva sacrală + con medular", la: "Pars sacralis, conus medullaris" },
     "Spinal cord membrane": { ro: "Meningele spinale (dura/arahnoida)", la: "Meninges spinales" },
+
+    Stomach: { ro: "Stomac", la: "Gaster / Ventriculus" },
+    "Stomach cap": { ro: "Fundul stomacului", la: "Fundus gastricus" },
+    "Stomach cap2": { ro: "Fundul stomacului", la: "Fundus gastricus" },
+    Cardiac: { ro: "Cardia (orificiul cardic)", la: "Cardia" },
+    Duodenum: { ro: "Duoden", la: "Duodenum" },
+    Esophagus: { ro: "Esofag", la: "Oesophagus" },
+    "Pyloric Sphincter valve": { ro: "Sfincter piloric", la: "Sphincter pyloricus" },
+    "Large Intestine": { ro: "Intestin gros", la: "Intestinum crassum" },
+    "Small Intestine": { ro: "Intestin subțire", la: "Intestinum tenue" },
+    "Left Lobe": { ro: "Lob hepatic stâng", la: "Lobus hepatis sinister" },
+    "Right Lobe": { ro: "Lob hepatic drept", la: "Lobus hepatis dexter" },
+    Ligaments: { ro: "Ligamente hepatice", la: "Ligamenta hepatis" },
+    "Gall bladder": { ro: "Vezică biliară", la: "Vesica biliaris" },
+    "Ducts A": { ro: "Canale biliare", la: "Ductus biliaris" },
+    "Ducts B": { ro: "Canale biliare", la: "Ductus biliaris" },
+    "Pancreas Body": { ro: "Corpul pancreasului", la: "Corpus pancreatis" },
+    "Pancreas Head": { ro: "Capul pancreasului", la: "Caput pancreatis" },
+    "Pancreas tail": { ro: "Coada pancreasului", la: "Cauda pancreatis" },
+    "Oral cavity": { ro: "Cavitate bucală", la: "Cavitas oris" },
+    Gingiva: { ro: "Gingie", la: "Gingiva" },
+    Uvula: { ro: "Omușor (uvulă)", la: "Uvula palatina" },
+    "Salivary gland": { ro: "Glandă salivară", la: "Glandula salivaria" },
+    "Salivary duct": { ro: "Canal salivar", la: "Ductus salivarius" },
+    "Nasal cavity": { ro: "Cavitate nazală", la: "Cavitas nasi" },
+    Nasopharynx: { ro: "Nazofaringe", la: "Pars nasalis pharyngis" },
+    Tongue: { ro: "Limbă", la: "Lingua" },
     "Abdomen aorta abdominalis arteries": { ro: "Aortă abdominală", la: "Aorta abdominalis" },
     "Abdomen inferior vena cavav Veins": { ro: "Venă cavă inferioară", la: "Vena cava inferior" },
     Aortaa: { ro: "Aortă", la: "Aorta" },
@@ -14765,6 +15095,14 @@ window.scrollToSection = function (id) {
       .replace(/_Spinal_Cord_material_\d+$/i, "")
       .replace(/_Brain_mtl_\d+$/i, "");
     s = s.replace(/_Lungs-?_\d+$/i, "").replace(/_Lungs-_\d+$/i, "");
+    s = s
+      .replace(/_mat_Stomach_\d+$/i, "")
+      .replace(/_Pancreas_Spleen_\d+$/i, "")
+      .replace(/_Oral_cavity_mtl_\d+$/i, "")
+      .replace(/_Large_Intestine_\d+$/i, "")
+      .replace(/_Small_Intestine_\d+$/i, "")
+      .replace(/_Liver_mtl_\d+$/i, "")
+      .replace(/_Head-neck_muscles_\d+$/i, "");
     s = s.replace(/_\d{3,}$/, "");
     var L = lang() === "en" ? " (left)" : " (stânga)",
       R = lang() === "en" ? " (right)" : " (dreapta)";
@@ -14800,7 +15138,7 @@ window.scrollToSection = function (id) {
     S.scene = new THREE.Scene();
     S.scene.background = new THREE.Color(cfg.bg);
 
-    var amb = new THREE.AmbientLight(cfg.ambColor, 0.55);
+    var amb = new THREE.AmbientLight(cfg.ambColor, cfg.ambIntensity || 0.55);
     S.scene.add(amb);
     var keyL = new THREE.DirectionalLight(cfg.keyColor, 0.85);
     keyL.position.set(2, 4, 3);
@@ -14909,7 +15247,7 @@ window.scrollToSection = function (id) {
       } catch (e) {}
     }
     loaderGltf.load(
-      cfg.glb,
+      cfg.glb + "?v=20260708",
       function (gltf) {
         S.model = gltf.scene;
         S.scene.add(S.model);
@@ -15391,19 +15729,103 @@ window.scrollToSection = function (id) {
 
   window.__extraInit = initSystem;
   window.__extraStates = STATES;
+  window.__extraNames = EXTRA_NAMES;
+  window.__extraConfigs = CONFIGS;
+  window.__extraBuildList = function (sys) {
+    if (typeof buildExtraList === "function") buildExtraList(sys);
+  };
+
+
+  window.__extraStructures = function (sys) {
+    var S = STATES[sys];
+    if (!S || !S.meshes) return [];
+    var seen = {},
+      out = [];
+    S.meshes.forEach(function (m) {
+      if (m.visible === false) return;
+      var grp = m.userData._grp;
+      var pretty = prettifyExtra(m.name);
+      var info = exName(pretty);
+      if (seen[info.display]) return;
+      seen[info.display] = 1;
+      out.push({
+        name: m.name,
+        mesh: m,
+        pretty: pretty,
+        display: info.display,
+        la: info.la,
+        group: grp ? grp.key : null,
+        groupLabel: grp ? groupLabel(grp) : "",
+      });
+    });
+    return out;
+  };
+  window.__extraGroupLabels = function (sys) {
+    var cfg = CONFIGS[sys];
+    if (!cfg) return [];
+    return (cfg.groups || []).map(function (g) {
+      return groupLabel(g);
+    });
+  };
+  var EX_QUIZ_HI = 0x29b6f6;
+  window.__extraQuizClear = function (sys) {
+    var S = STATES[sys];
+    if (!S || !S.meshes) return;
+    S.meshes.forEach(function (m) {
+      if (m.userData._qOrig) {
+        m.material = m.userData._qOrig;
+        m.userData._qOrig = null;
+        m.renderOrder = 0;
+      }
+    });
+  };
+  window.__extraQuizHi = function (sys, mesh) {
+    var S = STATES[sys];
+    if (!S || !S.meshes) return;
+    window.__extraQuizClear(sys);
+    S.meshes.forEach(function (m) {
+      if (!m.material) return;
+      m.userData._qOrig = m.material;
+      if (m === mesh) {
+        var hi = m.material.clone();
+        if (hi.color) hi.color = new THREE.Color(0xffffff).lerp(new THREE.Color(EX_QUIZ_HI), 0.62);
+        hi.emissive = new THREE.Color(EX_QUIZ_HI).multiplyScalar(0.55);
+        hi.transparent = false;
+        hi.opacity = 1;
+        hi.needsUpdate = true;
+        m.material = hi;
+        m.renderOrder = 2;
+      } else {
+        var fa = m.material.clone();
+        fa.transparent = true;
+        fa.opacity = 0.1;
+        fa.depthWrite = false;
+        fa.needsUpdate = true;
+        m.material = fa;
+        m.renderOrder = 0;
+      }
+    });
+    if (mesh) focusOn(sys, mesh);
+  };
 
   var origEnter = window.enterApp;
   if (typeof origEnter === "function") {
     window.enterApp = function (mode) {
       var r = origEnter.apply(this, arguments);
-      if (mode === "cardio" || mode === "nervous" || mode === "respiratory") {
+      if (
+        mode === "cardio" ||
+        mode === "nervous" ||
+        mode === "respiratory" ||
+        mode === "digestive"
+      ) {
         document.body.classList.remove(
           "mode-skeleton",
           "mode-quiz",
           "mode-muscular",
           "mode-cardio",
           "mode-nervous",
-          "mode-respiratory"
+          "mode-respiratory",
+          "mode-digestive"
         );
         document.body.classList.add("mode-" + mode);
         window.APP_MODE = mode;
@@ -15433,14 +15855,24 @@ window.scrollToSection = function (id) {
   var origGoBack = window.goBackFromApp;
   if (typeof origGoBack === "function") {
     window.goBackFromApp = function () {
-      document.body.classList.remove("mode-cardio", "mode-nervous", "mode-respiratory");
+      document.body.classList.remove(
+        "mode-cardio",
+        "mode-nervous",
+        "mode-respiratory",
+        "mode-digestive"
+      );
       return origGoBack.apply(this, arguments);
     };
   }
   var origShowHome = window.showHome;
   if (typeof origShowHome === "function") {
     window.showHome = function (opts) {
-      document.body.classList.remove("mode-cardio", "mode-nervous", "mode-respiratory");
+      document.body.classList.remove(
+        "mode-cardio",
+        "mode-nervous",
+        "mode-respiratory",
+        "mode-digestive"
+      );
       return origShowHome.apply(this, arguments);
     };
   }
@@ -15480,4 +15912,450 @@ window.scrollToSection = function (id) {
       return r;
     };
   })();
+})();
+
+
+(function extraQuizModule() {
+  if (typeof window.QUIZ === "undefined") return;
+  var EXTRA = { nervous: 1, cardio: 1, respiratory: 1, digestive: 1 };
+  var VIEWER_ID = {
+    nervous: "nervous-viewer",
+    cardio: "cardio-viewer",
+    respiratory: "resp-viewer",
+    digestive: "dig-viewer",
+  };
+  function L() {
+    return typeof CUR_LANG !== "undefined" && CUR_LANG === "en" ? "en" : "ro";
+  }
+  function tr(ro, en) {
+    return L() === "en" ? en : ro;
+  }
+  function isEx() {
+    return !!EXTRA[window.QUIZ.system];
+  }
+  function structures(sys) {
+    return (window.__extraStructures ? window.__extraStructures(sys) : []).filter(function (s) {
+      return s && s.display;
+    });
+  }
+
+  var oPickSys = window.pickQuizSystem;
+  window.pickQuizSystem = function (sys) {
+    if (!EXTRA[sys]) return oPickSys ? oPickSys.apply(this, arguments) : undefined;
+    window.QUIZ.system = sys;
+    window.QUIZ.mode = "visual";
+    if (typeof window.__extraInit === "function")
+      try {
+        window.__extraInit(sys);
+      } catch (e) {}
+    var vIcon = document.getElementById("quizModeVisualIcon");
+    var vTitle = document.getElementById("quizModeVisualTitle");
+    var vDesc = document.getElementById("quizModeVisualDesc");
+    var kDesc = document.getElementById("quizModeKnowDesc");
+    var duel = document.getElementById("quizModeDuelCard");
+    if (vIcon) vIcon.innerHTML = "&#127919;";
+    if (vTitle) vTitle.textContent = tr("Identifică structura", "Identify the structure");
+    if (vDesc)
+      vDesc.textContent = tr(
+        "Vezi o structură evidențiată cu albastru pe model și alegi numele corect din 4 variante.",
+        "See a structure highlighted in blue on the model and pick the correct name from 4 options."
+      );
+    if (kDesc)
+      kDesc.textContent = tr(
+        "Întrebări cu denumirile românești și latine ale structurilor.",
+        "Questions on the Romanian and Latin names of the structures."
+      );
+    if (duel) duel.style.display = "none";
+    if (typeof showQuizStage === "function") showQuizStage("quizPick");
+  };
+
+  var oPickMode = window.pickQuizMode;
+  window.pickQuizMode = function (mode) {
+    if (!isEx()) return oPickMode ? oPickMode.apply(this, arguments) : undefined;
+    window.QUIZ.mode = mode;
+    var icon = document.getElementById("quizStartIcon");
+    var title = document.getElementById("quizStartTitle");
+    var desc = document.getElementById("quizStartDesc");
+    if (mode === "visual") {
+      if (icon) icon.innerHTML = "&#127919;";
+      if (title) title.textContent = tr("Identifică structura", "Identify the structure");
+      if (desc)
+        desc.textContent = tr(
+          "Structura e evidențiată cu albastru pe model — alege numele corect din 4 variante.",
+          "The structure is highlighted in blue on the model — pick the correct name from 4 options."
+        );
+    } else {
+      if (icon) icon.innerHTML = "&#128218;";
+      if (title) title.textContent = tr("Test de Cunoștințe", "Knowledge Test");
+      if (desc)
+        desc.textContent = tr(
+          "Potrivește denumirile românești și latine ale structurilor.",
+          "Match the Romanian and Latin names of the structures."
+        );
+    }
+    if (typeof showQuizStage === "function") showQuizStage("quizStart");
+  };
+
+  function pick4(all, correct, keyFn) {
+    var others = shuffle(
+      all.filter(function (x) {
+        return x !== correct && keyFn(x) !== keyFn(correct);
+      })
+    ).slice(0, 3);
+    return shuffle([correct].concat(others)).map(keyFn);
+  }
+  function build(sys, mode, count) {
+    var all = structures(sys);
+    if (all.length < 4) return [];
+    var out = [];
+    var pool = shuffle(all.slice());
+    if (mode === "visual") {
+      pool.forEach(function (s) {
+        if (out.length >= count) return;
+        out.push({
+          type: "visual",
+          mesh: s.mesh,
+          answer: s.display,
+          options: pick4(all, s, function (x) {
+            return x.display;
+          }),
+          la: s.la,
+        });
+      });
+    } else {
+      var withLa = all.filter(function (s) {
+        return s.la;
+      });
+      var groups = window.__extraGroupLabels ? window.__extraGroupLabels(sys) : [];
+      pool.forEach(function (s, i) {
+        if (out.length >= count) return;
+        var k = i % 3;
+        if (k === 0 && s.la && withLa.length >= 4) {
+          out.push({
+            type: "know",
+            prompt: tr(
+              "Care este denumirea <b>latină</b> a structurii <b>" + s.display + "</b>?",
+              "What is the <b>Latin</b> name of <b>" + s.display + "</b>?"
+            ),
+            answer: s.la,
+            options: pick4(withLa, s, function (x) {
+              return x.la;
+            }),
+          });
+        } else if (k === 1 && s.la && withLa.length >= 4) {
+          out.push({
+            type: "know",
+            prompt: tr(
+              "Ce structură are denumirea latină <b><i>" + s.la + "</i></b>?",
+              "Which structure has the Latin name <b><i>" + s.la + "</i></b>?"
+            ),
+            answer: s.display,
+            options: pick4(withLa, s, function (x) {
+              return x.display;
+            }),
+          });
+        } else if (groups.length >= 2 && s.groupLabel) {
+          var og = shuffle(
+            groups.filter(function (g) {
+              return g !== s.groupLabel;
+            })
+          ).slice(0, 3);
+          out.push({
+            type: "know",
+            prompt: tr(
+              "Din ce grupă face parte <b>" + s.display + "</b>?",
+              "Which group does <b>" + s.display + "</b> belong to?"
+            ),
+            answer: s.groupLabel,
+            options: shuffle([s.groupLabel].concat(og)),
+          });
+        } else if (s.la && withLa.length >= 4) {
+          out.push({
+            type: "know",
+            prompt: tr(
+              "Denumirea latină a structurii <b>" + s.display + "</b>?",
+              "Latin name of <b>" + s.display + "</b>?"
+            ),
+            answer: s.la,
+            options: pick4(withLa, s, function (x) {
+              return x.la;
+            }),
+          });
+        }
+      });
+    }
+    return out.slice(0, count);
+  }
+
+  function enterVisualScene(sys) {
+    document.body.classList.remove(
+      "mode-skeleton",
+      "mode-muscular",
+      "mode-cardio",
+      "mode-nervous",
+      "mode-respiratory",
+      "mode-digestive"
+    );
+    document.body.classList.add("mode-" + sys, "mode-quiz", "qmode-visual");
+    document.body.classList.remove("qmode-knowledge", "qmode-duel");
+    var panel = document.getElementById("quizPanel");
+    var viewer = document.getElementById(VIEWER_ID[sys]);
+    if (panel && viewer && !viewer.contains(panel)) {
+      panel._exHome = panel.parentNode;
+      viewer.appendChild(panel);
+    }
+    if (typeof window.__extraInit === "function")
+      try {
+        window.__extraInit(sys);
+      } catch (e) {}
+    setTimeout(function () {
+      var S = window.__extraStates && window.__extraStates[sys];
+      if (S && S.resize) S.resize();
+    }, 200);
+  }
+  function restorePanel() {
+    var panel = document.getElementById("quizPanel");
+    if (panel && panel._exHome) {
+      panel._exHome.appendChild(panel);
+      panel._exHome = null;
+    }
+  }
+
+  function beginQuiz() {
+    var Q = window.QUIZ;
+    var sys = Q.system,
+      mode = Q.mode || "visual";
+    var diff = Q.difficulty || "medium";
+    var count = diff === "easy" ? 8 : diff === "hard" ? 12 : 10;
+    var qs = build(sys, mode, count);
+    if (!qs.length) {
+      alert(
+        tr(
+          "Se încarcă modelul... reîncearcă în câteva secunde.",
+          "Model still loading... try again shortly."
+        )
+      );
+      return;
+    }
+    Q.questions = qs;
+    Q.total = qs.length;
+    Q.currentQ = 0;
+    Q.score = 0;
+    Q.wrong = [];
+    Q.answered = false;
+    Q.active = true;
+    Q.startTime = Date.now();
+    var tot = document.getElementById("qTotal");
+    if (tot) tot.textContent = Q.total;
+    if (mode === "visual") {
+      enterVisualScene(sys);
+    } else {
+      document.body.classList.add("mode-quiz");
+      document.body.classList.remove("qmode-visual", "qmode-duel");
+      document.body.classList.add("qmode-knowledge");
+    }
+    if (typeof showQuizStage === "function") showQuizStage("quizQuestion");
+    loadQ();
+  }
+
+  var oStart = window.startQuiz;
+  window.startQuiz = function (difficulty) {
+    if (!isEx()) return oStart ? oStart.apply(this, arguments) : undefined;
+    if (difficulty) window.QUIZ.difficulty = difficulty;
+    var sys = window.QUIZ.system;
+    if (typeof window.__extraInit === "function")
+      try {
+        window.__extraInit(sys);
+      } catch (e) {}
+    var tries = 0;
+    (function waitModel() {
+      if (structures(sys).length >= 4) {
+        beginQuiz();
+        return;
+      }
+      if (tries++ > 50) {
+        alert(tr("Modelul nu s-a încărcat.", "Model failed to load."));
+        return;
+      }
+      setTimeout(waitModel, 200);
+    })();
+  };
+
+  function loadQ() {
+    var Q = window.QUIZ;
+    Q.answered = false;
+    if (typeof stopQuestionTimer === "function")
+      try {
+        stopQuestionTimer();
+      } catch (e) {}
+    var q = Q.questions[Q.currentQ];
+    if (!q) return;
+    var el;
+    if ((el = document.getElementById("qNum"))) el.textContent = Q.currentQ + 1;
+    if ((el = document.getElementById("qScore"))) el.textContent = Q.score;
+    if ((el = document.getElementById("qProgFill")))
+      el.style.width = (Q.currentQ / Q.total) * 100 + "%";
+    if ((el = document.getElementById("qFeedback"))) el.style.display = "none";
+    if ((el = document.getElementById("qNextBtn"))) el.style.display = "none";
+    var hint = document.querySelector(".quiz-q-text");
+    if (hint) {
+      if (q.type === "visual")
+        hint.innerHTML = tr(
+          'Cum se numește structura evidențiată cu <span style="color:#29b6f6">albastru</span>?',
+          'What is the structure highlighted in <span style="color:#29b6f6">blue</span>?'
+        );
+      else hint.innerHTML = q.prompt;
+    }
+    var opts = document.getElementById("qOptions");
+    if (opts) {
+      opts.className = "quiz-options";
+      opts.innerHTML = "";
+      var letters = ["A", "B", "C", "D"];
+      q.options.forEach(function (o, idx) {
+        var b = document.createElement("button");
+        b.className = "quiz-opt";
+        b.innerHTML =
+          '<span class="quiz-opt-letter">' + letters[idx] + "</span><span>" + o + "</span>";
+        b.onclick = function () {
+          answer(o, b);
+        };
+        opts.appendChild(b);
+      });
+    }
+    if (q.type === "visual" && window.__extraQuizHi)
+      try {
+        window.__extraQuizHi(window.QUIZ.system, q.mesh);
+      } catch (e) {}
+  }
+
+  function answer(opt, btn) {
+    var Q = window.QUIZ;
+    if (Q.answered) return;
+    Q.answered = true;
+    var q = Q.questions[Q.currentQ];
+    var correct = opt === q.answer;
+    document.querySelectorAll(".quiz-opt").forEach(function (b) {
+      b.disabled = true;
+      var sp = b.querySelector("span:last-child");
+      var lbl = sp ? sp.textContent : "";
+      if (lbl === q.answer) b.classList.add("correct");
+      else if (b === btn) b.classList.add("wrong");
+    });
+    var fb = document.getElementById("qFeedback");
+    if (correct) {
+      Q.score++;
+      if (fb) {
+        fb.className = "quiz-feedback fb-correct";
+        fb.innerHTML =
+          "&#9989; <b>" +
+          tr("Corect!", "Correct!") +
+          "</b> " +
+          q.answer +
+          (q.la ? " &mdash; <i>" + q.la + "</i>" : "");
+        fb.style.display = "block";
+      }
+    } else {
+      Q.wrong.push(q.answer);
+      if (fb) {
+        fb.className = "quiz-feedback fb-wrong";
+        fb.innerHTML =
+          "&#10060; <b>" +
+          tr("Greșit.", "Wrong.") +
+          "</b> " +
+          tr("Răspuns corect:", "Correct answer:") +
+          " <b>" +
+          q.answer +
+          "</b>";
+        fb.style.display = "block";
+      }
+    }
+    var sc = document.getElementById("qScore");
+    if (sc) sc.textContent = Q.score;
+    var nb = document.getElementById("qNextBtn");
+    if (nb) {
+      nb.style.display = "inline-block";
+      nb.textContent =
+        Q.currentQ + 1 >= Q.total
+          ? tr("Vezi rezultatul →", "See result →")
+          : tr("Următoarea →", "Next →");
+    }
+  }
+
+  var oNext = window.nextQuiz;
+  window.nextQuiz = function () {
+    if (!isEx() || !window.QUIZ.active) return oNext ? oNext.apply(this, arguments) : undefined;
+    window.QUIZ.currentQ++;
+    if (window.QUIZ.currentQ >= window.QUIZ.total) {
+      if (window.__extraQuizClear)
+        try {
+          window.__extraQuizClear(window.QUIZ.system);
+        } catch (e) {}
+      if (typeof window.endQuiz === "function") window.endQuiz();
+    } else loadQ();
+  };
+  var oSkip = window.skipQuiz;
+  window.skipQuiz = function () {
+    if (!isEx() || !window.QUIZ.active) return oSkip ? oSkip.apply(this, arguments) : undefined;
+    var Q = window.QUIZ;
+    if (Q.answered) return;
+    Q.answered = true;
+    var q = Q.questions[Q.currentQ];
+    Q.wrong.push(q.answer);
+    document.querySelectorAll(".quiz-opt").forEach(function (b) {
+      b.disabled = true;
+      var sp = b.querySelector("span:last-child");
+      if (sp && sp.textContent === q.answer) b.classList.add("correct");
+    });
+    var fb = document.getElementById("qFeedback");
+    if (fb) {
+      fb.className = "quiz-feedback fb-wrong";
+      fb.innerHTML =
+        "&#9197; " + tr("Sărit. Răspuns:", "Skipped. Answer:") + " <b>" + q.answer + "</b>";
+      fb.style.display = "block";
+    }
+    var nb = document.getElementById("qNextBtn");
+    if (nb) {
+      nb.style.display = "inline-block";
+      nb.textContent =
+        Q.currentQ + 1 >= Q.total
+          ? tr("Vezi rezultatul →", "See result →")
+          : tr("Următoarea →", "Next →");
+    }
+  };
+
+  function cleanup() {
+    if (window.__extraQuizClear && isEx())
+      try {
+        window.__extraQuizClear(window.QUIZ.system);
+      } catch (e) {}
+    restorePanel();
+    document.body.classList.remove(
+      "qmode-visual",
+      "qmode-knowledge",
+      "mode-cardio",
+      "mode-nervous",
+      "mode-respiratory",
+      "mode-digestive"
+    );
+  }
+  var oExit = window.exitQuizMode;
+  window.exitQuizMode = function () {
+    var wasEx = isEx();
+    cleanup();
+    if (wasEx) window.QUIZ.system = "osos";
+    return oExit ? oExit.apply(this, arguments) : undefined;
+  };
+  var oBack = window.goBackFromApp;
+  window.goBackFromApp = function () {
+    cleanup();
+    return oBack ? oBack.apply(this, arguments) : undefined;
+  };
+  var oRestart = window.restartQuiz;
+  window.restartQuiz = function () {
+    if (isEx()) {
+      cleanup();
+      document.body.classList.add("mode-skeleton", "mode-quiz");
+    }
+    return oRestart ? oRestart.apply(this, arguments) : undefined;
+  };
 })();
