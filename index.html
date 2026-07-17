@@ -368,6 +368,10 @@
           <div class="lang-switch" id="langSwitchHome" title="Schimbă limba">
             <button class="lang-btn active" data-lang="ro">RO</button>
             <button class="lang-btn" data-lang="en">EN</button>
+            <button class="lang-btn" data-lang="fr">FR</button>
+            <button class="lang-btn" data-lang="de">DE</button>
+            <button class="lang-btn" data-lang="es">ES</button>
+            <button class="lang-btn" data-lang="hu">HU</button>
           </div>
           <button class="home-login-btn" onclick="openLogin()" data-i18n="home.nav.login">
             Conectare
@@ -890,6 +894,10 @@
           <button class="home-footer-link" type="button" onclick="showTerms('privacy')" data-i18n="footer.privacy">
             Confidențialitate
           </button>
+          <span class="home-footer-sep" aria-hidden="true">&middot;</span>
+          <button class="home-footer-link" type="button" onclick="openReport()" data-i18n="footer.report">
+            Raportează o problemă
+          </button>
         </div>
         <div data-i18n="home.footer">BioNexus &middot; Platformă educațională anatomică</div>
         <div class="home-footer-source" data-i18n="footer.source">
@@ -1144,6 +1152,30 @@
             >
               💪 Mușchi
             </button>
+            <button
+              class="nb-filter"
+              data-nb-filter="nervous"
+              data-i18n-html="notebook.filter.nervous"
+            >
+              🧠 Nervos
+            </button>
+            <button class="nb-filter" data-nb-filter="cardio" data-i18n-html="notebook.filter.cardio">
+              ❤️ Cardio
+            </button>
+            <button
+              class="nb-filter"
+              data-nb-filter="respiratory"
+              data-i18n-html="notebook.filter.respiratory"
+            >
+              💨 Respirator
+            </button>
+            <button
+              class="nb-filter"
+              data-nb-filter="digestive"
+              data-i18n-html="notebook.filter.digestive"
+            >
+              🍽️ Digestiv
+            </button>
           </div>
           <div class="notebook-tags-wrap" id="notebookTagsWrap"></div>
         </div>
@@ -1193,6 +1225,12 @@
               <select id="nbCategory">
                 <option value="bone" data-i18n-html="notebook.cat.bone">🦴 Os</option>
                 <option value="muscle" data-i18n-html="notebook.cat.muscle">💪 Mușchi</option>
+                <option value="nervous" data-i18n-html="notebook.cat.nervous">🧠 Nervos</option>
+                <option value="cardio" data-i18n-html="notebook.cat.cardio">❤️ Cardiovascular</option>
+                <option value="respiratory" data-i18n-html="notebook.cat.respiratory">
+                  💨 Respirator
+                </option>
+                <option value="digestive" data-i18n-html="notebook.cat.digestive">🍽️ Digestiv</option>
                 <option value="general" data-i18n-html="notebook.cat.general">📌 General</option>
               </select>
             </div>
@@ -1450,6 +1488,10 @@
         <div class="lang-switch" id="langSwitchApp" title="Schimbă limba">
           <button class="lang-btn active" data-lang="ro">RO</button>
           <button class="lang-btn" data-lang="en">EN</button>
+          <button class="lang-btn" data-lang="fr">FR</button>
+          <button class="lang-btn" data-lang="de">DE</button>
+          <button class="lang-btn" data-lang="es">ES</button>
+          <button class="lang-btn" data-lang="hu">HU</button>
         </div>
       </div>
     </header>
@@ -1568,6 +1610,9 @@
               <div class="quiz-intro-icon" data-bxicon="target"></div>
               <h3 data-i18n="quiz.sys.h">Alege sistemul anatomic</h3>
               <p data-i18n="quiz.sys.p">Pentru ce sistem vrei să te testezi?</p>
+              <button class="online-entry-btn" onclick="openOnlineDuel()" data-i18n="online.entry">
+                🌐 Joacă online cu un prieten
+              </button>
               <div class="quiz-modes">
                 <button class="quiz-mode-card" onclick="pickQuizSystem('osos')">
                   <div class="quiz-mode-icon quiz-mode-icon-sys" data-bxsys="osos"></div>
@@ -2660,6 +2705,157 @@
     <script src="logo-cleanup.js"></script>
     <script src="ai-config.js"></script>
     <div id="quizAmbient" aria-hidden="true"></div>
+
+    <div class="report-modal" id="reportModal" style="display: none" role="dialog" aria-modal="true">
+      <div class="report-overlay" onclick="closeReport()"></div>
+      <div class="report-card">
+        <div class="report-head">
+          <h3 data-i18n="report.title">Raportează o problemă</h3>
+          <button class="report-close" onclick="closeReport()" aria-label="Închide">&times;</button>
+        </div>
+        <div class="report-body">
+          <p class="report-intro" data-i18n="report.intro">
+            Ai găsit o eroare, o greșeală de conținut sau ai o sugestie? Spune-ne — ajunge direct la
+            echipă.
+          </p>
+          <label class="report-lbl" for="reportType" data-i18n="report.lbl.type">Tip</label>
+          <select id="reportType">
+            <option value="bug" data-i18n="report.type.bug">🐛 Eroare / bug</option>
+            <option value="content" data-i18n="report.type.content">📚 Greșeală de conținut</option>
+            <option value="suggestion" data-i18n="report.type.suggestion">💡 Sugestie</option>
+            <option value="other" data-i18n="report.type.other">❓ Altceva</option>
+          </select>
+          <label class="report-lbl" for="reportMsg" data-i18n="report.lbl.msg">Descriere</label>
+          <textarea
+            id="reportMsg"
+            rows="5"
+            maxlength="1500"
+            data-i18n-ph="report.ph.msg"
+            placeholder="Descrie pe scurt problema sau sugestia..."
+          ></textarea>
+          <label class="report-lbl" for="reportEmail" data-i18n="report.lbl.email">
+            Email (opțional, ca să-ți putem răspunde)
+          </label>
+          <input type="email" id="reportEmail" data-i18n-ph="report.ph.email" placeholder="tu@email.com" />
+          <input
+            type="text"
+            id="reportHp"
+            tabindex="-1"
+            autocomplete="off"
+            aria-hidden="true"
+            style="position: absolute; left: -9999px; opacity: 0"
+          />
+          <div class="report-status" id="reportStatus" role="status"></div>
+        </div>
+        <div class="report-foot">
+          <button class="report-cancel" onclick="closeReport()" data-i18n="report.cancel">
+            Anulează
+          </button>
+          <button class="report-send" id="reportSend" onclick="submitReport()" data-i18n="report.send">
+            Trimite raportul
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="online-modal" id="onlineModal" style="display: none" role="dialog" aria-modal="true">
+      <div class="online-overlay" onclick="closeOnlineDuel()"></div>
+      <div class="online-card">
+        <div class="online-head">
+          <h3>🌐 <span data-i18n="online.title">Duel Online 1v1</span></h3>
+          <button class="online-close" onclick="closeOnlineDuel()" aria-label="Închide">&times;</button>
+        </div>
+
+        <div class="online-view" id="onlineLobby">
+          <p class="online-intro" data-i18n="online.intro">
+            Provoacă un prieten la un duel de cunoștințe în timp real. Aceleași întrebări, scor live —
+            câștigă cine are mai multe corecte.
+          </p>
+          <label class="online-lbl" for="onlineSystem" data-i18n="online.system">Sistem</label>
+          <select id="onlineSystem">
+            <option value="all" data-i18n="online.sys.all">🎯 Toate sistemele</option>
+            <option value="osos" data-i18n="online.sys.osos">🦴 Osos</option>
+            <option value="muscular" data-i18n="online.sys.muscular">💪 Muscular</option>
+            <option value="nervous" data-i18n="online.sys.nervous">🧠 Nervos</option>
+            <option value="cardio" data-i18n="online.sys.cardio">❤️ Cardiovascular</option>
+            <option value="respiratory" data-i18n="online.sys.respiratory">💨 Respirator</option>
+            <option value="digestive" data-i18n="online.sys.digestive">🍽️ Digestiv</option>
+          </select>
+          <button class="online-btn-primary" id="onlineCreateBtn" onclick="onlineCreateRoom()" data-i18n="online.create">
+            Creează o cameră
+          </button>
+          <div class="online-or"><span data-i18n="online.or">sau</span></div>
+          <div class="online-join-row">
+            <input id="onlineJoinCode" maxlength="4" autocomplete="off" spellcheck="false"
+              data-i18n-ph="online.codePh" placeholder="COD" />
+            <button class="online-btn-secondary" onclick="onlineJoinRoom()" data-i18n="online.join">
+              Intră
+            </button>
+          </div>
+          <div class="online-status" id="onlineStatus"></div>
+        </div>
+
+        <div class="online-view" id="onlineWaiting" style="display: none">
+          <div class="online-code-label" data-i18n="online.codeLabel">Codul camerei</div>
+          <div class="online-code" id="onlineRoomCode">----</div>
+          <p class="online-intro" data-i18n="online.share">
+            Trimite-i codul unui prieten. Jocul începe automat când intră.
+          </p>
+          <div class="online-spinner"></div>
+          <div class="online-status" id="onlineWaitStatus" data-i18n="online.waiting">
+            Aștept adversarul...
+          </div>
+          <button class="online-btn-secondary" onclick="closeOnlineDuel()" data-i18n="online.cancel">
+            Anulează
+          </button>
+        </div>
+
+        <div class="online-view" id="onlineGame" style="display: none">
+          <div class="online-scores">
+            <div class="online-score you">
+              <span class="online-pname" id="onlineYouName">Tu</span>
+              <b id="onlineYouScore">0</b>
+            </div>
+            <div class="online-vs">VS</div>
+            <div class="online-score opp">
+              <span class="online-pname" id="onlineOppName">Adversar</span>
+              <b id="onlineOppScore">0</b>
+            </div>
+          </div>
+          <div class="online-progline">
+            <span data-i18n="online.q">Întrebarea</span>
+            <b><span id="onlineQNum">1</span>/<span id="onlineQTotal">10</span></b>
+          </div>
+          <div class="online-ai-says" data-i18n="online.aiSays">Afirmație</div>
+          <div class="online-statement" id="onlineStatement"></div>
+          <div class="online-tf">
+            <button class="duel-btn true" id="onlineTrueBtn" onclick="onlineAnswer(true, this)">
+              <span class="duel-icon">✓</span><span data-i18n="online.true">ADEVĂRAT</span>
+            </button>
+            <button class="duel-btn false" id="onlineFalseBtn" onclick="onlineAnswer(false, this)">
+              <span class="duel-icon">✗</span><span data-i18n="online.false">FALS</span>
+            </button>
+          </div>
+          <div class="online-feedback" id="onlineFeedback"></div>
+          <div class="online-wait-opp" id="onlineWaitOpp" style="display: none" data-i18n="online.waitOpp">
+            Ai terminat! Aștepți adversarul...
+          </div>
+        </div>
+
+        <div class="online-view" id="onlineResults" style="display: none">
+          <div class="online-result-icon" id="onlineResultIcon">🏆</div>
+          <div class="online-result-title" id="onlineResultTitle"></div>
+          <div class="online-result-scores" id="onlineResultScores"></div>
+          <button class="online-btn-primary" onclick="onlineRematch()" data-i18n="online.rematch">
+            Revanșă
+          </button>
+          <button class="online-btn-secondary" onclick="closeOnlineDuel()" data-i18n="online.exit">
+            Ieși
+          </button>
+        </div>
+      </div>
+    </div>
+
     <script src="script.js"></script>
     <script src="supabase-integration.js"></script>
   </body>

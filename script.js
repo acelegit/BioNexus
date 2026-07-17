@@ -3360,6 +3360,12 @@ function applyLanguage(lang) {
   else if (typeof window.refreshReviewsUI === "function") window.refreshReviewsUI();
 }
 window.applyLanguage = applyLanguage;
+
+I18N.fr = {"home.nav.systems":"Systèmes","home.nav.features":"Fonctionnalités","home.nav.learn":"Apprendre","home.nav.contact":"Contact","home.nav.login":"Connexion","home.hero.badge":"Anatomie humaine 3D &nbsp;&middot;&nbsp; <span>Roumanie</span>","home.hero.title":"Toute l'anatomie humaine en <span class=\"home-hero-grad\">3D interactive</span>","home.hero.sub":"Explorez systématiquement tous les systèmes du corps humain. Les 6 sont désormais disponibles : squelettique, musculaire, nerveux, cardiovasculaire, respiratoire et digestif.","home.hero.ctaPrimary":"Voir les modèles 3D","home.hero.ctaSecondary":"Mes badges","home.stats.bones":"Os modélisés","home.stats.systems":"Systèmes disponibles","home.stats.questions":"Questions de quiz","home.stats.assistant":"Assistant IA","home.systems.title":"Systèmes <span class=\"home-hero-grad\">anatomiques</span>","home.systems.sub":"Les 6 principaux systèmes du corps humain sont désormais disponibles en 3D interactive.","home.sys.osos.t":"Système squelettique","home.sys.osos.d":"206 os modélisés en 3D, tête · tronc · membres, quiz interactif.","home.sys.muscular.t":"Système musculaire","home.sys.muscular.d":"Plus de 600 muscles, groupes musculaires, insertions et actions, noms RO/latins.","home.sys.nervos.t":"Système nerveux","home.sys.nervos.d":"Cerveau, moelle épinière, nerfs périphériques, voies neuronales.","home.sys.cardio.t":"Système cardiovasculaire","home.sys.cardio.d":"Cœur, artères, veines, capillaires — grande et petite circulation.","home.sys.digestiv.t":"Système digestif","home.sys.digestiv.d":"Parcours complet : cavité buccale → œsophage → estomac → intestins.","home.sys.respirator.t":"Système respiratoire","home.sys.respirator.d":"Voies respiratoires, poumons, alvéoles, la mécanique de la respiration.","home.sys.badge.ready":"Disponible maintenant","home.sys.cta":"Explorer en 3D &rarr;","home.sys.badge.soon":"En développement","home.sys.badge.planned":"Prévu","home.features.title":"Ce que vous pouvez faire avec <span class=\"home-hero-grad\">BioNexus</span>","home.feat.skel.t":"Squelette 3D complet","home.feat.skel.d":"Faites pivoter, zoomez, explorez chaque os en détail. Tous les noms en roumain, conformes aux manuels.","home.feat.skel.cta":"Ouvrir le squelette &rarr;","home.feat.quiz.t":"Minijeu : le test d'anatomie","home.feat.quiz.d":"Testez vos connaissances. La caméra se déplace automatiquement vers chaque os, identifiez la bonne réponse.","home.feat.quiz.cta":"Lancer le minijeu &rarr;","home.feat.ai.t":"Assistant IA biologique","home.feat.ai.d":"Posez des questions sur n'importe quel os ou structure. Réponses instantanées dans la fenêtre de discussion interactive.","home.feat.struct.t":"Structure de l'os","home.feat.struct.d":"Coupe transversale interactive — périoste, os compact, os spongieux, canal médullaire, moelle, tout est visible.","home.feat.search.t":"Recherche rapide","home.feat.search.d":"Tapez le nom de n'importe quel os et le site vous y amène instantanément. Classé par sections anatomiques.","home.feat.search.cta":"Rechercher des structures &rarr;","home.feat.details.t":"Détails médicaux","home.feat.details.d":"Catégorie, type, description, articulations, détails supplémentaires — panneau complet pour chaque os.","home.learn.title":"Apprenez avec les <span class=\"home-hero-grad\">manuels officiels</span>","home.learn.sub":"Manuels universitaires d'anatomie humaine — références officielles, ouvertes dans un nouvel onglet.","home.learn.open":"Ouvrir le manuel &rarr;","home.learn.hint":"Les manuels s'ouvrent sur le site officiel de l'USMF dans un nouvel onglet du navigateur.","home.learn.m1.t":"Anatomie humaine · Volume I","home.learn.m1.d":"Stefaneț M. — Ostéologie, arthrologie, myologie. La base de l'appareil locomoteur : os, articulations, muscles avec des descriptions morpho-fonctionnelles complètes.","home.learn.m2.t":"Anatomie humaine · Volume II","home.learn.m2.d":"Stefaneț M. — Splanchnologie : appareils digestif, respiratoire et urogénital. Les organes internes expliqués de manière systémique avec des schémas topographiques.","home.learn.m3.t":"Anatomie humaine · Volume III","home.learn.m3.d":"Stefaneț M. — Système cardiovasculaire, système nerveux central et périphérique, organes des sens. Le volume de l'intégration fonctionnelle.","home.learn.m4.t":"L'appareil locomoteur","home.learn.m4.d":"USMF · Recueil de cours (2011). Systématisation de l'appareil locomoteur : squelette axial, squelette appendiculaire, articulations et musculature — format PDF.","home.learn.m5.t":"Barron's · Anatomie et physiologie","home.learn.m5.d":"Krumhardt & Alcamo (UMFST 2022) — manuel d'admission pour les facultés de médecine. Chapitre détaillé : <b>Les os et les articulations</b> (ostéogenèse, ostéones, synarthroses, diarthroses, remodelage osseux).","home.learn.m6.t":"Physiologie de l'os","home.learn.m6.d":"Microstructure, moelle, périoste et régénération osseuse.","home.footer":"BioNexus · Plateforme éducative d'anatomie","footer.terms":"Conditions","footer.privacy":"Confidentialité","footer.source":"Contenu basé sur « Anatomie humaine » — M. Ștefaneț (USMF)","login.tab.login":"Connexion","login.tab.register":"Inscription","login.welcome":"Bon retour","login.user":"E-mail ou nom d'utilisateur","login.pass":"Mot de passe","login.submit":"Se connecter","login.sub":"Connectez-vous à votre compte","login.guest":"ou <a onclick=\"closeLogin()\">continuer en tant qu'invité</a>","reg.title":"Créer un compte","reg.user":"Nom d'utilisateur","reg.email":"Adresse e-mail","reg.pass":"Mot de passe","reg.submit":"Créer le compte","reg.sub":"Rejoignez BioNexus dès aujourd'hui","reg.note":"les données sont enregistrées localement dans le navigateur, le mot de passe est haché en SHA-256","reg.terms":"En créant un compte, vous acceptez que vos données soient stockées uniquement en local, chiffrées, sans jamais être partagées avec des tiers.","auth.back":"Retour","auth.or":"ou","auth.guest":"Continuer en tant qu'invité","auth.art.title":"L'anatomie humaine en <span class=\"home-hero-grad\">3D interactive</span>","auth.art.sub":"Connectez-vous pour sauvegarder votre progression aux quiz, synchroniser vos préférences et accéder au mode administrateur.","auth.art.p1":"206 os fidèlement modélisés en 3D","auth.art.p2":"Quiz adaptatif avec 3 niveaux de difficulté","auth.art.p3":"Assistant IA de biologie intégré","auth.art.p4":"Accès hors ligne, tout dans votre navigateur","auth.art.quote":"« La meilleure plateforme d'anatomie pour les élèves de collège et de lycée. »","auth.art.quote.by":"— Professeur de biologie","chat.status":"Assistant biologique en ligne","chat.welcome":"Salut ! Je suis l'assistant BioNexus. Je t'aide aussi bien pour l'anatomie que pour l'utilisation du site. Pose-moi n'importe quelle question ou utilise les raccourcis ci-dessous.","chat.ideas":"Quelques idées : <i>&bdquo;Combien d'os ?&rdquo;</i>, <i>&bdquo;Qu'est-ce que le fémur ?&rdquo;</i>","chat.placeholder":"Écris une question sur l'anatomie...","header.sub":"Anatomie humaine 3D","header.admin":"Admin","header.guest":"Invité","header.back":"Retour","sb.muscles":"Muscles","sb.searchMuscle":"Rechercher un muscle...","sb.footMuscle":"Système musculaire :","sb.musclesWord":"muscles","load.muscleText":"Système musculaire — modèles 3D en construction","load.cardioText":"Chargement du système cardiovasculaire...","load.nervousText":"Chargement du système nerveux...","load.respText":"Chargement du système respiratoire...","load.digText":"Chargement du système digestif...","view.muscleComplete":"Système musculaire","view.cardioComplete":"Système cardiovasculaire","view.nervousComplete":"Système nerveux","view.respComplete":"Système respiratoire","view.digComplete":"Système digestif","sb.dig":"Structures digestives","sb.searchDig":"Rechercher une structure...","sb.footDig":"Système digestif :","info.digTitle":"Informations sur la structure","info.digPlaceholder":"Sélectionne une structure dans le modèle<br />ou dans la liste à gauche","info.muscleTitle":"Infos sur le muscle","info.musclePlaceholder":"Sélectionne un muscle dans le modèle<br>ou dans la liste à gauche","nav.muAll":"Tous les muscles","nav.muCap":"Tête et cou","nav.muTrunchi":"Tronc","nav.muMembre":"Membres supérieurs","nav.muInferioare":"Membres inférieurs","home.sys.badge.beta":"Bêta","nav.all":"Tous les os","nav.cap":"Crâne","nav.trunchi":"Tronc","nav.membre":"Membres supérieurs","nav.inferioare":"Membres inférieurs","nav.structura":"Structure de l'os","sb.bones":"Os","sb.search":"Rechercher un os...","sb.foot":"Squelette humain :","sb.bonesWord":"os","load.text":"Chargement du modèle 3D...","load.error":"Impossible de charger le modèle 3D.<br>Assure-toi que le dossier contient les fichiers lib/three.min.js, lib/OrbitControls.js et lib/GLTFLoader.js","view.title":"Vue","view.complete":"Squelette complet","quiz.title":"Minijeu : le test d'anatomie","quiz.start.h":"Connais-tu le squelette ?","quiz.start.p":"Identifie l'os mis en évidence parmi 4 propositions.","quiz.diff.easy":"Facile","quiz.diff.medium":"Moyen","quiz.diff.hard":"Difficile","quiz.start.btn":"Commencer le quiz","quiz.q":"Question","quiz.score":"Score :","quiz.q.text":"Comment s'appelle l'os mis en évidence en <span style=\"color:#3b82f6\">bleu</span> ?","quiz.skip":"Passer","quiz.next":"Suivante &#8594;","quiz.end.title":"Félicitations !","quiz.end.msg":"Bien joué !","quiz.end.retry":"Réessayer","info.title":"Infos sur l'os","info.placeholder":"Sélectionne un os dans le modèle<br>ou dans la liste à gauche","admin.title":"Mode administrateur — Éditeur de contenu","admin.sub":"Modifie le contenu de tout le site — os, muscles, les structures des systèmes nerveux, cardiovasculaire, respiratoire et digestif, ainsi que le prompt de l'IA.","admin.pass":"Mot de passe administrateur","admin.login":"S'authentifier","admin.pickBone":"Sélectionne l'os :","admin.fld.name":"Nom","admin.fld.cat":"Catégorie","admin.fld.type":"Type","admin.fld.desc":"Description","admin.fld.art":"Articulations (séparées par des virgules)","admin.fld.det":"Détails supplémentaires","admin.save":"Enregistrer les modifications","admin.export":"Exporter en JSON","admin.reset":"Réinitialiser aux valeurs par défaut","err.fillBoth":"Remplis les deux champs.","err.fillAll":"Remplis tous les champs.","err.badCreds":"Nom d'utilisateur ou mot de passe incorrect.","err.passShort":"Le mot de passe doit comporter au moins 4 caractères.","err.email":"E-mail invalide.","err.userTaken":"Nom d'utilisateur déjà pris.","err.emailTaken":"E-mail déjà enregistré.","err.adminPass":"Mot de passe administrateur incorrect.","user.menu.profil":"Profil","user.menu.setari":"Paramètres","user.menu.logout":"Se déconnecter","profile.back":"Retour","profile.tagline":"Membre BioNexus","profile.tab.badges":"Badges","profile.achieved":"Obtenus","profile.profil.h":"Ton profil","profile.profil.p":"Le contenu de cette section sera ajouté ultérieurement.","profile.setari.h":"Paramètres","profile.setari.p":"Le contenu de cette section sera ajouté ultérieurement.","profile.insigne.h":"Mes badges","profile.insigne.p":"Le contenu de cette section sera ajouté ultérieurement.","home.feat.ai.cta":"Ouvrir la fenêtre de discussion &rarr;","home.feat.curio.t":"Curiosités","home.feat.curio.d":"Des faits étonnants sur le corps humain — combien d'os, le plus petit, le muscle le plus puissant. Découvre une curiosité au hasard.","home.feat.curio.cta":"Voir une curiosité &rarr;","login.forgot":"Mot de passe oublié ?","login.noAccount":"Pas de compte ? <a onclick=\"showAuthMode('register')\">Créer un compte</a>","reg.passHint":"Au moins 8 caractères","reg.passConf":"Confirmer le mot de passe","reg.termsAccept":"J'accepte les <a class=\"auth-link\" onclick=\"event.preventDefault();showTerms('terms')\">Conditions d'utilisation</a> et la <a class=\"auth-link\" onclick=\"event.preventDefault();showTerms('privacy')\">Politique de confidentialité</a>","reg.human":"Je suis humain","reg.captcha.title":"Vérification de sécurité","reg.haveAccount":"Vous avez déjà un compte ? <a onclick=\"showAuthMode('login')\">Se connecter</a>","home.feat.edu.t":"Ressource éducative","home.feat.edu.d":"BioNexus est une plateforme éducative ouverte. Des manuels universitaires officiels d'anatomie humaine sont disponibles directement dans la section Apprendre.","home.feat.edu.cta":"Parcourir les manuels &rarr;","home.reviews.title":"Avis <span class=\"home-hero-grad\">des utilisateurs</span>","home.reviews.sub":"Lis les expériences des autres ou laisse ton propre avis une fois connecté.","home.reviews.empty":"0 avis","home.reviews.login":"Connecte-toi pour laisser un avis.","home.reviews.ph":"Dis-nous ce que tu penses de BioNexus...","home.reviews.submit":"Publier l'avis","home.reviews.none":"Pas encore d'avis — sois le premier !","home.stats.verified":"Site éducatif · Vérifié","settings.adminH":"Mode administrateur","settings.adminSub":"Accès à l'éditeur de contenu (descriptions des os, catégories, export JSON). Authentification requise.","settings.adminBtn":"Ouvrir le panneau Admin","quiz.pick.h":"Choisis le type de test","quiz.pick.p":"Deux modes disponibles — choisis comment tu veux te tester.","quiz.mode.visual.t":"Identifie l'os","quiz.mode.visual.d":"Vois un os mis en évidence en bleu sur le squelette et choisis le nom correct parmi 4 propositions. Minijeu visuel rapide.","quiz.mode.know.t":"Test de connaissances","quiz.mode.know.d":"Questions sur les descriptions, les articulations et les détails (Facile/Moyen) ainsi que des questions issues des manuels Stefaneț Vol. I-III (Difficile).","quiz.back":"Retour","quiz.sys.h":"Choisis le système anatomique","quiz.sys.p":"Sur quel système veux-tu te tester ?","quiz.sys.osos.t":"Système squelettique","quiz.sys.osos.d":"206 os répartis sur la tête, le tronc et les membres. Questions visuelles et de connaissances + les manuels Ștefaneț (Difficile).","quiz.sys.muscular.t":"Système musculaire","quiz.sys.muscular.d":"Plus de 350 muscles striés avec noms RO/latins, origines, insertions et actions.","quiz.sys.nervous.t":"Système nerveux","quiz.sys.nervous.d":"Cerveau, moelle épinière, nerfs périphériques — noms RO + latins.","quiz.sys.cardio.t":"Système cardiovasculaire","quiz.sys.cardio.d":"Cœur, artères, veines — identifie les structures et leurs noms latins.","quiz.sys.respiratory.t":"Système respiratoire","quiz.sys.respiratory.d":"Voies aériennes, poumons, larynx, diaphragme — noms RO + latins.","quiz.sys.digestive.t":"Système digestif","quiz.sys.digestive.d":"Estomac, foie, intestins, pancréas — identifie les organes digestifs.","login.user.ph":"toi@email.com","login.pass.ph":"Saisis ton mot de passe","reg.user.ph":"Choisis un nom d'utilisateur","reg.email.ph":"toi@email.com","reg.pass.ph":"Crée un mot de passe","reg.passConf.ph":"Confirme ton mot de passe","forgot.email.ph":"toi@email.com","reset.newPass.ph":"Au moins 8 caractères","reset.confPass.ph":"Ressaisis le mot de passe","quiz.mode.duel.t":"Duel IA","quiz.mode.duel.d":"L'IA te lance des affirmations d'anatomie — certaines correctes, d'autres avec des erreurs subtiles. Repère laquelle est vraie et laquelle est fausse. Entraînement à l'esprit critique.","daily.title":"Défi du jour","daily.streak":"Série :","daily.days":"jours","daily.reward":"Récompense :","notebook.title":"Carnet BioNexus","notebook.search":"Rechercher dans les notes...","notebook.filter.all":"Toutes","notebook.filter.starred":"⭐ Importantes","notebook.filter.bone":"🦴 Os","notebook.filter.muscle":"💪 Muscles","notebook.filter.nervous":"🧠 Nerveux","notebook.filter.cardio":"❤️ Cardio","notebook.filter.respiratory":"💨 Respiratoire","notebook.filter.digestive":"🍽️ Digestif","notebook.empty.title":"Pas encore de note","notebook.empty.desc":"Ajoute ta première note en appuyant sur <b>+ Nouvelle note</b> ou depuis la visionneuse 3D lorsque tu sélectionnes une structure dans n'importe quel système.","notebook.empty.cta":"+ Ajouter la première note","notebook.editor.new":"Nouvelle note","notebook.editor.edit":"Modifier la note","notebook.lbl.title":"Titre","notebook.lbl.category":"Catégorie","notebook.lbl.subject":"Sujet (facultatif)","notebook.lbl.content":"Contenu","notebook.lbl.tags":"Tags (séparés par des virgules)","notebook.lbl.color":"Couleur","notebook.lbl.starred":"Marquer comme important ⭐","notebook.cat.bone":"🦴 Os","notebook.cat.muscle":"💪 Muscle","notebook.cat.nervous":"🧠 Nerveux","notebook.cat.cardio":"❤️ Cardiovasculaire","notebook.cat.respiratory":"💨 Respiratoire","notebook.cat.digestive":"🍽️ Digestif","notebook.cat.general":"📌 Général","notebook.ph.title":"ex : Fémur — origine des ischio-jambiers","notebook.ph.subject":"ex : Fémur, Biceps brachial, articulation de l'épaule","notebook.ph.content":"Écris des observations, des définitions, des moyens mnémotechniques...","notebook.ph.tags":"ex : examen, anatomie 1, important","notebook.btn.cancel":"Annuler","notebook.btn.delete":"🗑 Supprimer","notebook.btn.save":"💾 Enregistrer","home.feat.notes.t":"Notes et marque-pages","home.feat.notes.cta":"Ouvrir le carnet &rarr;","footer.report":"Signaler un problème","report.title":"Signaler un problème","report.intro":"Vous avez trouvé un bug, une erreur de contenu, ou vous avez une suggestion ? Dites-le-nous — cela arrive directement à l'équipe.","report.lbl.type":"Type","report.type.bug":"🐛 Erreur / bug","report.type.content":"📚 Erreur de contenu","report.type.suggestion":"💡 Suggestion","report.type.other":"❓ Autre chose","report.lbl.msg":"Description","report.ph.msg":"Décrivez brièvement le problème ou la suggestion...","report.lbl.email":"E-mail (facultatif, pour que nous puissions vous répondre)","report.ph.email":"toi@email.com","report.cancel":"Annuler","report.send":"Envoyer le rapport","report.sending":"Envoi en cours...","report.ok":"Merci ! Votre rapport a été envoyé.","report.err":"Impossible d'envoyer. Veuillez réessayer plus tard.","report.short":"Veuillez décrire le problème (5 caractères minimum)."};
+I18N.de = {"home.nav.systems":"Systeme","home.nav.features":"Funktionen","home.nav.learn":"Lernen","home.nav.contact":"Kontakt","home.nav.login":"Anmelden","home.hero.badge":"Menschliche Anatomie 3D &nbsp;&middot;&nbsp; <span>Rumänien</span>","home.hero.title":"Die gesamte menschliche Anatomie in <span class=\"home-hero-grad\">interaktivem 3D</span>","home.hero.sub":"Erkunde systematisch jedes System des menschlichen Körpers. Alle 6 jetzt verfügbar: Skelett, Muskeln, Nerven, Herz-Kreislauf, Atmung und Verdauung.","home.hero.ctaPrimary":"3D-Modelle ansehen","home.hero.ctaSecondary":"Meine Abzeichen","home.stats.bones":"Modellierte Knochen","home.stats.systems":"Verfügbare Systeme","home.stats.questions":"Quizfragen","home.stats.assistant":"KI-Assistent","home.systems.title":"Anatomische <span class=\"home-hero-grad\">Systeme</span>","home.systems.sub":"Alle 6 großen Systeme des menschlichen Körpers sind jetzt in interaktivem 3D verfügbar.","home.sys.osos.t":"Skelettsystem","home.sys.osos.d":"206 Knochen in 3D modelliert, Kopf · Rumpf · Gliedmaßen, interaktives Quiz.","home.sys.muscular.t":"Muskelsystem","home.sys.muscular.d":"600+ Muskeln, Muskelgruppen, Ansätze und Funktionen, RO/lateinische Namen.","home.sys.nervos.t":"Nervensystem","home.sys.nervos.d":"Gehirn, Rückenmark, periphere Nerven, Nervenbahnen.","home.sys.cardio.t":"Herz-Kreislauf-System","home.sys.cardio.d":"Herz, Arterien, Venen, Kapillaren — großer und kleiner Kreislauf.","home.sys.digestiv.t":"Verdauungssystem","home.sys.digestiv.d":"Kompletter Weg: Mundhöhle → Speiseröhre → Magen → Darm.","home.sys.respirator.t":"Atmungssystem","home.sys.respirator.d":"Atemwege, Lunge, Alveolen, die Mechanik der Atmung.","home.sys.badge.ready":"Jetzt verfügbar","home.sys.cta":"In 3D erkunden &rarr;","home.sys.badge.soon":"In Entwicklung","home.sys.badge.planned":"Geplant","home.features.title":"Was du mit <span class=\"home-hero-grad\">BioNexus</span> tun kannst","home.feat.skel.t":"Komplettes 3D-Skelett","home.feat.skel.d":"Drehen, zoomen, jeden Knochen im Detail erkunden. Alle Namen auf Rumänisch, gemäß den Lehrbüchern.","home.feat.skel.cta":"Skelett öffnen &rarr;","home.feat.quiz.t":"Minispiel: Der Anatomietest","home.feat.quiz.d":"Stelle dein Wissen auf die Probe. Die Kamera schwenkt automatisch zu jedem Knochen, erkenne die richtige Antwort.","home.feat.quiz.cta":"Minispiel starten &rarr;","home.feat.ai.t":"Biologischer KI-Assistent","home.feat.ai.d":"Stelle Fragen zu jedem Knochen oder jeder Struktur. Sofortige Antworten in der interaktiven Chatbox.","home.feat.struct.t":"Knochenstruktur","home.feat.struct.d":"Interaktiver Querschnitt — Periost, kompakter Knochen, Spongiosa, Markkanal, Knochenmark, alles sichtbar.","home.feat.search.t":"Schnellsuche","home.feat.search.d":"Gib einen beliebigen Knochennamen ein und die Seite springt sofort dorthin. Nach anatomischen Abschnitten kategorisiert.","home.feat.search.cta":"Strukturen suchen &rarr;","home.feat.details.t":"Medizinische Details","home.feat.details.d":"Kategorie, Typ, Beschreibung, Gelenke, Zusatzdetails — vollständiges Panel für jeden Knochen.","home.learn.title":"Lerne mit <span class=\"home-hero-grad\">offiziellen Lehrbüchern</span>","home.learn.sub":"Anatomie-Lehrbücher auf Hochschulniveau — offizielle Referenzen, in einem neuen Tab geöffnet.","home.learn.open":"Lehrbuch öffnen &rarr;","home.learn.hint":"Die Lehrbücher öffnen sich auf der offiziellen USMF-Website in einem neuen Browser-Tab.","home.learn.m1.t":"Menschliche Anatomie · Band I","home.learn.m1.d":"Stefaneț M. — Osteologie, Arthrologie, Myologie. Die Grundlage des Bewegungsapparats: Knochen, Gelenke, Muskeln mit vollständigen morphofunktionellen Beschreibungen.","home.learn.m2.t":"Menschliche Anatomie · Band II","home.learn.m2.d":"Stefaneț M. — Splanchnologie: Verdauungs-, Atmungs- und Urogenitalsystem. Innere Organe systemisch erklärt mit topografischen Skizzen.","home.learn.m3.t":"Menschliche Anatomie · Band III","home.learn.m3.d":"Stefaneț M. — Herz-Kreislauf-System, zentrales und peripheres Nervensystem, Sinnesorgane. Der Band der funktionellen Integration.","home.learn.m4.t":"Der Bewegungsapparat","home.learn.m4.d":"USMF · Vorlesungssammlung (2011). Systematisierung des Bewegungsapparats: Achsenskelett, Extremitätenskelett, Gelenke und Muskulatur — PDF-Format.","home.learn.m5.t":"Barron's · Anatomie & Physiologie","home.learn.m5.d":"Krumhardt & Alcamo (UMFST 2022) — Aufnahmelehrbuch für medizinische Fakultäten. Ausführliches Kapitel: <b>Knochen und Gelenke</b> (Osteogenese, Osteone, Synarthrosen, Diarthrosen, Knochenumbau).","home.learn.m6.t":"Knochenphysiologie","home.learn.m6.d":"Mikrostruktur, Knochenmark, Periost und Knochenregeneration.","home.footer":"BioNexus · Anatomische Bildungsplattform","footer.terms":"Nutzungsbedingungen","footer.privacy":"Datenschutz","footer.source":"Inhalt basierend auf „Menschliche Anatomie“ — M. Ștefaneț (USMF)","login.tab.login":"Anmelden","login.tab.register":"Registrieren","login.welcome":"Willkommen zurück","login.user":"E-Mail oder Benutzername","login.pass":"Passwort","login.submit":"Anmelden","login.sub":"Melde dich in deinem Konto an","login.guest":"oder <a onclick=\"closeLogin()\">als Gast fortfahren</a>","reg.title":"Konto erstellen","reg.user":"Benutzername","reg.email":"E-Mail-Adresse","reg.pass":"Passwort","reg.submit":"Konto erstellen","reg.sub":"Werde noch heute Teil von BioNexus","reg.note":"Daten werden lokal im Browser gespeichert, das Passwort wird mit SHA-256 gehasht","reg.terms":"Mit der Kontoerstellung stimmst du zu, dass Daten nur lokal und verschlüsselt gespeichert und niemals an Dritte weitergegeben werden.","auth.back":"Zurück","auth.or":"oder","auth.guest":"Als Gast fortfahren","auth.art.title":"Menschliche Anatomie in <span class=\"home-hero-grad\">interaktivem 3D</span>","auth.art.sub":"Melde dich an, um den Quiz-Fortschritt zu speichern, Einstellungen zu synchronisieren und auf den Administratormodus zuzugreifen.","auth.art.p1":"206 Knochen originalgetreu in 3D modelliert","auth.art.p2":"Adaptives Quiz mit 3 Schwierigkeitsstufen","auth.art.p3":"Integrierter biologischer KI-Assistent","auth.art.p4":"Offline-Zugriff, alles in deinem Browser","auth.art.quote":"\"Die beste Anatomie-Plattform für Schülerinnen und Schüler der Mittel- und Oberstufe.\"","auth.art.quote.by":"— Biologielehrer","chat.status":"Biologischer Assistent online","chat.welcome":"Hallo! Ich bin dein BioNexus-Assistent. Ich helfe dir sowohl bei der Anatomie als auch bei der Nutzung der Seite. Frag mich alles oder nutze die Schnellzugriffe unten.","chat.ideas":"Ein paar Ideen: <i>&bdquo;Wie viele Knochen?&rdquo;</i>, <i>&bdquo;Was ist der Femur?&rdquo;</i>","chat.placeholder":"Schreibe eine Frage zur Anatomie...","header.sub":"Menschliche Anatomie 3D","header.admin":"Admin","header.guest":"Gast","header.back":"Zurück","sb.muscles":"Muskeln","sb.searchMuscle":"Einen Muskel suchen...","sb.footMuscle":"Muskelsystem:","sb.musclesWord":"Muskeln","load.muscleText":"Muskelsystem — 3D-Modelle im Aufbau","load.cardioText":"Herz-Kreislauf-System wird geladen...","load.nervousText":"Nervensystem wird geladen...","load.respText":"Atmungssystem wird geladen...","load.digText":"Verdauungssystem wird geladen...","view.muscleComplete":"Muskelsystem","view.cardioComplete":"Herz-Kreislauf-System","view.nervousComplete":"Nervensystem","view.respComplete":"Atmungssystem","view.digComplete":"Verdauungssystem","sb.dig":"Verdauungsstrukturen","sb.searchDig":"Eine Struktur suchen...","sb.footDig":"Verdauungssystem:","info.digTitle":"Strukturinformationen","info.digPlaceholder":"Wähle eine Struktur aus dem Modell<br />oder aus der Liste links","info.muscleTitle":"Muskelinfo","info.musclePlaceholder":"Wähle einen Muskel aus dem Modell<br>oder aus der Liste links","nav.muAll":"Alle Muskeln","nav.muCap":"Kopf & Hals","nav.muTrunchi":"Rumpf","nav.muMembre":"Obere Gliedmaßen","nav.muInferioare":"Untere Gliedmaßen","home.sys.badge.beta":"Beta","nav.all":"Alle Knochen","nav.cap":"Schädel","nav.trunchi":"Rumpf","nav.membre":"Obere Gliedmaßen","nav.inferioare":"Untere Gliedmaßen","nav.structura":"Knochenstruktur","sb.bones":"Knochen","sb.search":"Einen Knochen suchen...","sb.foot":"Menschliches Skelett:","sb.bonesWord":"Knochen","load.text":"3D-Modell wird geladen...","load.error":"Das 3D-Modell konnte nicht geladen werden.<br>Stelle sicher, dass der Ordner die Dateien lib/three.min.js, lib/OrbitControls.js und lib/GLTFLoader.js enthält","view.title":"Ansicht","view.complete":"Komplettes Skelett","quiz.title":"Minispiel: Der Anatomietest","quiz.start.h":"Kennst du das Skelett?","quiz.start.p":"Erkenne den hervorgehobenen Knochen aus 4 Optionen.","quiz.diff.easy":"Leicht","quiz.diff.medium":"Mittel","quiz.diff.hard":"Schwer","quiz.start.btn":"Quiz starten","quiz.q":"Frage","quiz.score":"Punktzahl:","quiz.q.text":"Wie heißt der <span style=\"color:#3b82f6\">blau</span> hervorgehobene Knochen?","quiz.skip":"Überspringen","quiz.next":"Weiter &#8594;","quiz.end.title":"Glückwunsch!","quiz.end.msg":"Gut gemacht!","quiz.end.retry":"Erneut versuchen","info.title":"Knocheninfo","info.placeholder":"Wähle einen Knochen aus dem Modell<br>oder aus der Liste links","admin.title":"Administratormodus — Inhaltseditor","admin.sub":"Bearbeite den Inhalt der gesamten Seite — Knochen, Muskeln, die Strukturen des Nerven-, Herz-Kreislauf-, Atmungs- und Verdauungssystems sowie den KI-Prompt.","admin.pass":"Admin-Passwort","admin.login":"Authentifizieren","admin.pickBone":"Knochen auswählen:","admin.fld.name":"Name","admin.fld.cat":"Kategorie","admin.fld.type":"Typ","admin.fld.desc":"Beschreibung","admin.fld.art":"Gelenke (durch Komma getrennt)","admin.fld.det":"Zusätzliche Details","admin.save":"Änderungen speichern","admin.export":"JSON exportieren","admin.reset":"Auf Standardwerte zurücksetzen","err.fillBoth":"Fülle beide Felder aus.","err.fillAll":"Fülle alle Felder aus.","err.badCreds":"Falscher Benutzername oder falsches Passwort.","err.passShort":"Das Passwort muss mindestens 4 Zeichen lang sein.","err.email":"Ungültige E-Mail.","err.userTaken":"Benutzername bereits vergeben.","err.emailTaken":"E-Mail bereits registriert.","err.adminPass":"Falsches Administrator-Passwort.","user.menu.profil":"Profil","user.menu.setari":"Einstellungen","user.menu.logout":"Abmelden","profile.back":"Zurück","profile.tagline":"BioNexus-Mitglied","profile.tab.badges":"Abzeichen","profile.achieved":"Erhalten","profile.profil.h":"Dein Profil","profile.profil.p":"Der Inhalt dieses Abschnitts wird später hinzugefügt.","profile.setari.h":"Einstellungen","profile.setari.p":"Der Inhalt dieses Abschnitts wird später hinzugefügt.","profile.insigne.h":"Meine Abzeichen","profile.insigne.p":"Der Inhalt dieses Abschnitts wird später hinzugefügt.","home.feat.ai.cta":"Chatbox öffnen &rarr;","home.feat.curio.t":"Wissenswertes","home.feat.curio.d":"Erstaunliche Fakten über den menschlichen Körper — wie viele Knochen, der kleinste, der stärkste Muskel. Entdecke eine zufällige Kuriosität.","home.feat.curio.cta":"Eine Kuriosität zeigen &rarr;","login.forgot":"Passwort vergessen?","login.noAccount":"Noch kein Konto? <a onclick=\"showAuthMode('register')\">Konto erstellen</a>","reg.passHint":"Mindestens 8 Zeichen","reg.passConf":"Passwort bestätigen","reg.termsAccept":"Ich stimme den <a class=\"auth-link\" onclick=\"event.preventDefault();showTerms('terms')\">Nutzungsbedingungen</a> und der <a class=\"auth-link\" onclick=\"event.preventDefault();showTerms('privacy')\">Datenschutzerklärung</a> zu","reg.human":"Ich bin ein Mensch","reg.captcha.title":"Sicherheitsprüfung","reg.haveAccount":"Bereits ein Konto? <a onclick=\"showAuthMode('login')\">Anmelden</a>","home.feat.edu.t":"Bildungsressource","home.feat.edu.d":"BioNexus ist eine offene Bildungsplattform. Offizielle universitäre Anatomie-Lehrbücher direkt im Bereich Lernen verfügbar.","home.feat.edu.cta":"Lehrbücher durchsuchen &rarr;","home.reviews.title":"Bewertungen <span class=\"home-hero-grad\">von Nutzern</span>","home.reviews.sub":"Lies die Erfahrungen anderer oder hinterlasse deine eigene Bewertung, sobald du angemeldet bist.","home.reviews.empty":"0 Bewertungen","home.reviews.login":"Melde dich an, um eine Bewertung abzugeben.","home.reviews.ph":"Sag uns, was du von BioNexus hältst...","home.reviews.submit":"Bewertung veröffentlichen","home.reviews.none":"Noch keine Bewertungen — sei der Erste!","home.stats.verified":"Bildungsseite · Verifiziert","settings.adminH":"Administratormodus","settings.adminSub":"Zugriff auf den Inhaltseditor (Knochenbeschreibungen, Kategorien, JSON-Export). Authentifizierung erforderlich.","settings.adminBtn":"Admin-Panel öffnen","quiz.pick.h":"Wähle einen Quiztyp","quiz.pick.p":"Zwei Modi verfügbar — wähle, wie du dich testen möchtest.","quiz.mode.visual.t":"Erkenne den Knochen","quiz.mode.visual.d":"Sieh einen blau hervorgehobenen Knochen auf dem Skelett und wähle den richtigen Namen aus 4 Optionen. Schnelles visuelles Minispiel.","quiz.mode.know.t":"Wissenstest","quiz.mode.know.d":"Fragen zu Beschreibungen, Gelenken und Details (Leicht/Mittel) sowie Fragen aus den Lehrbüchern Stefaneț Bd. I-III (Schwer).","quiz.back":"Zurück","quiz.sys.h":"Wähle das anatomische System","quiz.sys.p":"Zu welchem System möchtest du dich testen?","quiz.sys.osos.t":"Skelettsystem","quiz.sys.osos.d":"206 Knochen an Kopf, Rumpf und Gliedmaßen. Visuelle und Wissensfragen + die Ștefaneț-Lehrbücher (Schwer).","quiz.sys.muscular.t":"Muskelsystem","quiz.sys.muscular.d":"350+ quergestreifte Muskeln mit RO/lateinischen Namen, Ursprüngen, Ansätzen und Funktionen.","quiz.sys.nervous.t":"Nervensystem","quiz.sys.nervous.d":"Gehirn, Rückenmark, periphere Nerven — RO + lateinische Namen.","quiz.sys.cardio.t":"Herz-Kreislauf-System","quiz.sys.cardio.d":"Herz, Arterien, Venen — erkenne die Strukturen und ihre lateinischen Namen.","quiz.sys.respiratory.t":"Atmungssystem","quiz.sys.respiratory.d":"Atemwege, Lunge, Kehlkopf, Zwerchfell — RO + lateinische Namen.","quiz.sys.digestive.t":"Verdauungssystem","quiz.sys.digestive.d":"Magen, Leber, Darm, Bauchspeicheldrüse — erkenne die Verdauungsorgane.","login.user.ph":"du@email.com","login.pass.ph":"Passwort eingeben","reg.user.ph":"Wähle einen Benutzernamen","reg.email.ph":"du@email.com","reg.pass.ph":"Erstelle ein Passwort","reg.passConf.ph":"Bestätige dein Passwort","forgot.email.ph":"du@email.com","reset.newPass.ph":"Mindestens 8 Zeichen","reset.confPass.ph":"Passwort erneut eingeben","quiz.mode.duel.t":"KI-Duell","quiz.mode.duel.d":"Die KI wirft dir Anatomie-Aussagen zu — einige richtig, einige mit subtilen Fehlern. Erkenne, welche wahr und welche falsch ist. Training für kritisches Denken.","daily.title":"Tägliche Herausforderung","daily.streak":"Serie:","daily.days":"Tage","daily.reward":"Belohnung:","notebook.title":"BioNexus-Notizbuch","notebook.search":"Notizen durchsuchen...","notebook.filter.all":"Alle","notebook.filter.starred":"⭐ Wichtig","notebook.filter.bone":"🦴 Knochen","notebook.filter.muscle":"💪 Muskeln","notebook.filter.nervous":"🧠 Nerven","notebook.filter.cardio":"❤️ Herz-Kreislauf","notebook.filter.respiratory":"💨 Atmung","notebook.filter.digestive":"🍽️ Verdauung","notebook.empty.title":"Noch keine Notizen","notebook.empty.desc":"Füge deine erste Notiz hinzu, indem du auf <b>+ Neue Notiz</b> drückst, oder aus dem 3D-Viewer, wenn du eine Struktur in einem beliebigen System auswählst.","notebook.empty.cta":"+ Erste Notiz hinzufügen","notebook.editor.new":"Neue Notiz","notebook.editor.edit":"Notiz bearbeiten","notebook.lbl.title":"Titel","notebook.lbl.category":"Kategorie","notebook.lbl.subject":"Thema (optional)","notebook.lbl.content":"Inhalt","notebook.lbl.tags":"Tags (durch Komma getrennt)","notebook.lbl.color":"Farbe","notebook.lbl.starred":"Als wichtig markieren ⭐","notebook.cat.bone":"🦴 Knochen","notebook.cat.muscle":"💪 Muskel","notebook.cat.nervous":"🧠 Nerven","notebook.cat.cardio":"❤️ Herz-Kreislauf","notebook.cat.respiratory":"💨 Atmung","notebook.cat.digestive":"🍽️ Verdauung","notebook.cat.general":"📌 Allgemein","notebook.ph.title":"z. B. Femur — Ursprung ischiokrurale Muskeln","notebook.ph.subject":"z. B. Femur, Biceps brachii, Schultergelenk","notebook.ph.content":"Schreibe Beobachtungen, Definitionen, Merksätze...","notebook.ph.tags":"z. B. Prüfung, Anatomie 1, wichtig","notebook.btn.cancel":"Abbrechen","notebook.btn.delete":"🗑 Löschen","notebook.btn.save":"💾 Speichern","home.feat.notes.t":"Notizen & Lesezeichen","home.feat.notes.cta":"Notizbuch öffnen &rarr;","footer.report":"Ein Problem melden","report.title":"Ein Problem melden","report.intro":"Hast du einen Fehler, einen inhaltlichen Fehler gefunden oder einen Vorschlag? Sag es uns — es geht direkt an das Team.","report.lbl.type":"Typ","report.type.bug":"🐛 Fehler / Bug","report.type.content":"📚 Inhaltlicher Fehler","report.type.suggestion":"💡 Vorschlag","report.type.other":"❓ Etwas anderes","report.lbl.msg":"Beschreibung","report.ph.msg":"Beschreibe kurz das Problem oder den Vorschlag...","report.lbl.email":"E-Mail (optional, damit wir antworten können)","report.ph.email":"du@email.com","report.cancel":"Abbrechen","report.send":"Bericht senden","report.sending":"Wird gesendet...","report.ok":"Danke! Dein Bericht wurde gesendet.","report.err":"Konnte nicht gesendet werden. Bitte versuche es später erneut.","report.short":"Bitte beschreibe das Problem (mind. 5 Zeichen)."};
+I18N.es = {"home.nav.systems":"Sistemas","home.nav.features":"Funciones","home.nav.learn":"Aprende","home.nav.contact":"Contacto","home.nav.login":"Iniciar sesión","home.hero.badge":"Anatomía humana 3D &nbsp;&middot;&nbsp; <span>Rumanía</span>","home.hero.title":"Toda la anatomía humana en <span class=\"home-hero-grad\">3D interactivo</span>","home.hero.sub":"Explora sistemáticamente cada sistema del cuerpo humano. Los 6 ya están disponibles: óseo, muscular, nervioso, cardiovascular, respiratorio y digestivo.","home.hero.ctaPrimary":"Ver modelos 3D","home.hero.ctaSecondary":"Mis insignias","home.stats.bones":"Huesos modelados","home.stats.systems":"Sistemas disponibles","home.stats.questions":"Preguntas de quiz","home.stats.assistant":"Asistente de IA","home.systems.title":"Sistemas <span class=\"home-hero-grad\">anatómicos</span>","home.systems.sub":"Los 6 sistemas principales del cuerpo humano ya están disponibles en 3D interactivo.","home.sys.osos.t":"Sistema Óseo","home.sys.osos.d":"206 huesos modelados en 3D, cabeza · tronco · miembros, quiz interactivo.","home.sys.muscular.t":"Sistema Muscular","home.sys.muscular.d":"600+ músculos, grupos musculares, inserciones y acciones, nombres RO/latín.","home.sys.nervos.t":"Sistema Nervioso","home.sys.nervos.d":"Cerebro, médula espinal, nervios periféricos, vías neuronales.","home.sys.cardio.t":"Sistema Cardiovascular","home.sys.cardio.d":"Corazón, arterias, venas, capilares — circulación mayor y menor.","home.sys.digestiv.t":"Sistema Digestivo","home.sys.digestiv.d":"Recorrido completo: cavidad bucal → esófago → estómago → intestinos.","home.sys.respirator.t":"Sistema Respiratorio","home.sys.respirator.d":"Vías respiratorias, pulmones, alvéolos, la mecánica de la respiración.","home.sys.badge.ready":"Disponible ahora","home.sys.cta":"Explorar en 3D &rarr;","home.sys.badge.soon":"En desarrollo","home.sys.badge.planned":"Planificado","home.features.title":"Lo que puedes hacer con <span class=\"home-hero-grad\">BioNexus</span>","home.feat.skel.t":"Esqueleto 3D completo","home.feat.skel.d":"Rota, haz zoom, explora cada hueso en detalle. Todos los nombres en rumano, conforme a los manuales.","home.feat.skel.cta":"Abrir el esqueleto &rarr;","home.feat.quiz.t":"Minijuego: El Test Anatómico","home.feat.quiz.d":"Pon a prueba tus conocimientos. La cámara se desplaza automáticamente a cada hueso, identifica la respuesta correcta.","home.feat.quiz.cta":"Iniciar minijuego &rarr;","home.feat.ai.t":"Asistente de IA Biológico","home.feat.ai.d":"Haz preguntas sobre cualquier hueso o estructura. Respuestas instantáneas en el chat interactivo.","home.feat.struct.t":"Estructura del hueso","home.feat.struct.d":"Sección transversal interactiva — periostio, hueso compacto, hueso esponjoso, canal medular, médula, todo visible.","home.feat.search.t":"Búsqueda rápida","home.feat.search.d":"Escribe el nombre de cualquier hueso y el sitio salta a él al instante. Categorizado por secciones anatómicas.","home.feat.search.cta":"Buscar estructuras &rarr;","home.feat.details.t":"Detalles médicos","home.feat.details.d":"Categoría, tipo, descripción, articulaciones, detalles adicionales — panel completo para cada hueso.","home.learn.title":"Aprende con <span class=\"home-hero-grad\">manuales oficiales</span>","home.learn.sub":"Manuales universitarios de anatomía humana — referencias oficiales abiertas en una pestaña nueva.","home.learn.open":"Abrir manual &rarr;","home.learn.hint":"Los manuales se abren en el sitio oficial de la USMF en una nueva pestaña del navegador.","home.learn.m1.t":"Anatomía Humana · Volumen I","home.learn.m1.d":"Stefaneț M. — Osteología, artrología, miología. La base del aparato locomotor: huesos, articulaciones, músculos con descripciones morfofuncionales completas.","home.learn.m2.t":"Anatomía Humana · Volumen II","home.learn.m2.d":"Stefaneț M. — Esplacnología: aparatos digestivo, respiratorio y urogenital. Los órganos internos explicados sistémicamente con esquemas topográficos.","home.learn.m3.t":"Anatomía Humana · Volumen III","home.learn.m3.d":"Stefaneț M. — Sistema cardiovascular, sistema nervioso central y periférico, órganos de los sentidos. El volumen de la integración funcional.","home.learn.m4.t":"El Aparato Locomotor","home.learn.m4.d":"USMF · Compendio de cursos (2011). Sistematización del aparato locomotor: esqueleto axial, esqueleto apendicular, articulaciones y musculatura — formato PDF.","home.learn.m5.t":"Barron's · Anatomía y Fisiología","home.learn.m5.d":"Krumhardt & Alcamo (UMFST 2022) — manual de admisión para las facultades de medicina. Capítulo detallado: <b>Los huesos y las articulaciones</b> (osteogénesis, osteonas, sinartrosis, diartrosis, remodelación ósea).","home.learn.m6.t":"Fisiología del hueso","home.learn.m6.d":"Microestructura, médula, periostio y regeneración ósea.","home.footer":"BioNexus · Plataforma educativa de anatomía","footer.terms":"Términos","footer.privacy":"Privacidad","footer.source":"Contenido basado en “Anatomía Humana” — M. Ștefaneț (USMF)","login.tab.login":"Iniciar sesión","login.tab.register":"Registrarse","login.welcome":"Bienvenido de nuevo","login.user":"Email o usuario","login.pass":"Contraseña","login.submit":"Entrar","login.sub":"Inicia sesión en tu cuenta","login.guest":"o <a onclick=\"closeLogin()\">continúa como invitado</a>","reg.title":"Crea una cuenta","reg.user":"Nombre de usuario","reg.email":"Dirección de email","reg.pass":"Contraseña","reg.submit":"Crear cuenta","reg.sub":"Únete a BioNexus hoy","reg.note":"los datos se guardan localmente en el navegador, la contraseña se cifra con SHA-256","reg.terms":"Al crear una cuenta aceptas que los datos se almacenen solo localmente, cifrados, sin compartirse nunca con terceros.","auth.back":"Atrás","auth.or":"o","auth.guest":"Continuar como invitado","auth.art.title":"Anatomía humana en <span class=\"home-hero-grad\">3D interactivo</span>","auth.art.sub":"Inicia sesión para guardar tu progreso en los quizzes, sincronizar preferencias y acceder al modo administrador.","auth.art.p1":"206 huesos modelados fielmente en 3D","auth.art.p2":"Quiz adaptativo con 3 niveles de dificultad","auth.art.p3":"Asistente de IA de biología integrado","auth.art.p4":"Acceso sin conexión, todo en tu navegador","auth.art.quote":"\"La mejor plataforma de anatomía para estudiantes de secundaria y bachillerato.\"","auth.art.quote.by":"— Profesor de Biología","chat.status":"Asistente biológico en línea","chat.welcome":"¡Hola! Soy tu asistente de BioNexus. Te ayudo tanto con la anatomía como con el uso del sitio. Pregúntame lo que quieras o usa los atajos de abajo.","chat.ideas":"Algunas ideas: <i>&bdquo;¿Cuántos huesos hay?&rdquo;</i>, <i>&bdquo;¿Qué es el fémur?&rdquo;</i>","chat.placeholder":"Escribe una pregunta sobre anatomía...","header.sub":"Anatomía humana 3D","header.admin":"Admin","header.guest":"Invitado","header.back":"Atrás","sb.muscles":"Músculos","sb.searchMuscle":"Busca un músculo...","sb.footMuscle":"Sistema muscular:","sb.musclesWord":"músculos","load.muscleText":"Sistema muscular — modelos 3D en construcción","load.cardioText":"Cargando el sistema cardiovascular...","load.nervousText":"Cargando el sistema nervioso...","load.respText":"Cargando el sistema respiratorio...","load.digText":"Cargando el sistema digestivo...","view.muscleComplete":"Sistema muscular","view.cardioComplete":"Sistema cardiovascular","view.nervousComplete":"Sistema nervioso","view.respComplete":"Sistema respiratorio","view.digComplete":"Sistema digestivo","sb.dig":"Estructuras digestivas","sb.searchDig":"Busca una estructura...","sb.footDig":"Sistema digestivo:","info.digTitle":"Información de la Estructura","info.digPlaceholder":"Selecciona una estructura del modelo<br />o de la lista de la izquierda","info.muscleTitle":"Información del Músculo","info.musclePlaceholder":"Selecciona un músculo del modelo<br>o de la lista de la izquierda","nav.muAll":"Todos los Músculos","nav.muCap":"Cabeza y Cuello","nav.muTrunchi":"Tronco","nav.muMembre":"Miembros Superiores","nav.muInferioare":"Miembros Inferiores","home.sys.badge.beta":"Beta","nav.all":"Todos los Huesos","nav.cap":"Cráneo","nav.trunchi":"Tronco","nav.membre":"Miembros Superiores","nav.inferioare":"Miembros Inferiores","nav.structura":"Estructura del Hueso","sb.bones":"Huesos","sb.search":"Busca un hueso...","sb.foot":"Esqueleto humano:","sb.bonesWord":"huesos","load.text":"Cargando el modelo 3D...","load.error":"No se pudo cargar el modelo 3D.<br>Asegúrate de que la carpeta contenga los archivos lib/three.min.js, lib/OrbitControls.js y lib/GLTFLoader.js","view.title":"Vista","view.complete":"Esqueleto completo","quiz.title":"Minijuego: El Test Anatómico","quiz.start.h":"¿Conoces el esqueleto?","quiz.start.p":"Identifica el hueso resaltado entre 4 opciones.","quiz.diff.easy":"Fácil","quiz.diff.medium":"Medio","quiz.diff.hard":"Difícil","quiz.start.btn":"Iniciar Quiz","quiz.q":"Pregunta","quiz.score":"Puntuación:","quiz.q.text":"¿Cómo se llama el hueso resaltado en <span style=\"color:#3b82f6\">azul</span>?","quiz.skip":"Saltar","quiz.next":"Siguiente &#8594;","quiz.end.title":"¡Felicidades!","quiz.end.msg":"¡Bien hecho!","quiz.end.retry":"Intentar de nuevo","info.title":"Información del Hueso","info.placeholder":"Selecciona un hueso del modelo<br>o de la lista de la izquierda","admin.title":"Modo Administrador — Editor de Contenido","admin.sub":"Edita el contenido de todo el sitio — huesos, músculos, las estructuras de los sistemas nervioso, cardiovascular, respiratorio y digestivo, además del prompt de la IA.","admin.pass":"Contraseña de administrador","admin.login":"Autenticar","admin.pickBone":"Selecciona el hueso:","admin.fld.name":"Nombre","admin.fld.cat":"Categoría","admin.fld.type":"Tipo","admin.fld.desc":"Descripción","admin.fld.art":"Articulaciones (separadas por comas)","admin.fld.det":"Detalles adicionales","admin.save":"Guardar cambios","admin.export":"Exportar JSON","admin.reset":"Restablecer a valores predeterminados","err.fillBoth":"Rellena ambos campos.","err.fillAll":"Rellena todos los campos.","err.badCreds":"Usuario o contraseña incorrectos.","err.passShort":"La contraseña debe tener al menos 4 caracteres.","err.email":"Email no válido.","err.userTaken":"El usuario ya existe.","err.emailTaken":"El email ya está registrado.","err.adminPass":"Contraseña de administrador incorrecta.","user.menu.profil":"Perfil","user.menu.setari":"Ajustes","user.menu.logout":"Cerrar sesión","profile.back":"Atrás","profile.tagline":"Miembro de BioNexus","profile.tab.badges":"Insignias","profile.achieved":"Obtenidas","profile.profil.h":"Tu perfil","profile.profil.p":"El contenido de esta sección se añadirá más adelante.","profile.setari.h":"Ajustes","profile.setari.p":"El contenido de esta sección se añadirá más adelante.","profile.insigne.h":"Mis insignias","profile.insigne.p":"El contenido de esta sección se añadirá más adelante.","home.feat.ai.cta":"Abrir el chat &rarr;","home.feat.curio.t":"Curiosidades","home.feat.curio.d":"Datos asombrosos sobre el cuerpo humano — cuántos huesos, el más pequeño, el músculo más fuerte. Descubre una curiosidad al azar.","home.feat.curio.cta":"Ver una curiosidad &rarr;","login.forgot":"¿Olvidaste la contraseña?","login.noAccount":"¿No tienes cuenta? <a onclick=\"showAuthMode('register')\">Crea una cuenta</a>","reg.passHint":"Al menos 8 caracteres","reg.passConf":"Confirmar contraseña","reg.termsAccept":"Acepto los <a class=\"auth-link\" onclick=\"event.preventDefault();showTerms('terms')\">Términos del Servicio</a> y la <a class=\"auth-link\" onclick=\"event.preventDefault();showTerms('privacy')\">Política de Privacidad</a>","reg.human":"Soy humano","reg.captcha.title":"Verificación de seguridad","reg.haveAccount":"¿Ya tienes una cuenta? <a onclick=\"showAuthMode('login')\">Inicia sesión</a>","home.feat.edu.t":"Recurso educativo","home.feat.edu.d":"BioNexus es una plataforma educativa abierta. Manuales universitarios oficiales de anatomía disponibles directamente en la sección Aprende.","home.feat.edu.cta":"Ver los manuales &rarr;","home.reviews.title":"Reseñas <span class=\"home-hero-grad\">de los usuarios</span>","home.reviews.sub":"Lee las experiencias de otros usuarios o deja tu propia reseña una vez que hayas iniciado sesión.","home.reviews.empty":"0 reseñas","home.reviews.login":"Inicia sesión para dejar una reseña.","home.reviews.ph":"Cuéntanos qué opinas sobre BioNexus...","home.reviews.submit":"Publicar reseña","home.reviews.none":"Aún no hay reseñas — ¡sé el primero!","home.stats.verified":"Sitio educativo · Verificado","settings.adminH":"Modo Administrador","settings.adminSub":"Acceso al editor de contenido (descripciones de huesos, categorías, exportación JSON). Requiere autenticación.","settings.adminBtn":"Abrir el panel Admin","quiz.pick.h":"Elige un tipo de test","quiz.pick.p":"Dos modos disponibles — elige cómo quieres ponerte a prueba.","quiz.mode.visual.t":"Identifica el Hueso","quiz.mode.visual.d":"Mira un hueso resaltado en azul sobre el esqueleto y elige el nombre correcto entre 4 opciones. Minijuego visual rápido.","quiz.mode.know.t":"Test de Conocimientos","quiz.mode.know.d":"Preguntas sobre descripciones, articulaciones y detalles (Fácil/Medio) más preguntas de los manuales Stefaneț Vol. I-III (Difícil).","quiz.back":"Atrás","quiz.sys.h":"Elige el sistema anatómico","quiz.sys.p":"¿Sobre qué sistema quieres ponerte a prueba?","quiz.sys.osos.t":"Sistema Óseo","quiz.sys.osos.d":"206 huesos en cabeza, tronco y miembros. Preguntas visuales y de conocimientos + los manuales Ștefaneț (Difícil).","quiz.sys.muscular.t":"Sistema Muscular","quiz.sys.muscular.d":"350+ músculos estriados con nombres RO/latín, orígenes, inserciones y acciones.","quiz.sys.nervous.t":"Sistema Nervioso","quiz.sys.nervous.d":"Cerebro, médula espinal, nervios periféricos — nombres RO + latín.","quiz.sys.cardio.t":"Sistema Cardiovascular","quiz.sys.cardio.d":"Corazón, arterias, venas — identifica las estructuras y sus nombres en latín.","quiz.sys.respiratory.t":"Sistema Respiratorio","quiz.sys.respiratory.d":"Vías aéreas, pulmones, laringe, diafragma — nombres RO + latín.","quiz.sys.digestive.t":"Sistema Digestivo","quiz.sys.digestive.d":"Estómago, hígado, intestinos, páncreas — identifica los órganos digestivos.","login.user.ph":"tu@email.com","login.pass.ph":"Introduce tu contraseña","reg.user.ph":"Elige un nombre de usuario","reg.email.ph":"tu@email.com","reg.pass.ph":"Crea una contraseña","reg.passConf.ph":"Confirma tu contraseña","forgot.email.ph":"tu@email.com","reset.newPass.ph":"Al menos 8 caracteres","reset.confPass.ph":"Reintroduce la contraseña","quiz.mode.duel.t":"Duelo de IA","quiz.mode.duel.d":"La IA te lanza afirmaciones sobre anatomía — algunas correctas, otras con errores sutiles. Detecta cuál es verdadera y cuál es falsa. Entrenamiento del pensamiento crítico.","daily.title":"Reto del día","daily.streak":"Racha:","daily.days":"días","daily.reward":"Recompensa:","notebook.title":"Cuaderno BioNexus","notebook.search":"Buscar en las notas...","notebook.filter.all":"Todas","notebook.filter.starred":"⭐ Importantes","notebook.filter.bone":"🦴 Huesos","notebook.filter.muscle":"💪 Músculos","notebook.filter.nervous":"🧠 Nervioso","notebook.filter.cardio":"❤️ Cardio","notebook.filter.respiratory":"💨 Respiratorio","notebook.filter.digestive":"🍽️ Digestivo","notebook.empty.title":"Aún no hay notas","notebook.empty.desc":"Añade tu primera nota pulsando <b>+ Nota nueva</b> o desde el visor 3D cuando selecciones una estructura en cualquier sistema.","notebook.empty.cta":"+ Añadir la primera nota","notebook.editor.new":"Nota nueva","notebook.editor.edit":"Editar nota","notebook.lbl.title":"Título","notebook.lbl.category":"Categoría","notebook.lbl.subject":"Tema (opcional)","notebook.lbl.content":"Contenido","notebook.lbl.tags":"Etiquetas (separadas por comas)","notebook.lbl.color":"Color","notebook.lbl.starred":"Marcar como importante ⭐","notebook.cat.bone":"🦴 Hueso","notebook.cat.muscle":"💪 Músculo","notebook.cat.nervous":"🧠 Nervioso","notebook.cat.cardio":"❤️ Cardiovascular","notebook.cat.respiratory":"💨 Respiratorio","notebook.cat.digestive":"🍽️ Digestivo","notebook.cat.general":"📌 General","notebook.ph.title":"ej: Fémur — origen de los isquiotibiales","notebook.ph.subject":"ej: Fémur, Bíceps braquial, articulación del hombro","notebook.ph.content":"Escribe observaciones, definiciones, mnemotécnicas...","notebook.ph.tags":"ej: examen, anatomía 1, importante","notebook.btn.cancel":"Cancelar","notebook.btn.delete":"🗑 Eliminar","notebook.btn.save":"💾 Guardar","home.feat.notes.t":"Notas y Marcadores","home.feat.notes.cta":"Abrir cuaderno &rarr;","footer.report":"Reportar un problema","report.title":"Reportar un problema","report.intro":"¿Encontraste un error, una equivocación de contenido o tienes una sugerencia? Cuéntanos — llega directo al equipo.","report.lbl.type":"Tipo","report.type.bug":"🐛 Error / bug","report.type.content":"📚 Error de contenido","report.type.suggestion":"💡 Sugerencia","report.type.other":"❓ Otra cosa","report.lbl.msg":"Descripción","report.ph.msg":"Describe brevemente el problema o la sugerencia...","report.lbl.email":"Email (opcional, para poder responderte)","report.ph.email":"tu@email.com","report.cancel":"Cancelar","report.send":"Enviar el reporte","report.sending":"Enviando...","report.ok":"¡Gracias! Tu reporte fue enviado.","report.err":"No se pudo enviar. Inténtalo de nuevo más tarde.","report.short":"Describe el problema (mín. 5 caracteres)."};
+I18N.hu = {"home.nav.systems":"Rendszerek","home.nav.features":"Funkciók","home.nav.learn":"Tanulás","home.nav.contact":"Kapcsolat","home.nav.login":"Bejelentkezés","home.hero.badge":"Emberi anatómia 3D &nbsp;&middot;&nbsp; <span>Románia</span>","home.hero.title":"A teljes emberi anatómia <span class=\"home-hero-grad\">interaktív 3D-ben</span>","home.hero.sub":"Fedezd fel rendszerezetten az emberi test összes rendszerét. Most már mind a 6 elérhető: csont-, izom-, ideg-, szív- és érrendszer, légző- és emésztőrendszer.","home.hero.ctaPrimary":"3D modellek megtekintése","home.hero.ctaSecondary":"Jelvényeim","home.stats.bones":"Modellezett csont","home.stats.systems":"Elérhető rendszer","home.stats.questions":"Kvízkérdés","home.stats.assistant":"MI-asszisztens","home.systems.title":"Anatómiai <span class=\"home-hero-grad\">rendszerek</span>","home.systems.sub":"Az emberi test mind a 6 fő rendszere most már elérhető interaktív 3D-ben.","home.sys.osos.t":"Csontrendszer","home.sys.osos.d":"206 csont 3D-ben modellezve, fej · törzs · végtagok, interaktív kvíz.","home.sys.muscular.t":"Izomrendszer","home.sys.muscular.d":"600+ izom, izomcsoportok, tapadások és működés, RO/latin nevekkel.","home.sys.nervos.t":"Idegrendszer","home.sys.nervos.d":"Agy, gerincvelő, perifériás idegek, idegpályák.","home.sys.cardio.t":"Szív- és érrendszer","home.sys.cardio.d":"Szív, artériák, vénák, hajszálerek — a nagy- és kisvérkör egyaránt.","home.sys.digestiv.t":"Emésztőrendszer","home.sys.digestiv.d":"Teljes útvonal: szájüreg → nyelőcső → gyomor → belek.","home.sys.respirator.t":"Légzőrendszer","home.sys.respirator.d":"Légutak, tüdő, léghólyagok, a légzés mechanikája.","home.sys.badge.ready":"Most elérhető","home.sys.cta":"Felfedezés 3D-ben &rarr;","home.sys.badge.soon":"Fejlesztés alatt","home.sys.badge.planned":"Tervezett","home.features.title":"Mit tehetsz a <span class=\"home-hero-grad\">BioNexus</span> segítségével","home.feat.skel.t":"Teljes 3D csontváz","home.feat.skel.d":"Forgasd, nagyíts, fedezd fel részletesen minden csontot. Minden név románul, a tankönyveknek megfelelően.","home.feat.skel.cta":"Csontváz megnyitása &rarr;","home.feat.quiz.t":"Minijáték: Az anatómiai teszt","home.feat.quiz.d":"Tedd próbára a tudásod. A kamera automatikusan minden csonthoz mozdul, azonosítsd a helyes választ.","home.feat.quiz.cta":"Minijáték indítása &rarr;","home.feat.ai.t":"Biológiai MI-asszisztens","home.feat.ai.d":"Tegyél fel kérdéseket bármely csontról vagy struktúráról. Azonnali válaszok az interaktív csevegőablakban.","home.feat.struct.t":"A csont szerkezete","home.feat.struct.d":"Interaktív keresztmetszet — csonthártya, tömör csont, szivacsos állomány, velőűr, csontvelő, minden látható.","home.feat.search.t":"Gyorskeresés","home.feat.search.d":"Írj be bármilyen csontnevet, és az oldal azonnal odaugrik. Anatómiai szakaszok szerint kategorizálva.","home.feat.search.cta":"Struktúrák keresése &rarr;","home.feat.details.t":"Orvosi részletek","home.feat.details.d":"Kategória, típus, leírás, ízületek, további részletek — teljes panel minden csonthoz.","home.learn.title":"Tanulj a <span class=\"home-hero-grad\">hivatalos tankönyvekből</span>","home.learn.sub":"Egyetemi szintű emberi anatómia tankönyvek — hivatalos források, új lapon megnyitva.","home.learn.open":"Tankönyv megnyitása &rarr;","home.learn.hint":"A tankönyvek a hivatalos USMF weboldalon, a böngésző új lapján nyílnak meg.","home.learn.m1.t":"Emberi anatómia · I. kötet","home.learn.m1.d":"Stefaneț M. — Csonttan, ízülettan, izomtan. A mozgásszervrendszer alapja: csontok, ízületek, izmok teljes morfofunkcionális leírásokkal.","home.learn.m2.t":"Emberi anatómia · II. kötet","home.learn.m2.d":"Stefaneț M. — Zsigertan: emésztő-, légző- és húgy-ivarrendszer. A belső szervek rendszerszemléletű magyarázata topográfiai vázlatokkal.","home.learn.m3.t":"Emberi anatómia · III. kötet","home.learn.m3.d":"Stefaneț M. — Szív- és érrendszer, központi és perifériás idegrendszer, érzékszervek. A funkcionális integráció kötete.","home.learn.m4.t":"A mozgás- és támasztószervrendszer","home.learn.m4.d":"USMF · Előadásgyűjtemény (2011). A mozgásszervrendszer rendszerezése: axiális csontváz, végtagi csontváz, ízületek és izomzat — PDF formátumban.","home.learn.m5.t":"Barron's · Anatómia és élettan","home.learn.m5.d":"Krumhardt & Alcamo (UMFST 2022) — felvételi tankönyv orvosi egyetemekre. Részletes fejezet: <b>Csontok és ízületek</b> (csontképződés, oszteonok, szinartrózisok, diartrózisok, csontátépülés).","home.learn.m6.t":"A csont élettana","home.learn.m6.d":"Mikroszerkezet, csontvelő, csonthártya és a csontregeneráció.","home.footer":"BioNexus · Anatómiai oktatási platform","footer.terms":"Feltételek","footer.privacy":"Adatvédelem","footer.source":"A tartalom az „Emberi anatómia” alapján — M. Ștefaneț (USMF)","login.tab.login":"Bejelentkezés","login.tab.register":"Regisztráció","login.welcome":"Üdv újra","login.user":"Email vagy felhasználónév","login.pass":"Jelszó","login.submit":"Bejelentkezés","login.sub":"Jelentkezz be a fiókodba","login.guest":"vagy <a onclick=\"closeLogin()\">folytasd vendégként</a>","reg.title":"Fiók létrehozása","reg.user":"Felhasználónév","reg.email":"Email-cím","reg.pass":"Jelszó","reg.submit":"Fiók létrehozása","reg.sub":"Csatlakozz még ma a BioNexushoz","reg.note":"az adatok helyben, a böngészőben tárolódnak, a jelszó SHA-256 titkosítású","reg.terms":"A fiók létrehozásával elfogadod, hogy az adatok csak helyben, titkosítva tárolódnak, harmadik féllel soha nem osztjuk meg.","auth.back":"Vissza","auth.or":"vagy","auth.guest":"Folytatás vendégként","auth.art.title":"Emberi anatómia <span class=\"home-hero-grad\">interaktív 3D-ben</span>","auth.art.sub":"Jelentkezz be, hogy elmentsd a kvízek haladását, szinkronizáld a beállításokat és elérd az adminisztrátori módot.","auth.art.p1":"206 csont hűen modellezve 3D-ben","auth.art.p2":"Adaptív kvíz 3 nehézségi szinttel","auth.art.p3":"Beépített biológiai MI-asszisztens","auth.art.p4":"Offline hozzáférés, minden a böngésződben","auth.art.quote":"„A legjobb anatómiai platform általános és középiskolás diákoknak.\"","auth.art.quote.by":"— Biológiatanár","chat.status":"Biológiai asszisztens online","chat.welcome":"Szia! A BioNexus asszisztense vagyok. Segítek mind az anatómiában, mind az oldal használatában. Kérdezz bármit, vagy használd az alábbi gyorsgombokat.","chat.ideas":"Néhány ötlet: <i>&bdquo;Hány csont?&rdquo;</i>, <i>&bdquo;Mi a combcsont?&rdquo;</i>","chat.placeholder":"Írj egy kérdést az anatómiáról...","header.sub":"Emberi anatómia 3D","header.admin":"Admin","header.guest":"Vendég","header.back":"Vissza","sb.muscles":"Izmok","sb.searchMuscle":"Keress egy izmot...","sb.footMuscle":"Izomrendszer:","sb.musclesWord":"izom","load.muscleText":"Izomrendszer — 3D modellek fejlesztés alatt","load.cardioText":"Szív- és érrendszer betöltése...","load.nervousText":"Idegrendszer betöltése...","load.respText":"Légzőrendszer betöltése...","load.digText":"Emésztőrendszer betöltése...","view.muscleComplete":"Izomrendszer","view.cardioComplete":"Szív- és érrendszer","view.nervousComplete":"Idegrendszer","view.respComplete":"Légzőrendszer","view.digComplete":"Emésztőrendszer","sb.dig":"Emésztőszervi struktúrák","sb.searchDig":"Keress egy struktúrát...","sb.footDig":"Emésztőrendszer:","info.digTitle":"Struktúra-információk","info.digPlaceholder":"Válassz egy struktúrát a modellről<br />vagy a bal oldali listából","info.muscleTitle":"Izom-információk","info.musclePlaceholder":"Válassz egy izmot a modellről<br>vagy a bal oldali listából","nav.muAll":"Összes izom","nav.muCap":"Fej és nyak","nav.muTrunchi":"Törzs","nav.muMembre":"Felső végtagok","nav.muInferioare":"Alsó végtagok","home.sys.badge.beta":"Béta","nav.all":"Összes csont","nav.cap":"Koponya","nav.trunchi":"Törzs","nav.membre":"Felső végtagok","nav.inferioare":"Alsó végtagok","nav.structura":"A csont szerkezete","sb.bones":"Csontok","sb.search":"Keress egy csontot...","sb.foot":"Emberi csontváz:","sb.bonesWord":"csont","load.text":"3D modell betöltése...","load.error":"Nem sikerült betölteni a 3D modellt.<br>Győződj meg róla, hogy a mappa tartalmazza a lib/three.min.js, lib/OrbitControls.js és lib/GLTFLoader.js fájlokat","view.title":"Nézet","view.complete":"Teljes csontváz","quiz.title":"Minijáték: Az anatómiai teszt","quiz.start.h":"Ismered a csontvázat?","quiz.start.p":"Azonosítsd a kiemelt csontot 4 lehetőség közül.","quiz.diff.easy":"Könnyű","quiz.diff.medium":"Közepes","quiz.diff.hard":"Nehéz","quiz.start.btn":"Kvíz indítása","quiz.q":"Kérdés","quiz.score":"Pontszám:","quiz.q.text":"Mi a neve a <span style=\"color:#3b82f6\">kékkel</span> kiemelt csontnak?","quiz.skip":"Kihagyás","quiz.next":"Következő &#8594;","quiz.end.title":"Gratulálunk!","quiz.end.msg":"Szép munka!","quiz.end.retry":"Próbáld újra","info.title":"Csont-információk","info.placeholder":"Válassz egy csontot a modellről<br>vagy a bal oldali listából","admin.title":"Adminisztrátori mód — Tartalomszerkesztő","admin.sub":"Szerkeszd a teljes oldal tartalmát — csontok, izmok, az ideg-, szív- és érrendszeri, légző- és emésztőrendszeri struktúrák, valamint az MI-prompt.","admin.pass":"Admin jelszó","admin.login":"Hitelesítés","admin.pickBone":"Válaszd ki a csontot:","admin.fld.name":"Név","admin.fld.cat":"Kategória","admin.fld.type":"Típus","admin.fld.desc":"Leírás","admin.fld.art":"Ízületek (vesszővel elválasztva)","admin.fld.det":"További részletek","admin.save":"Módosítások mentése","admin.export":"JSON exportálása","admin.reset":"Visszaállítás az alapértékekre","err.fillBoth":"Töltsd ki mindkét mezőt.","err.fillAll":"Töltsd ki az összes mezőt.","err.badCreds":"Hibás felhasználónév vagy jelszó.","err.passShort":"A jelszónak legalább 4 karakterből kell állnia.","err.email":"Érvénytelen email.","err.userTaken":"A felhasználónév már foglalt.","err.emailTaken":"Az email már regisztrálva van.","err.adminPass":"Hibás adminisztrátori jelszó.","user.menu.profil":"Profil","user.menu.setari":"Beállítások","user.menu.logout":"Kijelentkezés","profile.back":"Vissza","profile.tagline":"BioNexus tag","profile.tab.badges":"Jelvények","profile.achieved":"Megszerezve","profile.profil.h":"A profilod","profile.profil.p":"Ennek a szakasznak a tartalma később kerül hozzáadásra.","profile.setari.h":"Beállítások","profile.setari.p":"Ennek a szakasznak a tartalma később kerül hozzáadásra.","profile.insigne.h":"Jelvényeim","profile.insigne.p":"Ennek a szakasznak a tartalma később kerül hozzáadásra.","home.feat.ai.cta":"Csevegőablak megnyitása &rarr;","home.feat.curio.t":"Érdekességek","home.feat.curio.d":"Elképesztő tények az emberi testről — hány csont, a legkisebb, a legerősebb izom. Fedezz fel egy véletlenszerű érdekességet.","home.feat.curio.cta":"Érdekesség mutatása &rarr;","login.forgot":"Elfelejtetted a jelszavad?","login.noAccount":"Nincs fiókod? <a onclick=\"showAuthMode('register')\">Hozz létre egyet</a>","reg.passHint":"Legalább 8 karakter","reg.passConf":"Jelszó megerősítése","reg.termsAccept":"Elfogadom a <a class=\"auth-link\" onclick=\"event.preventDefault();showTerms('terms')\">Felhasználási feltételeket</a> és az <a class=\"auth-link\" onclick=\"event.preventDefault();showTerms('privacy')\">Adatvédelmi irányelveket</a>","reg.human":"Nem vagyok robot","reg.captcha.title":"Biztonsági ellenőrzés","reg.haveAccount":"Már van fiókod? <a onclick=\"showAuthMode('login')\">Jelentkezz be</a>","home.feat.edu.t":"Oktatási forrás","home.feat.edu.d":"A BioNexus egy nyílt oktatási platform. Hivatalos egyetemi anatómia tankönyvek közvetlenül elérhetők a Tanulás szekcióban.","home.feat.edu.cta":"Tankönyvek böngészése &rarr;","home.reviews.title":"Vélemények <span class=\"home-hero-grad\">a felhasználóktól</span>","home.reviews.sub":"Olvasd el mások tapasztalatait, vagy hagyd itt a sajátodat, miután bejelentkeztél.","home.reviews.empty":"0 vélemény","home.reviews.login":"Jelentkezz be, hogy véleményt írhass.","home.reviews.ph":"Mondd el, mit gondolsz a BioNexusról...","home.reviews.submit":"Vélemény közzététele","home.reviews.none":"Még nincs vélemény — legyél te az első!","home.stats.verified":"Oktatási oldal · Ellenőrzött","settings.adminH":"Adminisztrátori mód","settings.adminSub":"Hozzáférés a tartalomszerkesztőhöz (csontleírások, kategóriák, JSON export). Hitelesítés szükséges.","settings.adminBtn":"Admin panel megnyitása","quiz.pick.h":"Válassz kvíztípust","quiz.pick.p":"Két mód érhető el — válaszd ki, hogyan szeretnéd tesztelni magad.","quiz.mode.visual.t":"Azonosítsd a csontot","quiz.mode.visual.d":"Láss egy kékkel kiemelt csontot a csontvázon, és válaszd ki a helyes nevet 4 lehetőség közül. Gyors vizuális minijáték.","quiz.mode.know.t":"Tudásteszt","quiz.mode.know.d":"Kérdések leírásokról, ízületekről és részletekről (Könnyű/Közepes), valamint kérdések a Stefaneț I–III. kötet tankönyveiből (Nehéz).","quiz.back":"Vissza","quiz.sys.h":"Válaszd ki az anatómiai rendszert","quiz.sys.p":"Melyik rendszerből szeretnéd tesztelni magad?","quiz.sys.osos.t":"Csontrendszer","quiz.sys.osos.d":"206 csont a fejen, törzsön és végtagokon. Vizuális és tudáskérdések + a Ștefaneț tankönyvek (Nehéz).","quiz.sys.muscular.t":"Izomrendszer","quiz.sys.muscular.d":"350+ harántcsíkolt izom RO/latin nevekkel, eredésekkel, tapadásokkal és működéssel.","quiz.sys.nervous.t":"Idegrendszer","quiz.sys.nervous.d":"Agy, gerincvelő, perifériás idegek — RO + latin nevek.","quiz.sys.cardio.t":"Szív- és érrendszer","quiz.sys.cardio.d":"Szív, artériák, vénák — azonosítsd a struktúrákat és latin neveiket.","quiz.sys.respiratory.t":"Légzőrendszer","quiz.sys.respiratory.d":"Légutak, tüdő, gége, rekeszizom — RO + latin nevek.","quiz.sys.digestive.t":"Emésztőrendszer","quiz.sys.digestive.d":"Gyomor, máj, belek, hasnyálmirigy — azonosítsd az emésztőszerveket.","login.user.ph":"te@email.com","login.pass.ph":"Add meg a jelszavad","reg.user.ph":"Válassz felhasználónevet","reg.email.ph":"te@email.com","reg.pass.ph":"Hozz létre egy jelszót","reg.passConf.ph":"Erősítsd meg a jelszavad","forgot.email.ph":"te@email.com","reset.newPass.ph":"Legalább 8 karakter","reset.confPass.ph":"Add meg újra a jelszót","quiz.mode.duel.t":"MI-párbaj","quiz.mode.duel.d":"Az MI anatómiai állításokat dob feléd — egyesek helyesek, mások finom hibákkal. Ismerd fel, melyik igaz és melyik hamis. Kritikai gondolkodás edzése.","daily.title":"Napi kihívás","daily.streak":"Sorozat:","daily.days":"nap","daily.reward":"Jutalom:","notebook.title":"BioNexus jegyzetfüzet","notebook.search":"Keresés a jegyzetek között...","notebook.filter.all":"Összes","notebook.filter.starred":"⭐ Fontos","notebook.filter.bone":"🦴 Csontok","notebook.filter.muscle":"💪 Izmok","notebook.filter.nervous":"🧠 Ideg","notebook.filter.cardio":"❤️ Szív","notebook.filter.respiratory":"💨 Légző","notebook.filter.digestive":"🍽️ Emésztő","notebook.empty.title":"Még nincs jegyzet","notebook.empty.desc":"Add hozzá az első jegyzeted a <b>+ Új jegyzet</b> gombbal, vagy a 3D nézegetőből, amikor bármely rendszerben kiválasztasz egy struktúrát.","notebook.empty.cta":"+ Első jegyzet hozzáadása","notebook.editor.new":"Új jegyzet","notebook.editor.edit":"Jegyzet szerkesztése","notebook.lbl.title":"Cím","notebook.lbl.category":"Kategória","notebook.lbl.subject":"Tárgy (opcionális)","notebook.lbl.content":"Tartalom","notebook.lbl.tags":"Címkék (vesszővel elválasztva)","notebook.lbl.color":"Szín","notebook.lbl.starred":"Megjelölés fontosként ⭐","notebook.cat.bone":"🦴 Csont","notebook.cat.muscle":"💪 Izom","notebook.cat.nervous":"🧠 Ideg","notebook.cat.cardio":"❤️ Szív- és érrendszer","notebook.cat.respiratory":"💨 Légző","notebook.cat.digestive":"🍽️ Emésztő","notebook.cat.general":"📌 Általános","notebook.ph.title":"pl. Combcsont — hajlítóizmok eredése","notebook.ph.subject":"pl. Combcsont, Biceps brachii, vállízület","notebook.ph.content":"Írj megfigyeléseket, definíciókat, memóriafogásokat...","notebook.ph.tags":"pl. vizsga, anatómia 1, fontos","notebook.btn.cancel":"Mégse","notebook.btn.delete":"🗑 Törlés","notebook.btn.save":"💾 Mentés","home.feat.notes.t":"Jegyzetek és könyvjelzők","home.feat.notes.cta":"Jegyzetfüzet megnyitása &rarr;","footer.report":"Probléma jelentése","report.title":"Probléma jelentése","report.intro":"Hibát, tartalmi tévedést találtál, vagy van egy javaslatod? Mondd el — egyenesen a csapathoz jut.","report.lbl.type":"Típus","report.type.bug":"🐛 Hiba / bug","report.type.content":"📚 Tartalmi hiba","report.type.suggestion":"💡 Javaslat","report.type.other":"❓ Egyéb","report.lbl.msg":"Leírás","report.ph.msg":"Írd le röviden a problémát vagy a javaslatot...","report.lbl.email":"Email (opcionális, hogy válaszolhassunk)","report.ph.email":"te@email.com","report.cancel":"Mégse","report.send":"Jelentés küldése","report.sending":"Küldés...","report.ok":"Köszönjük! A jelentésed elküldtük.","report.err":"Nem sikerült elküldeni. Kérjük, próbáld újra később.","report.short":"Kérjük, írd le a problémát (legalább 5 karakter)."};
+
 document.addEventListener("click", function (e) {
   var b = e.target.closest && e.target.closest(".lang-btn");
   if (!b) return;
@@ -6763,6 +6769,22 @@ if (typeof endQuiz === "function") {
     "quiz.mode.know.d":
       "Întrebări despre descrieri, articulații și detalii (Ușor/Mediu) plus întrebări din manualele Stefaneț Vol. I-III (Greu).",
     "quiz.back": "Înapoi",
+    "quiz.sys.h": "Alege sistemul anatomic",
+    "quiz.sys.p": "Pentru ce sistem vrei să te testezi?",
+    "quiz.sys.osos.t": "Sistem Osos",
+    "quiz.sys.osos.d":
+      "206 oase pe cap, trunchi, membre. Întrebări vizuale și de cunoștințe + manualele Ștefaneț (Greu).",
+    "quiz.sys.muscular.t": "Sistem Muscular",
+    "quiz.sys.muscular.d":
+      "350+ mușchi striați cu denumiri RO/latină, origini, inserții și acțiuni.",
+    "quiz.sys.nervous.t": "Sistem Nervos",
+    "quiz.sys.nervous.d": "Creier, măduva spinării, nervi periferici — nume RO + latină.",
+    "quiz.sys.cardio.t": "Sistem Cardiovascular",
+    "quiz.sys.cardio.d": "Inimă, artere, vene — identifică structurile și denumirile latine.",
+    "quiz.sys.respiratory.t": "Sistem Respirator",
+    "quiz.sys.respiratory.d": "Căi aeriene, plămâni, laringe, diafragmă — nume RO + latină.",
+    "quiz.sys.digestive.t": "Sistem Digestiv",
+    "quiz.sys.digestive.d": "Stomac, ficat, intestine, pancreas — identifică organele digestive.",
   });
   Object.assign(I18N.en, {
     "quiz.pick.h": "Choose a quiz type",
@@ -6774,6 +6796,22 @@ if (typeof endQuiz === "function") {
     "quiz.mode.know.d":
       "Questions about descriptions, joints and details (Easy/Medium) plus questions from the Stefaneț Vol. I-III textbooks (Hard).",
     "quiz.back": "Back",
+    "quiz.sys.h": "Choose the anatomical system",
+    "quiz.sys.p": "Which system do you want to test yourself on?",
+    "quiz.sys.osos.t": "Skeletal System",
+    "quiz.sys.osos.d":
+      "206 bones across head, trunk and limbs. Visual and knowledge questions + the Ștefaneț textbooks (Hard).",
+    "quiz.sys.muscular.t": "Muscular System",
+    "quiz.sys.muscular.d":
+      "350+ striated muscles with RO/Latin names, origins, insertions and actions.",
+    "quiz.sys.nervous.t": "Nervous System",
+    "quiz.sys.nervous.d": "Brain, spinal cord, peripheral nerves — RO + Latin names.",
+    "quiz.sys.cardio.t": "Cardiovascular System",
+    "quiz.sys.cardio.d": "Heart, arteries, veins — identify the structures and their Latin names.",
+    "quiz.sys.respiratory.t": "Respiratory System",
+    "quiz.sys.respiratory.d": "Airways, lungs, larynx, diaphragm — RO + Latin names.",
+    "quiz.sys.digestive.t": "Digestive System",
+    "quiz.sys.digestive.d": "Stomach, liver, intestines, pancreas — identify the digestive organs.",
   });
   if (typeof applyLanguage === "function") applyLanguage(CUR_LANG);
 })();
@@ -12492,7 +12530,8 @@ window.scrollToSection = function (id) {
           lang === "en"
             ? "Questions about origin, insertion, action and innervation of major muscles."
             : "Întrebări despre origine, inserție, acțiune și inervație ale mușchilor majori.";
-      if (duelCard) duelCard.style.display = "none";
+      if (duelCard)
+        duelCard.style.display = window.DUEL_BANKS && window.DUEL_BANKS.muscular ? "" : "none";
     } else {
       if (visualIcon) visualIcon.innerHTML = "&#129463;";
       if (visualTitle)
@@ -12537,6 +12576,20 @@ window.scrollToSection = function (id) {
   }
 
   function buildMuscleQuestions(mode, difficulty, count) {
+    if (mode === "duel") {
+      var lg = typeof CUR_LANG !== "undefined" && CUR_LANG === "en" ? "en" : "ro";
+      var dbank = (window.DUEL_BANKS && window.DUEL_BANKS.muscular) || [];
+      return shuffleArr(dbank.slice())
+        .slice(0, count || 10)
+        .map(function (q) {
+          return {
+            type: "duel",
+            prompt: lg === "en" ? q.text_en : q.text_ro,
+            correct: !!q.correct,
+            explain: lg === "en" ? q.explain_en : q.explain_ro,
+          };
+        });
+    }
     var all = getMuscleEntries();
     if (all.length < 4) return [];
     var lang = typeof CUR_LANG !== "undefined" && CUR_LANG === "en" ? "en" : "ro";
@@ -12682,6 +12735,38 @@ window.scrollToSection = function (id) {
     if (qFeedback) qFeedback.style.display = "none";
     var qNextBtn = document.getElementById("qNextBtn");
     if (qNextBtn) qNextBtn.style.display = "none";
+    var _en = typeof CUR_LANG !== "undefined" && CUR_LANG === "en";
+    if (q.type === "duel") {
+      var mdh = document.querySelector(".quiz-q-text");
+      if (mdh) {
+        mdh.innerHTML =
+          '<div class="duel-ai-says">' + (_en ? "AI says" : "AI zice") + "</div>" +
+          '<div class="duel-statement"></div>' +
+          '<div style="font-size:13px;color:var(--t2);font-weight:600;margin-top:6px">' +
+          (_en ? "Is it true or false?" : "Este corect sau greșit?") + "</div>";
+        var mst = mdh.querySelector(".duel-statement");
+        if (mst) mst.textContent = '"' + q.prompt + '"';
+      }
+      var mopt = document.getElementById("qOptions");
+      if (mopt) {
+        mopt.className = "quiz-options duel-options";
+        mopt.innerHTML = "";
+        [
+          [true, "true", "✓", _en ? "TRUE" : "ADEVĂRAT"],
+          [false, "false", "✗", _en ? "FALSE" : "FALS"],
+        ].forEach(function (d) {
+          var b = document.createElement("button");
+          b.className = "duel-btn " + d[1];
+          b.innerHTML = '<span class="duel-icon">' + d[2] + "</span><span>" + d[3] + "</span>";
+          b.onclick = function () {
+            answerMuscleDuel(d[0], b);
+          };
+          mopt.appendChild(b);
+        });
+      }
+      if (typeof startQuestionTimer === "function") startQuestionTimer();
+      return;
+    }
     var hintEl = document.querySelector(".quiz-q-text");
     if (hintEl) {
       if (q.type === "visual") {
@@ -12766,6 +12851,58 @@ window.scrollToSection = function (id) {
     }
   }
   window.__answerMuscleQuiz = answerMuscleQuiz;
+
+  function answerMuscleDuel(picked, btn) {
+    if (QUIZ.answered) return;
+    QUIZ.answered = true;
+    if (typeof stopQuestionTimer === "function") stopQuestionTimer();
+    var q = QUIZ.questions[QUIZ.currentQ];
+    var correct = picked === q.correct;
+    var en = typeof CUR_LANG !== "undefined" && CUR_LANG === "en";
+    document.querySelectorAll(".duel-btn").forEach(function (b) {
+      b.disabled = true;
+      var bv = b.classList.contains("true");
+      if (bv === q.correct) b.classList.add("correct");
+      else if (b === btn) b.classList.add("wrong");
+    });
+    var fb = document.getElementById("qFeedback");
+    if (correct) {
+      QUIZ.score++;
+      if (fb) {
+        fb.className = "quiz-feedback fb-correct";
+        fb.innerHTML = "&#9989; <b>" + (en ? "Correct!" : "Corect!") + "</b> " + (q.explain || "");
+        fb.style.display = "block";
+      }
+    } else {
+      QUIZ.wrong.push(q.prompt);
+      if (fb) {
+        fb.className = "quiz-feedback fb-wrong";
+        fb.innerHTML =
+          "&#10060; <b>" +
+          (q.correct ? (en ? "It was TRUE." : "Era ADEVĂRAT.") : en ? "It was FALSE." : "Era FALS.") +
+          "</b> " +
+          (q.explain || "");
+        fb.style.display = "block";
+      }
+    }
+    var qScore = document.getElementById("qScore");
+    if (qScore) qScore.textContent = QUIZ.score;
+    var nextBtn = document.getElementById("qNextBtn");
+    if (nextBtn) {
+      nextBtn.style.display = "inline-block";
+      nextBtn.textContent =
+        QUIZ.currentQ + 1 >= QUIZ.total
+          ? en ? "See result →" : "Vezi rezultatul →"
+          : en ? "Next →" : "Următoarea →";
+      nextBtn.onclick = function () {
+        QUIZ.currentQ++;
+        if (QUIZ.currentQ >= QUIZ.total) {
+          if (typeof endQuiz === "function") endQuiz();
+        } else loadMuscleQuizQuestion();
+      };
+    }
+  }
+  window.__answerMuscleDuel = answerMuscleDuel;
 })();
 
 (function muscleQuizVisual() {
@@ -14077,8 +14214,13 @@ window.scrollToSection = function (id) {
     var q = NB_STATE.query.toLowerCase().trim();
     var filtered = notes.filter(function (n) {
       if (NB_STATE.filter === "starred" && !n.starred) return false;
-      if (NB_STATE.filter === "bone" && n.category !== "bone") return false;
-      if (NB_STATE.filter === "muscle" && n.category !== "muscle") return false;
+
+      if (
+        NB_STATE.filter !== "all" &&
+        NB_STATE.filter !== "starred" &&
+        n.category !== NB_STATE.filter
+      )
+        return false;
       if (
         NB_STATE.tagFilter &&
         !(n.tags || [])
@@ -14127,8 +14269,21 @@ window.scrollToSection = function (id) {
     empty.style.display = "none";
     list.innerHTML = filtered
       .map(function (n) {
-        var catIc = { bone: "🦴", muscle: "💪", general: "📌" }[n.category] || "📌";
-        var catName = { bone: "Os", muscle: "Mușchi", general: "General" }[n.category] || "Note";
+        var _en = typeof CUR_LANG !== "undefined" && CUR_LANG === "en";
+        var catIc =
+          { bone: "🦴", muscle: "💪", nervous: "🧠", cardio: "❤️", respiratory: "💨", digestive: "🍽️", general: "📌" }[
+            n.category
+          ] || "📌";
+        var catName =
+          {
+            bone: _en ? "Bone" : "Os",
+            muscle: _en ? "Muscle" : "Mușchi",
+            nervous: _en ? "Nervous" : "Nervos",
+            cardio: _en ? "Cardio" : "Cardiovascular",
+            respiratory: _en ? "Respiratory" : "Respirator",
+            digestive: _en ? "Digestive" : "Digestiv",
+            general: _en ? "General" : "General",
+          }[n.category] || "Note";
         var tags = (n.tags || [])
           .slice(0, 5)
           .map(function (t) {
@@ -14396,6 +14551,9 @@ window.scrollToSection = function (id) {
   window.notebookAddForMuscle = function (muscleName) {
     openNotebookEditor(null, muscleName, "muscle");
   };
+  window.notebookAddForStructure = function (name, category) {
+    openNotebookEditor(null, name, category || "general");
+  };
 
   (function injectViewerButton() {
     function ensureBtn() {
@@ -14445,6 +14603,37 @@ window.scrollToSection = function (id) {
         });
         observer2.observe(ctMu, { attributes: true, attributeFilter: ["style"] });
       }
+
+      [
+        { sys: "nervous", app: "appNervous", ct: "nervous-info-ct", cat: "nervous" },
+        { sys: "cardio", app: "appCardio", ct: "cardio-info-ct", cat: "cardio" },
+        { sys: "respiratory", app: "appRespiratory", ct: "resp-info-ct", cat: "respiratory" },
+        { sys: "digestive", app: "appDigestive", ct: "dig-info-ct", cat: "digestive" },
+      ].forEach(function (e) {
+        var bid = "nbAdd_" + e.sys + "_Btn";
+        var ip = document.querySelector("#" + e.app + " .info-panel .ip-body");
+        if (ip && !document.getElementById(bid)) {
+          var eb = document.createElement("button");
+          eb.id = bid;
+          eb.className = "nb-context-action";
+          eb.innerHTML = "📝 Adaugă notiță";
+          eb.style.cssText =
+            "display:none;margin:14px auto 0;position:relative;bottom:auto;right:auto;width:auto";
+          eb.onclick = function () {
+            var nm = (window.__extraSelectedName && window.__extraSelectedName(e.sys)) || "";
+            notebookAddForStructure(nm, e.cat);
+          };
+          ip.appendChild(eb);
+        }
+        var ct = document.getElementById(e.ct);
+        if (ct && !ct.__nbObserved) {
+          ct.__nbObserved = true;
+          new MutationObserver(function () {
+            var b = document.getElementById(bid);
+            if (b) b.style.display = ct.style.display === "block" ? "block" : "none";
+          }).observe(ct, { attributes: true, attributeFilter: ["style"] });
+        }
+      });
     }
     if (document.readyState === "loading")
       document.addEventListener("DOMContentLoaded", function () {
@@ -14773,9 +14962,13 @@ window.scrollToSection = function (id) {
     "notebook.filter.starred": "⭐ Importante",
     "notebook.filter.bone": "🦴 Oase",
     "notebook.filter.muscle": "💪 Mușchi",
+    "notebook.filter.nervous": "🧠 Nervos",
+    "notebook.filter.cardio": "❤️ Cardio",
+    "notebook.filter.respiratory": "💨 Respirator",
+    "notebook.filter.digestive": "🍽️ Digestiv",
     "notebook.empty.title": "Nicio notiță încă",
     "notebook.empty.desc":
-      "Adaugă prima ta notiță apăsând <b>+ Notiță nouă</b> sau din viewer-ul 3D când selectezi un os sau mușchi.",
+      "Adaugă prima ta notiță apăsând <b>+ Notiță nouă</b> sau din viewer-ul 3D când selectezi o structură din orice sistem.",
     "notebook.empty.cta": "+ Adaugă prima notiță",
     "notebook.editor.new": "Notiță nouă",
     "notebook.editor.edit": "Editare notiță",
@@ -14788,6 +14981,10 @@ window.scrollToSection = function (id) {
     "notebook.lbl.starred": "Marchează ca important ⭐",
     "notebook.cat.bone": "🦴 Os",
     "notebook.cat.muscle": "💪 Mușchi",
+    "notebook.cat.nervous": "🧠 Nervos",
+    "notebook.cat.cardio": "❤️ Cardiovascular",
+    "notebook.cat.respiratory": "💨 Respirator",
+    "notebook.cat.digestive": "🍽️ Digestiv",
     "notebook.cat.general": "📌 General",
     "notebook.ph.title": "ex: Femur — origine ischiogambieri",
     "notebook.ph.subject": "ex: Femur, Biceps brahial, articulația umărului",
@@ -14806,9 +15003,13 @@ window.scrollToSection = function (id) {
     "notebook.filter.starred": "⭐ Important",
     "notebook.filter.bone": "🦴 Bones",
     "notebook.filter.muscle": "💪 Muscles",
+    "notebook.filter.nervous": "🧠 Nervous",
+    "notebook.filter.cardio": "❤️ Cardio",
+    "notebook.filter.respiratory": "💨 Respiratory",
+    "notebook.filter.digestive": "🍽️ Digestive",
     "notebook.empty.title": "No notes yet",
     "notebook.empty.desc":
-      "Add your first note by pressing <b>+ New note</b> or from the 3D viewer when you select a bone or muscle.",
+      "Add your first note by pressing <b>+ New note</b> or from the 3D viewer when you select a structure in any system.",
     "notebook.empty.cta": "+ Add first note",
     "notebook.editor.new": "New note",
     "notebook.editor.edit": "Edit note",
@@ -14821,6 +15022,10 @@ window.scrollToSection = function (id) {
     "notebook.lbl.starred": "Mark as important ⭐",
     "notebook.cat.bone": "🦴 Bone",
     "notebook.cat.muscle": "💪 Muscle",
+    "notebook.cat.nervous": "🧠 Nervous",
+    "notebook.cat.cardio": "❤️ Cardiovascular",
+    "notebook.cat.respiratory": "💨 Respiratory",
+    "notebook.cat.digestive": "🍽️ Digestive",
     "notebook.cat.general": "📌 General",
     "notebook.ph.title": "e.g. Femur — hamstring origin",
     "notebook.ph.subject": "e.g. Femur, Biceps brachii, shoulder joint",
@@ -15511,7 +15716,8 @@ window.scrollToSection = function (id) {
     STATES[key] = S;
 
     S.scene = new THREE.Scene();
-    S.scene.background = new THREE.Color(cfg.bg);
+
+    S.scene.background = null;
 
     var amb = new THREE.AmbientLight(cfg.ambColor, cfg.ambIntensity || 0.55);
     S.scene.add(amb);
@@ -15530,7 +15736,7 @@ window.scrollToSection = function (id) {
     S.camera = new THREE.PerspectiveCamera(45, vw / vh, 0.01, 200);
     S.camera.position.set(0, 1, 3);
 
-    S.renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: false });
+    S.renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
     S.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     S.renderer.setSize(vw, vh);
     if (THREE.sRGBEncoding !== undefined) S.renderer.outputEncoding = THREE.sRGBEncoding;
@@ -16116,6 +16322,16 @@ window.scrollToSection = function (id) {
   window.__extraInit = initSystem;
   window.__extraStates = STATES;
 
+  window.__extraSelectedName = function (sys) {
+    try {
+      var S = STATES[sys];
+      if (!S || !S.selected) return "";
+      return exName(prettifyExtra(S.selected.name)).display || "";
+    } catch (e) {
+      return "";
+    }
+  };
+
   window.__extraToggleSidebar = function () {
     var sys = window.APP_MODE;
     var S = STATES[sys];
@@ -16377,7 +16593,8 @@ window.scrollToSection = function (id) {
         "Întrebări cu denumirile românești și latine ale structurilor.",
         "Questions on the Romanian and Latin names of the structures."
       );
-    if (duel) duel.style.display = "none";
+    if (duel)
+      duel.style.display = window.DUEL_BANKS && window.DUEL_BANKS[sys] ? "" : "none";
     if (typeof showQuizStage === "function") showQuizStage("quizPick");
   };
 
@@ -16395,6 +16612,14 @@ window.scrollToSection = function (id) {
         desc.textContent = tr(
           "Structura e evidențiată cu albastru pe model — alege numele corect din 4 variante.",
           "The structure is highlighted in blue on the model — pick the correct name from 4 options."
+        );
+    } else if (mode === "duel") {
+      if (icon) icon.innerHTML = "&#129302;";
+      if (title) title.textContent = "AI Duel";
+      if (desc)
+        desc.textContent = tr(
+          "Afirmații ADEVĂRAT/FALS despre acest sistem — unele au greșeli subtile. Decide rapid!",
+          "TRUE/FALSE statements about this system — some contain subtle errors. Decide fast!"
         );
     } else {
       if (icon) icon.innerHTML = "&#128218;";
@@ -16417,6 +16642,19 @@ window.scrollToSection = function (id) {
     return shuffle([correct].concat(others)).map(keyFn);
   }
   function build(sys, mode, count) {
+    if (mode === "duel") {
+      var dbank = (window.DUEL_BANKS && window.DUEL_BANKS[sys]) || [];
+      return shuffle(dbank.slice())
+        .slice(0, count)
+        .map(function (q) {
+          return {
+            type: "duel",
+            prompt: tr(q.text_ro, q.text_en),
+            correct: !!q.correct,
+            explain: tr(q.explain_ro, q.explain_en),
+          };
+        });
+    }
     var all = structures(sys);
     if (all.length < 4) return [];
     var out = [];
@@ -16562,8 +16800,8 @@ window.scrollToSection = function (id) {
 
     enterVisualScene(sys);
     if (mode !== "visual") {
-      document.body.classList.remove("qmode-visual", "qmode-duel");
-      document.body.classList.add("qmode-knowledge");
+      document.body.classList.remove("qmode-visual", "qmode-knowledge", "qmode-duel");
+      document.body.classList.add(mode === "duel" ? "qmode-duel" : "qmode-knowledge");
     }
     if (typeof showQuizStage === "function") showQuizStage("quizQuestion");
     loadQ();
@@ -16608,6 +16846,36 @@ window.scrollToSection = function (id) {
       el.style.width = (Q.currentQ / Q.total) * 100 + "%";
     if ((el = document.getElementById("qFeedback"))) el.style.display = "none";
     if ((el = document.getElementById("qNextBtn"))) el.style.display = "none";
+    if (q.type === "duel") {
+      var dh = document.querySelector(".quiz-q-text");
+      if (dh) {
+        dh.innerHTML =
+          '<div class="duel-ai-says">' + tr("AI zice", "AI says") + "</div>" +
+          '<div class="duel-statement"></div>' +
+          '<div style="font-size:13px;color:var(--t2);font-weight:600;margin-top:6px">' +
+          tr("Este corect sau greșit?", "Is it true or false?") + "</div>";
+        var st = dh.querySelector(".duel-statement");
+        if (st) st.textContent = '"' + q.prompt + '"';
+      }
+      var dopts = document.getElementById("qOptions");
+      if (dopts) {
+        dopts.className = "quiz-options duel-options";
+        dopts.innerHTML = "";
+        [
+          [true, "true", "✓", tr("ADEVĂRAT", "TRUE")],
+          [false, "false", "✗", tr("FALS", "FALSE")],
+        ].forEach(function (d) {
+          var b = document.createElement("button");
+          b.className = "duel-btn " + d[1];
+          b.innerHTML = '<span class="duel-icon">' + d[2] + "</span><span>" + d[3] + "</span>";
+          b.onclick = function () {
+            answerDuelEx(d[0], b);
+          };
+          dopts.appendChild(b);
+        });
+      }
+      return;
+    }
     var hint = document.querySelector(".quiz-q-text");
     if (hint) {
       if (q.type === "visual")
@@ -16692,6 +16960,49 @@ window.scrollToSection = function (id) {
     }
   }
 
+  function answerDuelEx(picked, btn) {
+    var Q = window.QUIZ;
+    if (Q.answered) return;
+    Q.answered = true;
+    var q = Q.questions[Q.currentQ];
+    var correct = picked === q.correct;
+    document.querySelectorAll(".duel-btn").forEach(function (b) {
+      b.disabled = true;
+      var bv = b.classList.contains("true");
+      if (bv === q.correct) b.classList.add("correct");
+      else if (b === btn) b.classList.add("wrong");
+    });
+    var fb = document.getElementById("qFeedback");
+    if (correct) {
+      Q.score++;
+      if (fb) {
+        fb.className = "quiz-feedback fb-correct";
+        fb.innerHTML = "&#9989; <b>" + tr("Corect!", "Correct!") + "</b> " + (q.explain || "");
+        fb.style.display = "block";
+      }
+    } else {
+      Q.wrong.push(q.prompt);
+      if (fb) {
+        fb.className = "quiz-feedback fb-wrong";
+        fb.innerHTML =
+          "&#10060; <b>" +
+          (q.correct ? tr("Era ADEVĂRAT.", "It was TRUE.") : tr("Era FALS.", "It was FALSE.")) +
+          "</b> " +
+          (q.explain || "");
+        fb.style.display = "block";
+      }
+    }
+    var sc = document.getElementById("qScore");
+    if (sc) sc.textContent = Q.score;
+    var nb = document.getElementById("qNextBtn");
+    if (nb) {
+      nb.style.display = "inline-block";
+      nb.textContent =
+        Q.currentQ + 1 >= Q.total ? tr("Vezi rezultatul →", "See result →") : tr("Următoarea →", "Next →");
+    }
+  }
+  window.__answerDuelEx = answerDuelEx;
+
   var oNext = window.nextQuiz;
   window.nextQuiz = function () {
     if (!isEx() || !window.QUIZ.active) return oNext ? oNext.apply(this, arguments) : undefined;
@@ -16711,6 +17022,32 @@ window.scrollToSection = function (id) {
     if (Q.answered) return;
     Q.answered = true;
     var q = Q.questions[Q.currentQ];
+    if (q.type === "duel") {
+      Q.wrong.push(q.prompt);
+      document.querySelectorAll(".duel-btn").forEach(function (b) {
+        b.disabled = true;
+        if (b.classList.contains("true") === q.correct) b.classList.add("correct");
+      });
+      var fbd = document.getElementById("qFeedback");
+      if (fbd) {
+        fbd.className = "quiz-feedback fb-wrong";
+        fbd.innerHTML =
+          "&#9197; " +
+          (q.correct
+            ? tr("Sărit. Era ADEVĂRAT.", "Skipped. It was TRUE.")
+            : tr("Sărit. Era FALS.", "Skipped. It was FALSE.")) +
+          " " +
+          (q.explain || "");
+        fbd.style.display = "block";
+      }
+      var nbd = document.getElementById("qNextBtn");
+      if (nbd) {
+        nbd.style.display = "inline-block";
+        nbd.textContent =
+          Q.currentQ + 1 >= Q.total ? tr("Vezi rezultatul →", "See result →") : tr("Următoarea →", "Next →");
+      }
+      return;
+    }
     Q.wrong.push(q.answer);
     document.querySelectorAll(".quiz-opt").forEach(function (b) {
       b.disabled = true;
@@ -16786,5 +17123,519 @@ window.scrollToSection = function (id) {
       }
     } catch (e) {}
     return r;
+  };
+})();
+
+
+(function reportProblem() {
+  if (typeof I18N !== "undefined") {
+    Object.assign(I18N.ro, {
+      "footer.report": "Raportează o problemă",
+      "report.title": "Raportează o problemă",
+      "report.intro":
+        "Ai găsit o eroare, o greșeală de conținut sau ai o sugestie? Spune-ne — ajunge direct la echipă.",
+      "report.lbl.type": "Tip",
+      "report.type.bug": "🐛 Eroare / bug",
+      "report.type.content": "📚 Greșeală de conținut",
+      "report.type.suggestion": "💡 Sugestie",
+      "report.type.other": "❓ Altceva",
+      "report.lbl.msg": "Descriere",
+      "report.ph.msg": "Descrie pe scurt problema sau sugestia...",
+      "report.lbl.email": "Email (opțional, ca să-ți putem răspunde)",
+      "report.ph.email": "tu@email.com",
+      "report.cancel": "Anulează",
+      "report.send": "Trimite raportul",
+      "report.sending": "Se trimite...",
+      "report.ok": "Mulțumim! Raportul a fost trimis.",
+      "report.err": "Nu s-a putut trimite. Încearcă din nou mai târziu.",
+      "report.short": "Descrie problema (minim 5 caractere).",
+      "report.mailto":
+        "Ți-am deschis aplicația de email cu raportul completat — apasă <b>Trimite</b> acolo.<br><small style=\"color:var(--t3)\">Nu s-a deschis? Scrie-ne direct la <b>ryan.dobrota@cntvb.ro</b></small>",
+    });
+    Object.assign(I18N.en, {
+      "footer.report": "Report a problem",
+      "report.title": "Report a problem",
+      "report.intro":
+        "Found a bug, a content mistake, or have a suggestion? Tell us — it goes straight to the team.",
+      "report.lbl.type": "Type",
+      "report.type.bug": "🐛 Error / bug",
+      "report.type.content": "📚 Content mistake",
+      "report.type.suggestion": "💡 Suggestion",
+      "report.type.other": "❓ Something else",
+      "report.lbl.msg": "Description",
+      "report.ph.msg": "Briefly describe the problem or suggestion...",
+      "report.lbl.email": "Email (optional, so we can reply)",
+      "report.ph.email": "you@email.com",
+      "report.cancel": "Cancel",
+      "report.send": "Send report",
+      "report.sending": "Sending...",
+      "report.ok": "Thank you! Your report was sent.",
+      "report.err": "Couldn't send. Please try again later.",
+      "report.short": "Please describe the problem (min 5 characters).",
+      "report.mailto":
+        "Your email app just opened with the report filled in — hit <b>Send</b> there.<br><small style=\"color:var(--t3)\">Didn't open? Write to us directly at <b>ryan.dobrota@cntvb.ro</b></small>",
+    });
+    if (typeof applyLanguage === "function") applyLanguage(CUR_LANG);
+  }
+
+  function L(key) {
+    try {
+      var d = I18N[CUR_LANG] || I18N.ro;
+      return d[key] || I18N.ro[key] || key;
+    } catch (e) {
+      return key;
+    }
+  }
+  window.openReport = function () {
+    var m = document.getElementById("reportModal");
+    if (!m) return;
+    m.style.display = "flex";
+    var st = document.getElementById("reportStatus");
+    if (st) {
+      st.textContent = "";
+      st.className = "report-status";
+    }
+    setTimeout(function () {
+      var t = document.getElementById("reportMsg");
+      if (t) t.focus();
+    }, 80);
+  };
+  window.closeReport = function () {
+    var m = document.getElementById("reportModal");
+    if (m) m.style.display = "none";
+  };
+  window.submitReport = function () {
+    var typeEl = document.getElementById("reportType");
+    var msgEl = document.getElementById("reportMsg");
+    var emailEl = document.getElementById("reportEmail");
+    var hp = document.getElementById("reportHp");
+    var status = document.getElementById("reportStatus");
+    var btn = document.getElementById("reportSend");
+    if (hp && hp.value) {
+      window.closeReport();
+      return;
+    }
+    var msg = (msgEl && msgEl.value || "").trim();
+    if (msg.length < 5) {
+      if (status) {
+        status.textContent = L("report.short");
+        status.className = "report-status err";
+      }
+      return;
+    }
+
+    var typeLabel = typeEl ? typeEl.options[typeEl.selectedIndex].text : "?";
+    var contact = (emailEl && emailEl.value || "").trim() || "—";
+    var subject = "BioNexus — raport: " + typeLabel;
+    var body =
+      "Tip: " + typeLabel + "\n" +
+      "Descriere:\n" + msg + "\n\n" +
+      "Email contact: " + contact + "\n" +
+      "Pagina: " + location.href + "\n" +
+      "Limba: " + (typeof CUR_LANG !== "undefined" ? CUR_LANG : "ro");
+    var url =
+      "mailto:ryan.dobrota@cntvb.ro?subject=" +
+      encodeURIComponent(subject) +
+      "&body=" +
+      encodeURIComponent(body);
+    try {
+      window.location.href = url;
+    } catch (e) {}
+    if (status) {
+      status.className = "report-status ok";
+      status.innerHTML = L("report.mailto");
+    }
+  };
+  document.addEventListener("keydown", function (e) {
+    if (e.key !== "Escape") return;
+    var m = document.getElementById("reportModal");
+    if (m && m.style.display === "flex") window.closeReport();
+  });
+})();
+
+
+window.DUEL_BANKS = {"muscular":[{"text_ro":"Prin contracția unilaterală, sternocleidomastoidianul (m. sternocleidomastoideus) înclină capul de aceeași parte și rotește fața spre partea opusă.","text_en":"Through unilateral contraction, the sternocleidomastoid (m. sternocleidomastoideus) tilts the head to the same side and rotates the face to the opposite side.","correct":true,"explain_ro":"Corect. Contracția unilaterală a SCM produce flexie laterală ipsilaterală (înclinare de aceeași parte) și rotația feței contralateral; bilateral flectează gâtul/extinde capul.","explain_en":"Correct. Unilateral SCM contraction produces ipsilateral lateral flexion (tilt to the same side) and contralateral rotation of the face; bilaterally it flexes the neck/extends the head."},{"text_ro":"Maseterul (m. masseter) coboară mandibula, deschizând gura în timpul masticației.","text_en":"The masseter (m. masseter) depresses the mandible, opening the mouth during mastication.","correct":false,"explain_ro":"Fals. Maseterul RIDICĂ mandibula (închide gura) — este un mușchi masticator puternic. Coborârea mandibulei este realizată de mușchii suprahioidieni și pterigoidianul lateral.","explain_en":"False. The masseter ELEVATES the mandible (closes the mouth) — it is a powerful muscle of mastication. Depression of the mandible is performed by the suprahyoid muscles and the lateral pterygoid."},{"text_ro":"Bicepsul brahial (m. biceps brachii) realizează flexia cotului și supinația antebrațului, fiind inervat de nervul musculocutanat.","text_en":"The biceps brachii (m. biceps brachii) performs elbow flexion and forearm supination, and is innervated by the musculocutaneous nerve.","correct":true,"explain_ro":"Corect. Bicepsul brahial este flexor al cotului și cel mai puternic supinator al antebrațului; inervația provine din nervul musculocutanat (C5–C6).","explain_en":"Correct. The biceps brachii flexes the elbow and is the strongest supinator of the forearm; its innervation comes from the musculocutaneous nerve (C5–C6)."},{"text_ro":"Cvadricepsul femural (m. quadriceps femoris) este format din trei capete musculare.","text_en":"The quadriceps femoris (m. quadriceps femoris) is composed of three muscle heads.","correct":false,"explain_ro":"Fals. Cvadricepsul are PATRU capete: dreptul femural, vastul lateral, vastul medial și vastul intermediar. Toate se inseră pe rotulă prin tendonul cvadricipital și extind gamba.","explain_en":"False. The quadriceps has FOUR heads: rectus femoris, vastus lateralis, vastus medialis and vastus intermedius. All insert on the patella via the quadriceps tendon and extend the leg."},{"text_ro":"Gastrocnemianul (m. gastrocnemius), împreună cu solearul, formează tricepsul sural, realizează flexia plantară și este inervat de nervul tibial.","text_en":"The gastrocnemius (m. gastrocnemius), together with the soleus, forms the triceps surae, performs plantar flexion and is innervated by the tibial nerve.","correct":true,"explain_ro":"Corect. Gastrocnemianul + solearul = tricepsul sural, care se inseră pe calcaneu prin tendonul lui Ahile, produce flexia plantară și este inervat de nervul tibial (L4–S2).","explain_en":"Correct. Gastrocnemius + soleus = triceps surae, inserting on the calcaneus via the Achilles tendon, producing plantar flexion, innervated by the tibial nerve (L4–S2)."},{"text_ro":"Fesierul mare (m. gluteus maximus) este inervat de nervul fesier superior.","text_en":"The gluteus maximus (m. gluteus maximus) is innervated by the superior gluteal nerve.","correct":false,"explain_ro":"Fals. Fesierul mare este inervat de nervul fesier INFERIOR (L5–S2). Nervul fesier superior inervează fesierul mijlociu, fesierul mic și tensorul fasciei lata.","explain_en":"False. The gluteus maximus is innervated by the INFERIOR gluteal nerve (L5–S2). The superior gluteal nerve supplies the gluteus medius, gluteus minimus and tensor fasciae latae."},{"text_ro":"Croitorul (m. sartorius) își are originea pe spina iliacă antero-superioară (SIAS) și se inseră pe fața medială a tibiei (pes anserinus), fiind cel mai lung mușchi din corp.","text_en":"The sartorius (m. sartorius) originates on the anterior superior iliac spine (ASIS) and inserts on the medial surface of the tibia (pes anserinus), being the longest muscle in the body.","correct":true,"explain_ro":"Corect. Croitorul pornește de pe SIAS, traversează oblic coapsa și se inseră pe pes anserinus; flectează, abduce și rotește lateral coapsa, flectând și gamba. Este cel mai lung mușchi, inervat de nervul femural.","explain_en":"Correct. The sartorius runs from the ASIS obliquely across the thigh to the pes anserinus; it flexes, abducts and laterally rotates the thigh, and flexes the leg. It is the longest muscle, innervated by the femoral nerve."},{"text_ro":"Deltoidul (m. deltoideus) realizează abducția brațului și este inervat de nervul axilar.","text_en":"The deltoid (m. deltoideus) performs abduction of the arm and is innervated by the axillary nerve.","correct":true,"explain_ro":"Corect. Fasciculul mijlociu al deltoidului este principalul abductor al brațului (peste ~15°), iar inervația provine din nervul axilar (C5–C6).","explain_en":"Correct. The middle fibers of the deltoid are the main abductors of the arm (beyond ~15°), and its innervation comes from the axillary nerve (C5–C6)."},{"text_ro":"Mușchiul tibial anterior (m. tibialis anterior) realizează flexia plantară a piciorului.","text_en":"The tibialis anterior (m. tibialis anterior) performs plantar flexion of the foot.","correct":false,"explain_ro":"Fals. Tibialul anterior realizează flexia DORSALĂ (dorsiflexia) și inversia piciorului, fiind inervat de nervul peronier (fibular) profund. Flexia plantară este asigurată de tricepsul sural.","explain_en":"False. The tibialis anterior performs DORSIFLEXION and inversion of the foot, innervated by the deep fibular (peroneal) nerve. Plantar flexion is provided by the triceps surae."},{"text_ro":"Tricepsul brahial (m. triceps brachii) este inervat de nervul musculocutanat.","text_en":"The triceps brachii (m. triceps brachii) is innervated by the musculocutaneous nerve.","correct":false,"explain_ro":"Fals. Tricepsul brahial, extensorul cotului, este inervat de nervul RADIAL (C6–C8). Nervul musculocutanat inervează mușchii lojei anterioare a brațului (biceps, brahial, coracobrahial).","explain_en":"False. The triceps brachii, the extensor of the elbow, is innervated by the RADIAL nerve (C6–C8). The musculocutaneous nerve supplies the anterior arm compartment (biceps, brachialis, coracobrachialis)."}],"nervous":[{"text_ro":"Meningele care învelesc encefalul și măduva spinării sunt formate din trei foițe: dura mater, arahnoida (arachnoidea mater) și pia mater.","text_en":"The meninges covering the brain and spinal cord are made of three layers: the dura mater, the arachnoid (arachnoidea mater) and the pia mater.","correct":true,"explain_ro":"Corect. Cele trei meninge, dinspre exterior spre interior, sunt dura mater, arahnoida și pia mater.","explain_en":"Correct. The three meninges, from outer to inner, are the dura mater, the arachnoid and the pia mater."},{"text_ro":"Nervul trohlear (nervul cranian IV / nervus trochlearis) inervează mușchiul drept lateral al globului ocular.","text_en":"The trochlear nerve (cranial nerve IV / nervus trochlearis) innervates the lateral rectus muscle of the eyeball.","correct":false,"explain_ro":"Fals. Nervul trohlear (IV) inervează mușchiul oblic superior; mușchiul drept lateral este inervat de nervul abducens (VI).","explain_en":"False. The trochlear nerve (IV) innervates the superior oblique muscle; the lateral rectus is innervated by the abducens nerve (VI)."},{"text_ro":"Nervul vag (nervul cranian X / nervus vagus) asigură cea mai mare parte a inervației parasimpatice a organelor toracice și abdominale.","text_en":"The vagus nerve (cranial nerve X / nervus vagus) provides most of the parasympathetic innervation of the thoracic and abdominal organs.","correct":true,"explain_ro":"Corect. Nervul vag are cel mai extins teritoriu parasimpatic, inervând inima, plămânii și tubul digestiv până la unghiul splenic al colonului.","explain_en":"Correct. The vagus nerve has the widest parasympathetic distribution, supplying the heart, lungs and digestive tract up to the splenic flexure of the colon."},{"text_ro":"La adult, măduva spinării se termină prin conul medular (conus medullaris) la nivelul vertebrelor L3-L4.","text_en":"In the adult, the spinal cord ends as the conus medullaris at the level of the L3-L4 vertebrae.","correct":false,"explain_ro":"Fals. La adult conul medular se află de obicei la nivelul L1-L2; sub acest nivel se găsește coada de cal (cauda equina).","explain_en":"False. In the adult the conus medullaris usually lies at the L1-L2 level; below it lies the cauda equina."},{"text_ro":"În secțiune transversală, substanța cenușie (substantia grisea) a măduvei spinării are formă de fluture (literă H) și este dispusă central, înconjurată de substanța albă.","text_en":"In cross-section, the gray matter (substantia grisea) of the spinal cord has a butterfly (H) shape and lies centrally, surrounded by the white matter.","correct":true,"explain_ro":"Corect. În măduvă substanța cenușie este centrală (formă de H/fluture), iar substanța albă este periferică — invers față de encefal.","explain_en":"Correct. In the spinal cord the gray matter is central (H/butterfly shape) and the white matter is peripheral — the reverse of the brain."},{"text_ro":"Inervația senzitivă a feței este asigurată de nervul facial (nervul cranian VII / nervus facialis).","text_en":"The sensory innervation of the face is provided by the facial nerve (cranial nerve VII / nervus facialis).","correct":false,"explain_ro":"Fals. Sensibilitatea feței este asigurată de nervul trigemen (V / nervus trigeminus); nervul facial (VII) inervează motor mușchii mimicii.","explain_en":"False. Facial sensation is provided by the trigeminal nerve (V / nervus trigeminus); the facial nerve (VII) provides motor supply to the muscles of facial expression."},{"text_ro":"Cerebelul (cerebellum) participă la coordonarea mișcărilor, la menținerea echilibrului și la reglarea tonusului muscular.","text_en":"The cerebellum coordinates movements, maintains balance and regulates muscle tone.","correct":true,"explain_ro":"Corect. Cerebelul nu inițiază mișcarea, dar o coordonează și asigură echilibrul și tonusul muscular.","explain_en":"Correct. The cerebellum does not initiate movement but coordinates it and maintains balance and muscle tone."},{"text_ro":"Nervul frenic (nervus phrenicus), care inervează diafragma, ia naștere din plexul brahial (C5-C7).","text_en":"The phrenic nerve (nervus phrenicus), which innervates the diaphragm, arises from the brachial plexus (C5-C7).","correct":false,"explain_ro":"Fals. Nervul frenic provine din plexul cervical, în principal din rădăcinile C3-C5, nu din plexul brahial.","explain_en":"False. The phrenic nerve arises from the cervical plexus, mainly from roots C3-C5, not from the brachial plexus."},{"text_ro":"Bulbul rahidian (medulla oblongata) conține centri vitali care controlează ritmul cardiac și respirația.","text_en":"The medulla oblongata contains vital centers that control heart rate and respiration.","correct":true,"explain_ro":"Corect. Bulbul rahidian adăpostește centrii cardiovascular și respirator, motiv pentru care leziunile sale sunt frecvent fatale.","explain_en":"Correct. The medulla oblongata houses the cardiovascular and respiratory centers, which is why lesions here are often fatal."},{"text_ro":"Lichidul cefalorahidian (LCR) circulă în spațiul subdural, între dura mater și arahnoidă.","text_en":"The cerebrospinal fluid (CSF) circulates in the subdural space, between the dura mater and the arachnoid.","correct":false,"explain_ro":"Fals. LCR circulă în spațiul subarahnoidian, între arahnoidă și pia mater; spațiul subdural este doar un spațiu virtual.","explain_en":"False. CSF circulates in the subarachnoid space, between the arachnoid and the pia mater; the subdural space is only a potential space."}],"cardio":[{"text_ro":"Venele pulmonare (venae pulmonales) aduc sânge oxigenat în atriul stâng.","text_en":"The pulmonary veins (venae pulmonales) bring oxygenated blood into the left atrium.","correct":true,"explain_ro":"Cele patru vene pulmonare sunt singurele vene din corp care transportă sânge oxigenat; ele se varsă în atriul stâng, încheind circulația mică.","explain_en":"The four pulmonary veins are the only veins carrying oxygenated blood; they drain into the left atrium, completing the pulmonary circulation."},{"text_ro":"Aorta pornește din ventriculul drept, prin valva aortică.","text_en":"The aorta arises from the right ventricle, through the aortic valve.","correct":false,"explain_ro":"Fals: aorta pornește din ventriculul STÂNG. Din ventriculul drept pornește trunchiul pulmonar. Camera este inversată.","explain_en":"False: the aorta arises from the LEFT ventricle. The pulmonary trunk is the vessel leaving the right ventricle. The chamber is swapped."},{"text_ro":"Valva tricuspidă (valva atrioventricularis dextra) are trei cuspide și se află între atriul drept și ventriculul drept.","text_en":"The tricuspid valve (valva atrioventricularis dextra) has three cusps and lies between the right atrium and the right ventricle.","correct":true,"explain_ro":"Corect: valva atrioventriculară dreaptă are trei foițe și controlează trecerea sângelui din atriul drept în ventriculul drept.","explain_en":"Correct: the right atrioventricular valve has three leaflets and controls blood flow from the right atrium into the right ventricle."},{"text_ro":"Circulația mică (pulmonară) începe în ventriculul stâng.","text_en":"The pulmonary (lesser) circulation begins in the left ventricle.","correct":false,"explain_ro":"Fals: circulația mică începe în ventriculul DREPT (prin trunchiul pulmonar). Ventriculul stâng inițiază circulația mare (sistemică).","explain_en":"False: the pulmonary circulation begins in the RIGHT ventricle (via the pulmonary trunk). The left ventricle starts the systemic (greater) circulation."},{"text_ro":"Vena cavă superioară și vena cavă inferioară se varsă în atriul drept.","text_en":"The superior vena cava and inferior vena cava drain into the right atrium.","correct":true,"explain_ro":"Corect: ambele vene cave aduc sângele venos (dezoxigenat) al corpului în atriul drept, unde începe traseul spre circulația mică.","explain_en":"Correct: both venae cavae return the body's venous (deoxygenated) blood to the right atrium, the entry point toward the pulmonary circulation."},{"text_ro":"Trunchiul pulmonar (truncus pulmonalis) transportă sânge oxigenat de la inimă spre plămâni.","text_en":"The pulmonary trunk (truncus pulmonalis) carries oxygenated blood from the heart to the lungs.","correct":false,"explain_ro":"Fals: trunchiul pulmonar transportă sânge NEoxigenat (venos) din ventriculul drept spre plămâni, unde se oxigenează. Funcția e inversată.","explain_en":"False: the pulmonary trunk carries DEoxygenated (venous) blood from the right ventricle to the lungs for oxygenation. The function is reversed."},{"text_ro":"Valva mitrală (bicuspidă) se află între atriul stâng și ventriculul stâng.","text_en":"The mitral (bicuspid) valve lies between the left atrium and the left ventricle.","correct":true,"explain_ro":"Corect: valva mitrală, cu două cuspide, controlează fluxul din atriul stâng în ventriculul stâng și previne refluxul în timpul sistolei.","explain_en":"Correct: the mitral valve, with two cusps, controls flow from the left atrium into the left ventricle and prevents backflow during systole."},{"text_ro":"Artera subclaviculară dreaptă pornește direct din arcul aortic.","text_en":"The right subclavian artery arises directly from the aortic arch.","correct":false,"explain_ro":"Fals: artera subclaviculară dreaptă provine din trunchiul brahiocefalic, nu direct din arcul aortic. Doar subclaviculara STÂNGĂ pornește direct din arc.","explain_en":"False: the right subclavian artery arises from the brachiocephalic trunk, not directly from the aortic arch. Only the LEFT subclavian branches directly off the arch."},{"text_ro":"Sângele din ventriculul stâng este pompat în circulația mare (sistemică) prin aortă.","text_en":"Blood from the left ventricle is pumped into the systemic (greater) circulation through the aorta.","correct":true,"explain_ro":"Corect: ventriculul stâng ejectează sânge oxigenat în aortă, care îl distribuie întregului corp prin circulația mare.","explain_en":"Correct: the left ventricle ejects oxygenated blood into the aorta, which distributes it to the whole body via the systemic circulation."},{"text_ro":"Valvele semilunare (aortică și pulmonară) previn refluxul sângelui înapoi în atrii în timpul diastolei.","text_en":"The semilunar valves (aortic and pulmonary) prevent backflow of blood into the atria during diastole.","correct":false,"explain_ro":"Fals: valvele semilunare previn refluxul din aortă/trunchi pulmonar înapoi în VENTRICULI. Refluxul în atrii este împiedicat de valvele atrioventriculare (mitrală/tricuspidă).","explain_en":"False: the semilunar valves prevent backflow from the aorta/pulmonary trunk into the VENTRICLES. Backflow into the atria is prevented by the atrioventricular valves (mitral/tricuspid)."}],"respiratory":[{"text_ro":"Plămânul drept (pulmo dexter) are 3 lobi (superior, mijlociu, inferior), iar plămânul stâng (pulmo sinister) are 2 lobi (superior și inferior).","text_en":"The right lung (pulmo dexter) has 3 lobes (superior, middle, inferior), while the left lung (pulmo sinister) has 2 lobes (superior and inferior).","correct":true,"explain_ro":"Corect. Plămânul drept are 3 lobi separați de scizura oblică și cea orizontală; plămânul stâng are doar 2 lobi (scizura oblică), locul lobului mijlociu fiind ocupat de incizura cardiacă și lingula.","explain_en":"Correct. The right lung has 3 lobes separated by the oblique and horizontal fissures; the left lung has only 2 lobes (oblique fissure), with the cardiac notch and lingula occupying the space of the missing middle lobe."},{"text_ro":"Epiglota (epiglottis) este formată din cartilaj hialin, la fel ca majoritatea cartilajelor laringelui.","text_en":"The epiglottis (epiglottis) is made of hyaline cartilage, like most of the laryngeal cartilages.","correct":false,"explain_ro":"Fals. Epiglota este alcătuită din cartilaj elastic, nu hialin. Cartilajele tiroid, cricoid și cea mai mare parte a aritenoidelor sunt hialine, dar epiglota (și apexul aritenoidelor, corniculatele, cuneiformele) sunt cartilaj elastic, ceea ce îi conferă flexibilitatea de a acoperi glota la deglutiție.","explain_en":"False. The epiglottis is made of elastic cartilage, not hyaline. The thyroid, cricoid and most of the arytenoid cartilages are hyaline, but the epiglottis (plus the arytenoid apices, corniculate and cuneiform cartilages) are elastic cartilage, giving it the flexibility to cover the glottis during swallowing."},{"text_ro":"Nervul frenic (nervus phrenicus), care asigură inervația motorie a diafragmului, ia naștere din segmentele medulare C6-C8.","text_en":"The phrenic nerve (nervus phrenicus), which provides the motor innervation of the diaphragm, arises from spinal segments C6-C8.","correct":false,"explain_ro":"Fals. Nervul frenic provine din segmentele C3-C5 (\"C3, 4, 5 keep the diaphragm alive\"), predominant din C4. C6-C8 contribuie la plexul brahial, nu la nervul frenic.","explain_en":"False. The phrenic nerve arises from segments C3-C5 (\"C3, 4, 5 keep the diaphragm alive\"), mainly C4. C6-C8 contribute to the brachial plexus, not the phrenic nerve."},{"text_ro":"Bronhia principală dreaptă (bronchus principalis dexter) este mai scurtă, mai largă și mai verticală decât bronhia principală stângă.","text_en":"The right main bronchus (bronchus principalis dexter) is shorter, wider and more vertical than the left main bronchus.","correct":true,"explain_ro":"Corect. Datorită acestui traiect mai vertical, mai larg și mai scurt, corpii străini aspirați ajung mai frecvent în bronhia principală dreaptă. Bronhia stângă este mai lungă și mai orizontală, fiind împinsă de arcul aortic și inimă.","explain_en":"Correct. Because of this more vertical, wider and shorter course, aspirated foreign bodies more often lodge in the right main bronchus. The left bronchus is longer and more horizontal, being displaced by the aortic arch and heart."},{"text_ro":"Pleura viscerală (pleura visceralis) este bogat inervată senzitiv somatic și este foarte sensibilă la durere.","text_en":"The visceral pleura (pleura visceralis) is richly supplied with somatic sensory fibers and is very sensitive to pain.","correct":false,"explain_ro":"Fals. Pleura viscerală primește doar inervație autonomă (vegetativă) și este insensibilă la durere. Pleura parietală, în schimb, este inervată somatic (nervii intercostali și nervul frenic) și este foarte sensibilă la durere - de aceea durerea pleuritică provine din afectarea pleurei parietale.","explain_en":"False. The visceral pleura receives only autonomic innervation and is insensitive to pain. The parietal pleura, by contrast, has somatic innervation (intercostal nerves and phrenic nerve) and is very pain-sensitive - which is why pleuritic pain arises from irritation of the parietal pleura."},{"text_ro":"Traheea (trachea) este menținută deschisă de inele cartilaginoase incomplete, în formă de \"C\", deschise posterior spre esofag, unde peretele este completat de mușchiul traheal.","text_en":"The trachea (trachea) is kept open by incomplete, C-shaped cartilage rings, open posteriorly toward the esophagus, where the wall is completed by the trachealis muscle.","correct":true,"explain_ro":"Corect. Cele 16-20 de inele cartilaginoase hialine în formă de \"C\" au deschiderea posterioară închisă de mușchiul traheal (musculus trachealis) și țesut fibroelastic (paries membranaceus), ceea ce permite dilatarea esofagului la deglutiție.","explain_en":"Correct. The 16-20 C-shaped hyaline cartilage rings have their posterior opening closed by the trachealis muscle (musculus trachealis) and fibroelastic tissue (paries membranaceus), which allows the esophagus to expand during swallowing."},{"text_ro":"Surfactantul pulmonar, care scade tensiunea superficială din alveole și previne colabarea lor, este secretat de pneumocitele de tip I.","text_en":"Pulmonary surfactant, which lowers alveolar surface tension and prevents alveolar collapse, is secreted by type I pneumocytes.","correct":false,"explain_ro":"Fals. Surfactantul este secretat de pneumocitele de tip II (celule cuboidale, granulare, cu corpi lamelari). Pneumocitele de tip I sunt celule scuamoase subțiri care acoperă aproximativ 95% din suprafața alveolară și asigură schimbul gazos, dar nu produc surfactant.","explain_en":"False. Surfactant is secreted by type II pneumocytes (cuboidal, granular cells containing lamellar bodies). Type I pneumocytes are thin squamous cells covering roughly 95% of the alveolar surface and mediate gas exchange, but they do not produce surfactant."},{"text_ro":"Plămânul stâng (pulmo sinister) prezintă pe marginea sa anterioară o incizură cardiacă (incisura cardiaca), sub care se află lingula (lingula pulmonis sinistri).","text_en":"The left lung (pulmo sinister) shows on its anterior border a cardiac notch (incisura cardiaca), below which lies the lingula (lingula pulmonis sinistri).","correct":true,"explain_ro":"Corect. Incizura cardiacă face loc inimii, iar lingula este o prelungire în formă de limbă a lobului superior stâng, considerată omoloagă lobului mijlociu al plămânului drept.","explain_en":"Correct. The cardiac notch accommodates the heart, and the lingula is a tongue-shaped projection of the left superior lobe, considered the counterpart of the right lung's middle lobe."},{"text_ro":"Cartilajul cricoid (cartilago cricoidea) este singurul cartilaj incomplet al laringelui, având forma unui inel deschis posterior.","text_en":"The cricoid cartilage (cartilago cricoidea) is the only incomplete cartilage of the larynx, shaped like a ring open posteriorly.","correct":false,"explain_ro":"Fals. Este invers: cartilajul cricoid este singurul cartilaj complet (inel închis pe toată circumferința), în formă de inel cu pecete, cu lama mai înaltă posterior. Cartilajul tiroid este cel incomplet posterior (are formă de scut deschis în spate).","explain_en":"False. It is the reverse: the cricoid cartilage is the only complete cartilage (a ring closed around its entire circumference), signet-ring shaped with a taller posterior lamina. The thyroid cartilage is the one incomplete posteriorly (shield-shaped, open at the back)."},{"text_ro":"Traheea se bifurcă la nivelul carinei (carina tracheae) în cele două bronhii principale, aproximativ în dreptul vertebrelor T4-T5.","text_en":"The trachea bifurcates at the carina (carina tracheae) into the two main bronchi, roughly at the level of vertebrae T4-T5.","correct":true,"explain_ro":"Corect. Traheea începe la nivelul C6 (sub cartilajul cricoid) și se bifurcă la nivelul unghiului sternal (Louis), aproximativ T4-T5, unde carina reprezintă pintenul cartilaginos dintre cele două bronhii principale.","explain_en":"Correct. The trachea begins at C6 (below the cricoid cartilage) and bifurcates at the level of the sternal angle (of Louis), roughly T4-T5, where the carina is the cartilaginous ridge between the two main bronchi."}],"digestive":[{"text_ro":"Ficatul produce bila, care este apoi stocată și concentrată în vezica biliară (vesica biliaris).","text_en":"The liver produces bile, which is then stored and concentrated in the gallbladder (vesica biliaris).","correct":true,"explain_ro":"Hepatocitele secretă continuu bila; între mese aceasta este deviată prin ductul cistic în vezica biliară, unde apa este reabsorbită, concentrând bila de 5-10 ori.","explain_en":"Hepatocytes secrete bile continuously; between meals it is diverted through the cystic duct into the gallbladder, where water is reabsorbed, concentrating the bile 5-10 fold."},{"text_ro":"Amilaza salivară (ptialina) inițiază digestia proteinelor în cavitatea bucală.","text_en":"Salivary amylase (ptyalin) initiates protein digestion in the oral cavity.","correct":false,"explain_ro":"Fals: amilaza salivară descompune glucidele (amidonul) în maltoză, nu proteinele. Digestia proteinelor începe în stomac prin pepsină.","explain_en":"False: salivary amylase breaks down carbohydrates (starch) into maltose, not proteins. Protein digestion begins in the stomach via pepsin."},{"text_ro":"Esofagul traversează diafragma prin hiatul esofagian, situat la nivelul vertebrei T10.","text_en":"The esophagus passes through the diaphragm via the esophageal hiatus, located at the level of vertebra T10.","correct":true,"explain_ro":"Adevărat: hiatul esofagian se află la nivelul T10 (spre deosebire de hiatul aortic la T12 și orificiul venei cave la T8).","explain_en":"True: the esophageal hiatus is at the T10 level (as opposed to the aortic hiatus at T12 and the caval opening at T8)."},{"text_ro":"Celulele parietale (oxintice) ale mucoasei gastrice secretă pepsinogen.","text_en":"The parietal (oxyntic) cells of the gastric mucosa secrete pepsinogen.","correct":false,"explain_ro":"Fals: pepsinogenul este secretat de celulele principale (zimogene). Celulele parietale secretă acid clorhidric (HCl) și factor intrinsec.","explain_en":"False: pepsinogen is secreted by the chief (zymogenic) cells. Parietal cells secrete hydrochloric acid (HCl) and intrinsic factor."},{"text_ro":"Pancreasul are atât funcție exocrină (enzime digestive), cât și endocrină (insulină și glucagon din insulele Langerhans).","text_en":"The pancreas has both an exocrine function (digestive enzymes) and an endocrine function (insulin and glucagon from the islets of Langerhans).","correct":true,"explain_ro":"Adevărat: acinii pancreatici secretă enzime (amilază, lipază, tripsinogen) în duoden, iar insulele Langerhans secretă insulină (celule beta) și glucagon (celule alfa) în sânge.","explain_en":"True: pancreatic acini secrete enzymes (amylase, lipase, trypsinogen) into the duodenum, while the islets of Langerhans secrete insulin (beta cells) and glucagon (alpha cells) into the blood."},{"text_ro":"Duodenul este cea mai lungă porțiune a intestinului subțire.","text_en":"The duodenum is the longest portion of the small intestine.","correct":false,"explain_ro":"Fals: duodenul este cel mai scurt segment (~25 cm). Cele mai lungi porțiuni sunt jejunul și mai ales ileonul.","explain_en":"False: the duodenum is the shortest segment (~25 cm). The longest portions are the jejunum and especially the ileum."},{"text_ro":"Stomacul secretă factor intrinsec, necesar pentru absorbția vitaminei B12 la nivelul ileonului.","text_en":"The stomach secretes intrinsic factor, which is required for the absorption of vitamin B12 in the ileum.","correct":true,"explain_ro":"Adevărat: factorul intrinsec, produs de celulele parietale, se leagă de vitamina B12 și permite absorbția acesteia în ileonul terminal.","explain_en":"True: intrinsic factor, produced by parietal cells, binds vitamin B12 and enables its absorption in the terminal ileum."},{"text_ro":"Vena portă hepatică (vena portae) transportă spre ficat sânge bogat în oxigen, provenit de la intestin și splină.","text_en":"The hepatic portal vein (vena portae) carries oxygen-rich blood from the intestine and spleen to the liver.","correct":false,"explain_ro":"Fals: vena portă aduce sânge venos, sărac în oxigen, dar bogat în nutrienți, de la tubul digestiv și splină. Sângele oxigenat ajunge la ficat prin artera hepatică.","explain_en":"False: the portal vein brings venous, oxygen-poor but nutrient-rich blood from the digestive tract and spleen. Oxygenated blood reaches the liver via the hepatic artery."},{"text_ro":"Intestinul gros absoarbe apă și electroliți și găzduiește flora bacteriană care sintetizează vitamina K.","text_en":"The large intestine absorbs water and electrolytes and hosts the bacterial flora that synthesizes vitamin K.","correct":true,"explain_ro":"Adevărat: colonul reabsoarbe apa și electroliții din chim, iar microbiota intestinală produce vitamina K și unele vitamine din grupul B.","explain_en":"True: the colon reabsorbs water and electrolytes from the chyme, and the gut microbiota produces vitamin K and some B-group vitamins."},{"text_ro":"Ductul biliar comun (ductus choledochus) și ductul pancreatic principal se deschid în duoden la nivelul papilei duodenale mici (minore).","text_en":"The common bile duct (ductus choledochus) and the main pancreatic duct open into the duodenum at the minor duodenal papilla.","correct":false,"explain_ro":"Fals: ele se unesc în ampula hepatopancreatică (Vater) și se deschid la papila duodenală mare. Papila mică primește ductul pancreatic accesor (Santorini).","explain_en":"False: they join at the hepatopancreatic ampulla (of Vater) and open at the major duodenal papilla. The minor papilla receives the accessory pancreatic duct (of Santorini)."}]};
+
+
+(function onlineDuel() {
+  if (typeof I18N !== "undefined") {
+    Object.assign(I18N.ro, {
+      "online.entry": "🌐 Joacă online cu un prieten",
+      "online.title": "Duel Online 1v1",
+      "online.intro":
+        "Provoacă un prieten la un duel de cunoștințe în timp real. Aceleași întrebări, scor live — câștigă cine are mai multe corecte.",
+      "online.system": "Sistem",
+      "online.sys.all": "🎯 Toate sistemele",
+      "online.sys.osos": "🦴 Osos",
+      "online.sys.muscular": "💪 Muscular",
+      "online.sys.nervous": "🧠 Nervos",
+      "online.sys.cardio": "❤️ Cardiovascular",
+      "online.sys.respiratory": "💨 Respirator",
+      "online.sys.digestive": "🍽️ Digestiv",
+      "online.create": "Creează o cameră",
+      "online.or": "sau",
+      "online.codePh": "COD",
+      "online.join": "Intră",
+      "online.codeLabel": "Codul camerei",
+      "online.share": "Trimite-i codul unui prieten. Jocul începe automat când intră.",
+      "online.waiting": "Aștept adversarul...",
+      "online.cancel": "Anulează",
+      "online.q": "Întrebarea",
+      "online.aiSays": "Afirmație",
+      "online.true": "ADEVĂRAT",
+      "online.false": "FALS",
+      "online.waitOpp": "Ai terminat! Aștepți adversarul să termine...",
+      "online.rematch": "Revanșă",
+      "online.exit": "Ieși",
+      "online.win": "Ai câștigat! 🎉",
+      "online.lose": "Ai pierdut",
+      "online.tie": "Egalitate!",
+      "online.noRealtime": "Jocul online nu e disponibil momentan (conexiune lipsă).",
+      "online.connErr": "Eroare de conexiune. Încearcă din nou.",
+      "online.badCode": "Introdu codul de 4 caractere.",
+      "online.joining": "Se conectează la cameră...",
+      "online.noRoom": "Camera nu există sau adversarul a plecat.",
+      "online.rematchWait": "Aștepți gazda să înceapă revanșa...",
+    });
+    Object.assign(I18N.en, {
+      "online.entry": "🌐 Play online with a friend",
+      "online.title": "Online 1v1 Duel",
+      "online.intro":
+        "Challenge a friend to a real-time knowledge duel. Same questions, live score — most correct wins.",
+      "online.system": "System",
+      "online.sys.all": "🎯 All systems",
+      "online.sys.osos": "🦴 Skeletal",
+      "online.sys.muscular": "💪 Muscular",
+      "online.sys.nervous": "🧠 Nervous",
+      "online.sys.cardio": "❤️ Cardiovascular",
+      "online.sys.respiratory": "💨 Respiratory",
+      "online.sys.digestive": "🍽️ Digestive",
+      "online.create": "Create a room",
+      "online.or": "or",
+      "online.codePh": "CODE",
+      "online.join": "Join",
+      "online.codeLabel": "Room code",
+      "online.share": "Send the code to a friend. The game starts automatically when they join.",
+      "online.waiting": "Waiting for opponent...",
+      "online.cancel": "Cancel",
+      "online.q": "Question",
+      "online.aiSays": "Statement",
+      "online.true": "TRUE",
+      "online.false": "FALSE",
+      "online.waitOpp": "You're done! Waiting for your opponent to finish...",
+      "online.rematch": "Rematch",
+      "online.exit": "Exit",
+      "online.win": "You won! 🎉",
+      "online.lose": "You lost",
+      "online.tie": "It's a tie!",
+      "online.noRealtime": "Online play is unavailable right now (no connection).",
+      "online.connErr": "Connection error. Try again.",
+      "online.badCode": "Enter the 4-character code.",
+      "online.joining": "Connecting to the room...",
+      "online.noRoom": "Room not found or the opponent left.",
+      "online.rematchWait": "Waiting for the host to start the rematch...",
+    });
+    if (typeof applyLanguage === "function") applyLanguage(CUR_LANG);
+  }
+
+  function L(k) {
+    try {
+      var d = I18N[CUR_LANG] || I18N.ro;
+      return d[k] || I18N.ro[k] || k;
+    } catch (e) {
+      return k;
+    }
+  }
+  function EN() {
+    return typeof CUR_LANG !== "undefined" && CUR_LANG === "en";
+  }
+  function esc(s) {
+    return String(s || "").replace(/[&<>]/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c];
+    });
+  }
+
+  function normOpp(n) {
+    if (!n || n === "Tu" || n === "You") return EN() ? "Opponent" : "Adversar";
+    return n;
+  }
+
+  var OD;
+  function reset() {
+    OD = { channel: null, code: null, isHost: false, system: "all", questions: [], cur: 0, score: 0, oppScore: 0, oppDone: false, done: false, started: false, myName: "", oppName: "", answered: false, joinTimer: null };
+  }
+  reset();
+
+  function myName() {
+    try {
+      var u = typeof getCurrentUser === "function" ? getCurrentUser() : null;
+      if (u && u.user) return u.user;
+    } catch (e) {}
+    return EN() ? "You" : "Tu";
+  }
+  function genCode() {
+    var A = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789", s = "";
+    for (var i = 0; i < 4; i++) s += A[Math.floor(Math.random() * A.length)];
+    return s;
+  }
+  function bankFor(sys) {
+    var out = [], B = window.DUEL_BANKS || {};
+    function add(arr) {
+      (arr || []).forEach(function (q) {
+        out.push({ r: q.text_ro, e: q.text_en, c: !!q.correct, er: q.explain_ro, ee: q.explain_en });
+      });
+    }
+    function addOsos() {
+      (window.DUEL_BANK || []).forEach(function (q) {
+        out.push({ r: q.text, e: q.text, c: !!q.correct, er: q.explain, ee: q.explain });
+      });
+    }
+    if (sys === "all") {
+      Object.keys(B).forEach(function (k) { add(B[k]); });
+      addOsos();
+    } else if (sys === "osos") {
+      addOsos();
+    } else {
+      add(B[sys]);
+    }
+    return out;
+  }
+  function buildQuestions(sys) {
+    var pool = bankFor(sys);
+    for (var i = pool.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1)), t = pool[i];
+      pool[i] = pool[j];
+      pool[j] = t;
+    }
+    return pool.slice(0, Math.min(10, pool.length));
+  }
+  function setView(id) {
+    ["onlineLobby", "onlineWaiting", "onlineGame", "onlineResults"].forEach(function (v) {
+      var el = document.getElementById(v);
+      if (el) el.style.display = v === id ? "block" : "none";
+    });
+  }
+  function status(msg, cls) {
+    var s = document.getElementById("onlineStatus");
+    if (s) {
+      s.textContent = msg || "";
+      s.className = "online-status" + (cls ? " " + cls : "");
+    }
+  }
+  function bcast(ev, payload) {
+    try {
+      if (OD.channel) OD.channel.send({ type: "broadcast", event: ev, payload: payload });
+    } catch (e) {}
+  }
+  function makeChannel(code) {
+    var ch = window.sb.channel("bx_duel_" + code, { config: { broadcast: { self: false } } });
+    ch.on("broadcast", { event: "join" }, function (m) { onJoin(m.payload); });
+    ch.on("broadcast", { event: "start" }, function (m) { onStart(m.payload); });
+    ch.on("broadcast", { event: "progress" }, function (m) { onProgress(m.payload); });
+    ch.on("broadcast", { event: "finish" }, function (m) { onFinish(m.payload); });
+    ch.on("broadcast", { event: "rematch" }, function () { if (OD.isHost) doHostStart(); });
+    return ch;
+  }
+  function dropChannel() {
+    try {
+      if (OD.channel) {
+        OD.channel.unsubscribe();
+        if (window.sb && window.sb.removeChannel) window.sb.removeChannel(OD.channel);
+      }
+    } catch (e) {}
+    OD.channel = null;
+  }
+
+  window.openOnlineDuel = function () {
+    var m = document.getElementById("onlineModal");
+    if (!m) return;
+    reset();
+    m.style.display = "flex";
+    setView("onlineLobby");
+    status("");
+    var jc = document.getElementById("onlineJoinCode");
+    if (jc) jc.value = "";
+    var cb = document.getElementById("onlineCreateBtn");
+    if (cb) cb.disabled = false;
+    if (!window.sb || !window.sb.channel) status(L("online.noRealtime"), "err");
+  };
+  window.closeOnlineDuel = function () {
+    if (OD.joinTimer) clearTimeout(OD.joinTimer);
+    dropChannel();
+    reset();
+    var m = document.getElementById("onlineModal");
+    if (m) m.style.display = "none";
+  };
+
+  window.onlineCreateRoom = function () {
+    if (!window.sb || !window.sb.channel) { status(L("online.noRealtime"), "err"); return; }
+    OD.isHost = true;
+    OD.myName = myName();
+    var sysEl = document.getElementById("onlineSystem");
+    OD.system = sysEl ? sysEl.value : "all";
+    OD.code = genCode();
+    OD.channel = makeChannel(OD.code);
+    var btn = document.getElementById("onlineCreateBtn");
+    if (btn) btn.disabled = true;
+    OD.channel.subscribe(function (st) {
+      if (st === "SUBSCRIBED") {
+        var cE = document.getElementById("onlineRoomCode");
+        if (cE) cE.textContent = OD.code;
+        setView("onlineWaiting");
+      } else if (st === "CHANNEL_ERROR" || st === "TIMED_OUT") {
+        status(L("online.connErr"), "err");
+        if (btn) btn.disabled = false;
+      }
+    });
+  };
+
+  window.onlineJoinRoom = function () {
+    if (!window.sb || !window.sb.channel) { status(L("online.noRealtime"), "err"); return; }
+    var jc = document.getElementById("onlineJoinCode");
+    var code = jc ? (jc.value || "").trim().toUpperCase() : "";
+    if (code.length !== 4) { status(L("online.badCode"), "err"); return; }
+    OD.isHost = false;
+    OD.myName = myName();
+    OD.code = code;
+    OD.channel = makeChannel(code);
+    status(L("online.joining"));
+    OD.channel.subscribe(function (st) {
+      if (st === "SUBSCRIBED") {
+        bcast("join", { name: OD.myName });
+        OD.joinTimer = setTimeout(function () {
+          if (!OD.started) { status(L("online.noRoom"), "err"); dropChannel(); }
+        }, 6000);
+      } else if (st === "CHANNEL_ERROR" || st === "TIMED_OUT") {
+        status(L("online.connErr"), "err");
+      }
+    });
+  };
+
+  function doHostStart() {
+    OD.questions = buildQuestions(OD.system);
+    bcast("start", { questions: OD.questions, hostName: OD.myName, system: OD.system });
+    beginGame();
+  }
+  function onJoin(payload) {
+    if (!OD.isHost) return;
+    OD.oppName = normOpp(payload && payload.name);
+    doHostStart();
+  }
+  function onStart(payload) {
+    if (OD.isHost || !payload) return;
+    if (OD.joinTimer) { clearTimeout(OD.joinTimer); OD.joinTimer = null; }
+    OD.questions = payload.questions || [];
+    OD.oppName = normOpp(payload.hostName);
+    beginGame();
+  }
+
+  function beginGame() {
+    OD.started = true; OD.cur = 0; OD.score = 0; OD.oppScore = 0; OD.oppDone = false; OD.done = false;
+    document.getElementById("onlineYouName").textContent = OD.myName;
+    document.getElementById("onlineOppName").textContent = OD.oppName;
+    document.getElementById("onlineYouScore").textContent = "0";
+    document.getElementById("onlineOppScore").textContent = "0";
+    document.getElementById("onlineQTotal").textContent = OD.questions.length;
+    setView("onlineGame");
+    renderQ();
+  }
+  function renderQ() {
+    OD.answered = false;
+    var q = OD.questions[OD.cur];
+    if (!q) { finish(); return; }
+    document.getElementById("onlineQNum").textContent = OD.cur + 1;
+    var stt = document.getElementById("onlineStatement");
+    if (stt) stt.textContent = '"' + (EN() ? q.e : q.r) + '"';
+    var fb = document.getElementById("onlineFeedback");
+    if (fb) { fb.style.display = "none"; fb.innerHTML = ""; }
+    var tf = document.querySelector("#onlineGame .online-tf");
+    if (tf) tf.style.display = "";
+    ["onlineTrueBtn", "onlineFalseBtn"].forEach(function (id) {
+      var b = document.getElementById(id);
+      if (b) { b.disabled = false; b.classList.remove("correct", "wrong"); }
+    });
+    var wo = document.getElementById("onlineWaitOpp");
+    if (wo) wo.style.display = "none";
+  }
+  window.onlineAnswer = function (pick, btn) {
+    if (OD.answered || OD.done) return;
+    OD.answered = true;
+    var q = OD.questions[OD.cur];
+    var correct = pick === q.c;
+    var tb = document.getElementById("onlineTrueBtn"), fbn = document.getElementById("onlineFalseBtn");
+    tb.disabled = true; fbn.disabled = true;
+    (q.c ? tb : fbn).classList.add("correct");
+    if (!correct && btn) btn.classList.add("wrong");
+    if (correct) OD.score++;
+    document.getElementById("onlineYouScore").textContent = OD.score;
+    var fb = document.getElementById("onlineFeedback");
+    if (fb) {
+      fb.style.display = "block";
+      fb.className = "online-feedback " + (correct ? "ok" : "err");
+      fb.innerHTML = (correct ? "&#9989; " : "&#10060; ") + esc(EN() ? q.ee : q.er);
+    }
+    bcast("progress", { score: OD.score, cur: OD.cur, name: OD.myName });
+    setTimeout(function () {
+      OD.cur++;
+      if (OD.cur >= OD.questions.length) finish();
+      else renderQ();
+    }, 1600);
+  };
+  function onProgress(p) {
+    if (!p) return;
+    if (typeof p.score === "number") OD.oppScore = p.score;
+    if (p.name) OD.oppName = normOpp(p.name);
+    var e = document.getElementById("onlineOppScore");
+    if (e) e.textContent = OD.oppScore;
+    var n = document.getElementById("onlineOppName");
+    if (n && OD.oppName) n.textContent = OD.oppName;
+  }
+  function onFinish(p) {
+    OD.oppDone = true;
+    if (p && typeof p.score === "number") {
+      OD.oppScore = p.score;
+      var e = document.getElementById("onlineOppScore");
+      if (e) e.textContent = OD.oppScore;
+    }
+    if (OD.done) showResults();
+  }
+  function finish() {
+    OD.done = true;
+    bcast("finish", { score: OD.score, name: OD.myName });
+    if (OD.oppDone) { showResults(); return; }
+    var tf = document.querySelector("#onlineGame .online-tf");
+    if (tf) tf.style.display = "none";
+    var stt = document.getElementById("onlineStatement");
+    if (stt) stt.textContent = "";
+    var fb = document.getElementById("onlineFeedback");
+    if (fb) fb.style.display = "none";
+    var wo = document.getElementById("onlineWaitOpp");
+    if (wo) wo.style.display = "block";
+  }
+  function showResults() {
+    setView("onlineResults");
+    var win = OD.score > OD.oppScore, tie = OD.score === OD.oppScore;
+    var icon = document.getElementById("onlineResultIcon"),
+      title = document.getElementById("onlineResultTitle"),
+      sc = document.getElementById("onlineResultScores");
+    if (icon) icon.textContent = win ? "🏆" : tie ? "🤝" : "💪";
+    if (title) title.textContent = win ? L("online.win") : tie ? L("online.tie") : L("online.lose");
+    if (sc)
+      sc.innerHTML =
+        "<span>" + esc(OD.myName) + ": <b>" + OD.score + "</b></span>" +
+        '<span class="online-vs">—</span>' +
+        "<span>" + esc(OD.oppName) + ": <b>" + OD.oppScore + "</b></span>";
+  }
+  window.onlineRematch = function () {
+    if (OD.isHost) {
+      doHostStart();
+    } else {
+      bcast("rematch", {});
+      var ws = document.getElementById("onlineWaitStatus");
+      if (ws) ws.textContent = L("online.rematchWait");
+      var cE = document.getElementById("onlineRoomCode");
+      if (cE) cE.textContent = OD.code;
+      setView("onlineWaiting");
+    }
   };
 })();
