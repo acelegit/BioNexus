@@ -4,6 +4,46 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>BioNexus - Anatomia umană 3D Interactivă</title>
+    <meta
+      name="description"
+      content="BioNexus — anatomie umană 3D interactivă: 6 sisteme (osos, muscular, nervos, cardiovascular, respirator, digestiv), modele 3D explorabile, quiz anatomic și asistent AI. Nume RO + latină."
+    />
+    <meta name="author" content="BioNexus" />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#0a0e1a" />
+    <meta name="color-scheme" content="dark light" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="BioNexus" />
+    <meta property="og:title" content="BioNexus — Anatomia umană 3D interactivă" />
+    <meta
+      property="og:description"
+      content="Explorează 6 sisteme anatomice în 3D, testează-te cu quiz-ul anatomic și întreabă asistentul AI. Nume RO + latină."
+    />
+    <meta property="og:locale" content="ro_RO" />
+    <meta property="og:image" content="images/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="BioNexus — Anatomia umană 3D interactivă" />
+    <meta
+      name="twitter:description"
+      content="6 sisteme anatomice în 3D, quiz anatomic și asistent AI. Nume RO + latină."
+    />
+    <meta name="twitter:image" content="images/og-image.png" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "BioNexus",
+        "description": "Anatomie umană 3D interactivă: 6 sisteme, modele 3D explorabile, quiz anatomic și asistent AI biologic.",
+        "applicationCategory": "EducationalApplication",
+        "operatingSystem": "Web",
+        "inLanguage": "ro",
+        "isAccessibleForFree": true,
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "RON" }
+      }
+    </script>
     <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="48x48" href="images/favicon-48.png" />
     <link rel="icon" type="image/png" sizes="64x64" href="images/favicon-64.png" />
@@ -340,18 +380,16 @@
             </button>
             <div class="user-menu-dropdown" id="userMenuDropdown">
               <button class="user-menu-item" onclick="goProfile('profil')">
-                <span class="user-menu-ic user-menu-ic-img"
-                  ><img src="images/icon-profile.png" alt="" /></span
+                <span class="user-menu-ic" data-bxicon="profile"></span
                 ><span data-i18n="user.menu.profil">Profil</span>
               </button>
               <button class="user-menu-item" onclick="goProfile('setari')">
-                <span class="user-menu-ic user-menu-ic-img"
-                  ><img src="images/icon-settings.png" alt="" /></span
+                <span class="user-menu-ic" data-bxicon="gear"></span
                 ><span data-i18n="user.menu.setari">Setări</span>
               </button>
               <div class="user-menu-divider"></div>
               <button class="user-menu-item user-menu-logout" onclick="doLogout()">
-                <span class="user-menu-ic">&#8629;</span
+                <span class="user-menu-ic" data-bxicon="logout"></span
                 ><span data-i18n="user.menu.logout">Deloghează-te</span>
               </button>
             </div>
@@ -485,9 +523,14 @@
             <p data-i18n="home.sys.osos.d">
               206 oase modelate 3D, cap · trunchi · membre, quiz interactiv.
             </p>
-            <span class="system-badge badge-ready" data-i18n="home.sys.badge.ready"
-              >Disponibil acum</span
-            >
+            <div class="system-card-foot">
+              <span class="system-badge badge-ready" data-i18n="home.sys.badge.ready"
+                >Disponibil acum</span
+              >
+              <span class="system-card-cta" data-i18n-html="home.sys.cta"
+                >Explorează în 3D &rarr;</span
+              >
+            </div>
           </div>
           <div class="system-card ready" onclick="enterApp('muscular')">
             <div
@@ -500,9 +543,14 @@
             <p data-i18n="home.sys.muscular.d">
               Mușchi striați și netezi, grupe musculare, inserții și acțiuni.
             </p>
-            <span class="system-badge badge-ready" data-i18n="home.sys.badge.ready"
-              >Disponibil acum</span
-            >
+            <div class="system-card-foot">
+              <span class="system-badge badge-ready" data-i18n="home.sys.badge.ready"
+                >Disponibil acum</span
+              >
+              <span class="system-card-cta" data-i18n-html="home.sys.cta"
+                >Explorează în 3D &rarr;</span
+              >
+            </div>
           </div>
           <div class="system-card ready" onclick="enterApp('nervous')">
             <div
@@ -515,9 +563,14 @@
             <p data-i18n="home.sys.nervos.d">
               Creier, măduvă spinării, nervii periferici, traseele neuronale.
             </p>
-            <span class="system-badge badge-ready" data-i18n="home.sys.badge.ready"
-              >Disponibil acum</span
-            >
+            <div class="system-card-foot">
+              <span class="system-badge badge-ready" data-i18n="home.sys.badge.ready"
+                >Disponibil acum</span
+              >
+              <span class="system-card-cta" data-i18n-html="home.sys.cta"
+                >Explorează în 3D &rarr;</span
+              >
+            </div>
           </div>
           <div class="system-card ready" onclick="enterApp('cardio')">
             <div
@@ -530,9 +583,14 @@
             <p data-i18n="home.sys.cardio.d">
               Inima, artere, vene, capilare — circulația mare și mică.
             </p>
-            <span class="system-badge badge-ready" data-i18n="home.sys.badge.ready"
-              >Disponibil acum</span
-            >
+            <div class="system-card-foot">
+              <span class="system-badge badge-ready" data-i18n="home.sys.badge.ready"
+                >Disponibil acum</span
+              >
+              <span class="system-card-cta" data-i18n-html="home.sys.cta"
+                >Explorează în 3D &rarr;</span
+              >
+            </div>
           </div>
           <div class="system-card ready" onclick="enterApp('digestive')">
             <div
@@ -545,9 +603,14 @@
             <p data-i18n="home.sys.digestiv.d">
               Traseu complet: cavitate bucală → esofag → stomac → intestine.
             </p>
-            <span class="system-badge badge-ready" data-i18n="home.sys.badge.ready"
-              >Disponibil acum</span
-            >
+            <div class="system-card-foot">
+              <span class="system-badge badge-ready" data-i18n="home.sys.badge.ready"
+                >Disponibil acum</span
+              >
+              <span class="system-card-cta" data-i18n-html="home.sys.cta"
+                >Explorează în 3D &rarr;</span
+              >
+            </div>
           </div>
           <div class="system-card ready" onclick="enterApp('respiratory')">
             <div
@@ -560,9 +623,14 @@
             <p data-i18n="home.sys.respirator.d">
               Căi respiratorii, plămâni, alveole, mecanica respirației.
             </p>
-            <span class="system-badge badge-ready" data-i18n="home.sys.badge.ready"
-              >Disponibil acum</span
-            >
+            <div class="system-card-foot">
+              <span class="system-badge badge-ready" data-i18n="home.sys.badge.ready"
+                >Disponibil acum</span
+              >
+              <span class="system-card-cta" data-i18n-html="home.sys.cta"
+                >Explorează în 3D &rarr;</span
+              >
+            </div>
           </div>
         </div>
       </section>
@@ -621,7 +689,7 @@
               >Deschide chatbox-ul &rarr;</span
             >
           </div>
-          <div class="home-feat-card">
+          <div class="home-feat-card home-feat-clickable" onclick="enterApp('skeleton')">
             <div
               class="home-feat-icon home-feat-icon-img"
               style="background: linear-gradient(135deg, #8b5cf6, #6366f1)"
@@ -633,6 +701,9 @@
               Tastează orice os și site-ul te duce instant la el. Categorisare pe secțiuni
               anatomice.
             </p>
+            <span class="home-feat-cta" data-i18n-html="home.feat.search.cta"
+              >Caută structuri &rarr;</span
+            >
           </div>
           <div class="home-feat-card home-feat-clickable" onclick="openCuriozitati()">
             <div
@@ -753,9 +824,7 @@
           <div class="reviews-avg">
             <span class="reviews-avg-num" id="reviewsAvgNum">—</span>
             <div class="reviews-avg-stars" id="reviewsAvgStars"></div>
-            <span class="reviews-avg-count" id="reviewsAvgCount" data-i18n="home.reviews.empty"
-              >0 recenzii</span
-            >
+            <span class="reviews-avg-count" id="reviewsAvgCount">0 recenzii</span>
           </div>
         </div>
         <div class="reviews-form-wrap">
@@ -813,7 +882,19 @@
       </section>
 
       <footer class="home-footer">
+        <div class="home-footer-links">
+          <button class="home-footer-link" type="button" onclick="showTerms('terms')" data-i18n="footer.terms">
+            Termeni
+          </button>
+          <span class="home-footer-sep" aria-hidden="true">&middot;</span>
+          <button class="home-footer-link" type="button" onclick="showTerms('privacy')" data-i18n="footer.privacy">
+            Confidențialitate
+          </button>
+        </div>
         <div data-i18n="home.footer">BioNexus &middot; Platformă educațională anatomică</div>
+        <div class="home-footer-source" data-i18n="footer.source">
+          Conținut bazat pe „Anatomia Omului" — M. Ștefaneț (USMF)
+        </div>
         <div class="home-credit">made by ryan</div>
       </footer>
     </div>
@@ -1484,12 +1565,12 @@
           </div>
           <div class="quiz-body" id="quizBody">
             <div class="quiz-stage" id="quizSystemPick">
-              <div class="quiz-intro-icon">&#127919;</div>
+              <div class="quiz-intro-icon" data-bxicon="target"></div>
               <h3 data-i18n="quiz.sys.h">Alege sistemul anatomic</h3>
               <p data-i18n="quiz.sys.p">Pentru ce sistem vrei să te testezi?</p>
               <div class="quiz-modes">
                 <button class="quiz-mode-card" onclick="pickQuizSystem('osos')">
-                  <div class="quiz-mode-icon quiz-mode-icon-emoji">&#129463;</div>
+                  <div class="quiz-mode-icon quiz-mode-icon-sys" data-bxsys="osos"></div>
                   <div class="quiz-mode-info">
                     <div class="quiz-mode-title" data-i18n="quiz.sys.osos.t">Sistem Osos</div>
                     <div class="quiz-mode-sub" data-i18n="quiz.sys.osos.d">
@@ -1499,7 +1580,7 @@
                   </div>
                 </button>
                 <button class="quiz-mode-card" onclick="pickQuizSystem('muscular')">
-                  <div class="quiz-mode-icon quiz-mode-icon-emoji">&#128170;</div>
+                  <div class="quiz-mode-icon quiz-mode-icon-sys" data-bxsys="muscular"></div>
                   <div class="quiz-mode-info">
                     <div class="quiz-mode-title" data-i18n="quiz.sys.muscular.t">
                       Sistem Muscular
@@ -1510,7 +1591,7 @@
                   </div>
                 </button>
                 <button class="quiz-mode-card" onclick="pickQuizSystem('nervous')">
-                  <div class="quiz-mode-icon quiz-mode-icon-emoji">&#129504;</div>
+                  <div class="quiz-mode-icon quiz-mode-icon-sys" data-bxsys="nervous"></div>
                   <div class="quiz-mode-info">
                     <div class="quiz-mode-title" data-i18n="quiz.sys.nervous.t">Sistem Nervos</div>
                     <div class="quiz-mode-sub" data-i18n="quiz.sys.nervous.d">
@@ -1519,7 +1600,7 @@
                   </div>
                 </button>
                 <button class="quiz-mode-card" onclick="pickQuizSystem('cardio')">
-                  <div class="quiz-mode-icon quiz-mode-icon-emoji">&#10084;&#65039;</div>
+                  <div class="quiz-mode-icon quiz-mode-icon-sys" data-bxsys="cardio"></div>
                   <div class="quiz-mode-info">
                     <div class="quiz-mode-title" data-i18n="quiz.sys.cardio.t">
                       Sistem Cardiovascular
@@ -1530,7 +1611,7 @@
                   </div>
                 </button>
                 <button class="quiz-mode-card" onclick="pickQuizSystem('respiratory')">
-                  <div class="quiz-mode-icon quiz-mode-icon-emoji">&#128168;</div>
+                  <div class="quiz-mode-icon quiz-mode-icon-sys" data-bxsys="respiratory"></div>
                   <div class="quiz-mode-info">
                     <div class="quiz-mode-title" data-i18n="quiz.sys.respiratory.t">
                       Sistem Respirator
@@ -1541,7 +1622,7 @@
                   </div>
                 </button>
                 <button class="quiz-mode-card" onclick="pickQuizSystem('digestive')">
-                  <div class="quiz-mode-icon quiz-mode-icon-emoji">&#127869;</div>
+                  <div class="quiz-mode-icon quiz-mode-icon-sys" data-bxsys="digestive"></div>
                   <div class="quiz-mode-info">
                     <div class="quiz-mode-title" data-i18n="quiz.sys.digestive.t">
                       Sistem Digestiv
@@ -1558,14 +1639,16 @@
               <button class="quiz-back-pick" onclick="backToSystemPick()">
                 &larr; <span data-i18n="quiz.back">Înapoi</span>
               </button>
-              <div class="quiz-intro-icon">&#127919;</div>
+              <div class="quiz-intro-icon" data-bxicon="target"></div>
               <h3 data-i18n="quiz.pick.h">Alege tipul de test</h3>
               <p data-i18n="quiz.pick.p">Două moduri disponibile — alege cum vrei să te testezi.</p>
               <div class="quiz-modes">
                 <button class="quiz-mode-card" onclick="pickQuizMode('visual')">
-                  <div class="quiz-mode-icon quiz-mode-icon-emoji" id="quizModeVisualIcon">
-                    &#129463;
-                  </div>
+                  <div
+                    class="quiz-mode-icon quiz-mode-icon-svg"
+                    id="quizModeVisualIcon"
+                    data-bxicon="eye"
+                  ></div>
                   <div class="quiz-mode-info">
                     <div
                       class="quiz-mode-title"
@@ -1585,9 +1668,7 @@
                   </div>
                 </button>
                 <button class="quiz-mode-card" onclick="pickQuizMode('knowledge')">
-                  <div class="quiz-mode-icon quiz-mode-icon-img">
-                    <img src="images/quiz-books.png" alt="Cunoștințe" data-clean-bg="light" />
-                  </div>
+                  <div class="quiz-mode-icon quiz-mode-icon-svg" data-bxicon="book"></div>
                   <div class="quiz-mode-info">
                     <div class="quiz-mode-title" data-i18n="quiz.mode.know.t">
                       Test de Cunoștințe
@@ -1602,9 +1683,7 @@
                   onclick="pickQuizMode('duel')"
                   id="quizModeDuelCard"
                 >
-                  <div class="quiz-mode-icon quiz-mode-icon-img">
-                    <img src="images/quiz-aiduel.png" alt="AI Duel" data-clean-bg="light" />
-                  </div>
+                  <div class="quiz-mode-icon quiz-mode-icon-svg" data-bxicon="atom"></div>
                   <div class="quiz-mode-info">
                     <div class="quiz-mode-title" data-i18n="quiz.mode.duel.t">AI Duel</div>
                     <div class="quiz-mode-sub" data-i18n="quiz.mode.duel.d">
@@ -2406,7 +2485,25 @@
           </div>
           <div class="profile-badges-wrap">
             <div class="profile-badges-head">
-              <span class="profile-badges-ic">&#127942;</span>
+              <span class="profile-badges-ic" aria-hidden="true">
+                <svg width="34" height="34" viewBox="0 0 24 24" fill="none">
+                  <defs>
+                    <linearGradient id="pbHexGrad" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0" stop-color="#a78bfa" />
+                      <stop offset="1" stop-color="#6d28d9" />
+                    </linearGradient>
+                  </defs>
+                  <path
+                    d="M12 2 20.5 6.75v10.5L12 22 3.5 17.25V6.75Z"
+                    fill="url(#pbHexGrad)"
+                    stroke="rgba(255,255,255,.18)"
+                  />
+                  <path
+                    d="M12 7.1 13.45 10.85 17.4 11.05 14.3 13.6 15.35 17.45 12 15.2 8.65 17.45 9.7 13.6 6.6 11.05 10.55 10.85Z"
+                    fill="#fff"
+                  />
+                </svg>
+              </span>
               <h2 class="profile-badges-title" data-i18n="profile.insigne.h">INSIGNELE MELE</h2>
               <div class="profile-badges-count">
                 <b id="profileBadgesAchieved">0</b
@@ -2562,6 +2659,7 @@
     </div>
     <script src="logo-cleanup.js"></script>
     <script src="ai-config.js"></script>
+    <div id="quizAmbient" aria-hidden="true"></div>
     <script src="script.js"></script>
     <script src="supabase-integration.js"></script>
   </body>

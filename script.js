@@ -2935,16 +2935,16 @@ var I18N = {
     "home.hero.ctaPrimary": "Vezi modele 3D",
     "home.hero.ctaSecondary": "Insignele mele",
     "home.stats.bones": "Oase modelate",
-    "home.stats.systems": "Sisteme planificate",
+    "home.stats.systems": "Sisteme disponibile",
     "home.stats.questions": "Întrebări quiz",
     "home.stats.assistant": "Asistent biologic",
     "home.systems.title": 'Sisteme <span class="home-hero-grad">anatomice</span>',
     "home.systems.sub":
-      "Acoperim sistematic toate sistemele corpului uman. Începem cu sistemul osos, dezvoltarea continuă.",
+      "Toate cele 6 sisteme majore ale corpului uman sunt acum disponibile în 3D interactiv.",
     "home.sys.osos.t": "Sistem Osos",
     "home.sys.osos.d": "206 oase modelate 3D, cap · trunchi · membre, quiz interactiv.",
     "home.sys.muscular.t": "Sistem Muscular",
-    "home.sys.muscular.d": "600+ mușchi, grupe musculare, inserții și acțiuni — în lucru.",
+    "home.sys.muscular.d": "600+ mușchi, grupe musculare, inserții și acțiuni, cu denumiri RO/latină.",
     "home.sys.nervos.t": "Sistem Nervos",
     "home.sys.nervos.d": "Creier, măduvă spinării, nervii periferici, traseele neuronale.",
     "home.sys.cardio.t": "Sistem Cardiovascular",
@@ -2954,6 +2954,7 @@ var I18N = {
     "home.sys.respirator.t": "Sistem Respirator",
     "home.sys.respirator.d": "Căi respiratorii, plămâni, alveole, mecanica respirației.",
     "home.sys.badge.ready": "Disponibil acum",
+    "home.sys.cta": "Explorează în 3D &rarr;",
     "home.sys.badge.soon": "În dezvoltare",
     "home.sys.badge.planned": "Planificat",
     "home.features.title": 'Ce poți face cu <span class="home-hero-grad">BioNexus</span>',
@@ -2974,6 +2975,7 @@ var I18N = {
     "home.feat.search.t": "Căutare rapidă",
     "home.feat.search.d":
       "Tastează orice os și site-ul te duce instant la el. Categorisare pe secțiuni anatomice.",
+    "home.feat.search.cta": "Caută structuri &rarr;",
     "home.feat.details.t": "Detalii medicale",
     "home.feat.details.d":
       "Categorie, tip, descriere, articulații, detalii suplimentare — panou complet pentru fiecare os.",
@@ -2996,6 +2998,9 @@ var I18N = {
     "home.learn.m6.t": "Fiziologia osului",
     "home.learn.m6.d": "Microstructură, măduvă, periost și regenerarea osoasă.",
     "home.footer": "BioNexus &middot; Platformă educațională anatomică",
+    "footer.terms": "Termeni",
+    "footer.privacy": "Confidențialitate",
+    "footer.source": "Conținut bazat pe „Anatomia Omului” — M. Ștefaneț (USMF)",
     "login.tab.login": "Conectare",
     "login.tab.register": "Înregistrare",
     "login.welcome": "Bine ai revenit",
@@ -3131,16 +3136,16 @@ var I18N = {
     "home.hero.ctaPrimary": "View 3D models",
     "home.hero.ctaSecondary": "My badges",
     "home.stats.bones": "Bones modeled",
-    "home.stats.systems": "Planned systems",
+    "home.stats.systems": "Available systems",
     "home.stats.questions": "Quiz questions",
     "home.stats.assistant": "AI assistant",
     "home.systems.title": 'Anatomical <span class="home-hero-grad">systems</span>',
     "home.systems.sub":
-      "We are systematically covering every system of the human body. Starting with the skeletal system, more to come.",
+      "All 6 major systems of the human body are now available in interactive 3D.",
     "home.sys.osos.t": "Skeletal System",
     "home.sys.osos.d": "206 bones modeled in 3D, head · trunk · limbs, interactive quiz.",
     "home.sys.muscular.t": "Muscular System",
-    "home.sys.muscular.d": "600+ muscles, muscle groups, insertions and actions — in progress.",
+    "home.sys.muscular.d": "600+ muscles, muscle groups, insertions and actions, RO/Latin names.",
     "home.sys.nervos.t": "Nervous System",
     "home.sys.nervos.d": "Brain, spinal cord, peripheral nerves, neural pathways.",
     "home.sys.cardio.t": "Cardiovascular System",
@@ -3150,6 +3155,7 @@ var I18N = {
     "home.sys.respirator.t": "Respiratory System",
     "home.sys.respirator.d": "Airways, lungs, alveoli, the mechanics of breathing.",
     "home.sys.badge.ready": "Available now",
+    "home.sys.cta": "Explore in 3D &rarr;",
     "home.sys.badge.soon": "In development",
     "home.sys.badge.planned": "Planned",
     "home.features.title": 'What you can do with <span class="home-hero-grad">BioNexus</span>',
@@ -3170,6 +3176,7 @@ var I18N = {
     "home.feat.search.t": "Quick search",
     "home.feat.search.d":
       "Type any bone name and the site jumps to it instantly. Categorized by anatomical sections.",
+    "home.feat.search.cta": "Search structures &rarr;",
     "home.feat.details.t": "Medical details",
     "home.feat.details.d":
       "Category, type, description, joints, extra details — full panel for every bone.",
@@ -3191,6 +3198,9 @@ var I18N = {
     "home.learn.m6.t": "Bone Physiology",
     "home.learn.m6.d": "Microstructure, marrow, periosteum and bone regeneration.",
     "home.footer": "BioNexus &middot; Anatomical educational platform",
+    "footer.terms": "Terms",
+    "footer.privacy": "Privacy",
+    "footer.source": "Content based on “Human Anatomy” — M. Ștefaneț (USMF)",
     "login.tab.login": "Login",
     "login.tab.register": "Sign up",
     "login.welcome": "Welcome back",
@@ -3345,6 +3355,9 @@ function applyLanguage(lang) {
   document.querySelectorAll(".lang-btn").forEach(function (b) {
     b.classList.toggle("active", b.dataset.lang === CUR_LANG);
   });
+
+  if (typeof window.refreshReviewsList === "function") window.refreshReviewsList();
+  else if (typeof window.refreshReviewsUI === "function") window.refreshReviewsUI();
 }
 window.applyLanguage = applyLanguage;
 document.addEventListener("click", function (e) {
@@ -3721,6 +3734,8 @@ function showQuizStage(name) {
     var el = document.getElementById(id);
     if (el) el.style.display = id === name ? "block" : "none";
   });
+
+  document.body.classList.toggle("quiz-inq", name === "quizQuestion");
 }
 window.showQuizStage = showQuizStage;
 
@@ -4285,6 +4300,268 @@ applyUserBadge();
   if (typeof applyLanguage === "function") applyLanguage(CUR_LANG);
 })();
 
+
+var BX_ICONS = {
+
+  bone: '<path d="M9 15 15 9"/><circle cx="8" cy="14" r="2"/><circle cx="10" cy="16" r="2"/><circle cx="14" cy="8" r="2"/><circle cx="16" cy="10" r="2"/>',
+  muscle: '<path d="M8.2 21v-6c0-1.2-.5-1.9-1.4-2.7C5.6 11 5.1 9.7 5.1 8.2 5.1 5.6 7.3 3.6 10 3.6h3.1c2.6 0 4.7 2 4.7 4.5 0 1.4-.6 2.4-1.4 3.3-.7.8-1.1 1.5-1.1 2.8V21"/><path d="M8.2 21h7"/><path d="M5.4 9.6c2 .5 3.4 1.9 3.9 4"/>',
+  brain: '<path d="M12 5.2A3 3 0 0 0 6.5 3.7 2.7 2.7 0 0 0 4.2 7 2.5 2.5 0 0 0 4.5 10.6 2.7 2.7 0 0 0 6 15.6a3 3 0 0 0 6 .4Z"/><path d="M12 5.2a3 3 0 0 1 5.5-1.5A2.7 2.7 0 0 1 19.8 7a2.5 2.5 0 0 1-.3 3.6 2.7 2.7 0 0 1-1.5 5 3 3 0 0 1-6 .4Z"/><path d="M12 5.5v10.5"/>',
+  heart: '<path d="M12 20.3 4.5 12.8a4.8 4.8 0 0 1 6.8-6.8l.7.7.7-.7a4.8 4.8 0 1 1 6.8 6.8Z"/>',
+  lungs: '<path d="M12 3v6"/><path d="M12 8.2c-1.3.6-2.2 1-3 2.1"/><path d="M12 8.2c1.3.6 2.2 1 3 2.1"/><path d="M8.9 9.6C6.9 11 6.1 14 6.1 16.7c0 2 .9 3.4 2.3 3.4 2 0 3.4-2 3.4-4.6v-4c0-1.4-.8-2.2-2.9-.9Z"/><path d="M15.1 9.6c2 1.4 2.8 4.4 2.8 7.1 0 2-.9 3.4-2.3 3.4-2 0-3.4-2-3.4-4.6v-4c0-1.4.8-2.2 2.9-.9Z"/>',
+  stomach: '<path d="M10.5 3.2c0 2.1-.2 2.9 1.1 3.5 2.4 1 4.4 3 4.4 6.1 0 3.6-2.7 6.4-6 6.4-2.7 0-4.9-1.8-4.9-4.2 0-1.9 1.3-3 2.8-3"/><path d="M16 12.8c1 .1 1.7.8 1.9 1.9"/>',
+
+  compass: '<circle cx="12" cy="12" r="9"/><path d="M15.6 8.4 13.6 13.6 8.4 15.6 10.4 10.4Z"/>',
+  mountain: '<path d="M3 20 9.2 7.5l3.6 7"/><path d="M12.4 14 16.5 7l4.5 13Z"/><path d="M2.5 20h19"/>',
+  medal: '<circle cx="12" cy="9" r="5.4"/><circle cx="12" cy="9" r="1.9"/><path d="M8.8 13.4 7 21l5-2.6L17 21l-1.8-7.6"/>',
+  cross: '<path d="M9.6 3.6h4.8v5h5v4.8h-5v5H9.6v-5h-5V8.6h5Z"/>',
+  star: '<path d="M12 3.5 14.6 9l6 .7-4.4 4.1 1.2 5.9L12 16.7 6.6 19.7l1.2-5.9L3.4 9.7l6-.7Z"/>',
+  gem: '<path d="M6 3.6h12l3 5-9 11.8L3 8.6Z"/><path d="M3 8.6h18"/><path d="M9.4 8.6 12 20.4"/><path d="M14.6 8.6 12 20.4"/><path d="M9 3.6 6 8.6"/><path d="M15 3.6 18 8.6"/>',
+  bulb: '<path d="M9.2 18h5.6"/><path d="M10 21h4"/><path d="M12 3a6 6 0 0 0-3.9 10.5c.8.8 1.2 1.4 1.4 2.5h5c.2-1.1.6-1.7 1.4-2.5A6 6 0 0 0 12 3Z"/>',
+  crown: '<path d="M4 18.5h16"/><path d="M4 18.5 2.8 8l4.6 4.2L12 4.8l4.6 7.4L21.2 8 20 18.5Z"/>',
+  sparkle: '<path d="M12 3.4 13.9 9.1 19.6 11l-5.7 1.9L12 18.6 10.1 12.9 4.4 11l5.7-1.9Z"/><path d="M18.8 4v3.2M17.2 5.6h3.2"/><path d="M5.4 15.8v2.6M4.1 17.1h2.6"/>',
+  flame: '<path d="M12 3c.4 2.5 1.9 4.4 3.5 5.9C17 10.3 18 12 18 14a6 6 0 0 1-12 0c0-1 .3-2 1-3 0 1.2.9 2 2 2a2 2 0 0 0 2-2c0-1.2-.7-2-1.3-3.1C8.6 6.4 9.6 4.5 12 3Z"/>',
+  search: '<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/>',
+  people: '<circle cx="9" cy="8" r="3.1"/><path d="M3.6 20c0-3 2.4-5 5.4-5s5.4 2 5.4 5"/><path d="M16 5.2a3.2 3.2 0 0 1 0 6.2"/><path d="M17.2 15.1c2.1.6 3.6 2.4 3.6 4.9"/>',
+  chisel: '<path d="M20 4.2 14.4 9.8"/><path d="M15.2 5 19 8.8"/><path d="M13.6 10.6 5.2 19l-1.7 2.4 2.4-1.7 8.4-8.4Z"/>',
+  dna: '<path d="M7 3c0 4.2 10 5 10 9s-10 4.8-10 9"/><path d="M17 3c0 4.2-10 5-10 9s10 4.8 10 9"/><path d="M8.4 6h7.2"/><path d="M6.6 12h10.8"/><path d="M8.4 18h7.2"/>',
+  bolt: '<path d="M13 2.5 4.5 13.2H11l-1 8.3L18.5 10.5H12Z"/>',
+
+  profile: '<circle cx="12" cy="8" r="4"/><path d="M4.5 20c0-3.6 3.3-6.4 7.5-6.4s7.5 2.8 7.5 6.4"/>',
+  gear: '<circle cx="12" cy="12" r="3"/><path d="M12.2 2h-.4a2 2 0 0 0-2 2v.2a2 2 0 0 1-1 1.7l-.4.3a2 2 0 0 1-2 0l-.2-.1a2 2 0 0 0-2.7.7l-.2.4a2 2 0 0 0 .7 2.7l.2.1a2 2 0 0 1 1 1.7v.5a2 2 0 0 1-1 1.7l-.2.1a2 2 0 0 0-.7 2.7l.2.4a2 2 0 0 0 2.7.7l.2-.1a2 2 0 0 1 2 0l.4.3a2 2 0 0 1 1 1.7V20a2 2 0 0 0 2 2h.4a2 2 0 0 0 2-2v-.2a2 2 0 0 1 1-1.7l.4-.3a2 2 0 0 1 2 0l.2.1a2 2 0 0 0 2.7-.7l.2-.4a2 2 0 0 0-.7-2.7l-.2-.1a2 2 0 0 1-1-1.7v-.5a2 2 0 0 1 1-1.7l.2-.1a2 2 0 0 0 .7-2.7l-.2-.4a2 2 0 0 0-2.7-.7l-.2.1a2 2 0 0 1-2 0l-.4-.3a2 2 0 0 1-1-1.7V4a2 2 0 0 0-2-2Z"/>',
+  logout: '<path d="M14 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-2"/><path d="M9.5 12h10.5"/><path d="M17 9l3 3-3 3"/>',
+  target: '<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1"/>',
+
+  eye: '<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="2.8"/>',
+  book: '<path d="M6.5 3H19a1 1 0 0 1 1 1v15.5a1 1 0 0 1-1 1H6.5A2.5 2.5 0 0 1 4 19V5.5A2.5 2.5 0 0 1 6.5 3Z"/><path d="M4 18.2A2.5 2.5 0 0 1 6.5 16H20"/><path d="M9 7.5h6"/>',
+  atom: '<circle cx="12" cy="12" r="1.7"/><ellipse cx="12" cy="12" rx="9" ry="3.9"/><ellipse cx="12" cy="12" rx="9" ry="3.9" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="3.9" transform="rotate(120 12 12)"/>',
+  trophy: '<path d="M8 4h8v4.2a4 4 0 0 1-8 0Z"/><path d="M8 5H5.4A1.4 1.4 0 0 0 4 6.4C4 8.8 6 10.4 8.2 10.6"/><path d="M16 5h2.6A1.4 1.4 0 0 1 20 6.4C20 8.8 18 10.4 15.8 10.6"/><path d="M12 12.2v3.8"/><path d="M9 20.2h6"/><path d="M9.8 20.2c0-1.6.7-2.6 2.2-4.2 1.5 1.6 2.2 2.6 2.2 4.2"/>',
+};
+function BX_ICON(name, sw) {
+  return (
+    '<svg class="bx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="' +
+    (sw || 1.7) +
+    '" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+    (BX_ICONS[name] || "") +
+    "</svg>"
+  );
+}
+window.BX_ICON = BX_ICON;
+
+function bxBadgeIcon(a) {
+  return a && a.ic && BX_ICONS[a.ic] ? BX_ICON(a.ic) : a ? a.icon || "" : "";
+}
+window.bxBadgeIcon = bxBadgeIcon;
+
+
+var BX_GLYPH = {
+  bone: { emoji: "🦴", color: "#d7dde8" },
+  muscle: { emoji: "💪", color: "#f87171" },
+  brain: { emoji: "🧠", color: "#c4b5fd" },
+  heart: { emoji: "🫀", color: "#fb7185" },
+  lungs: { emoji: "🫁", color: "#5ec8f2" },
+  stomach: { emoji: "🍽️", color: "#fbbf24" },
+};
+var BX_SYS_TO_ICON = {
+  osos: "bone", muscular: "muscle", nervous: "brain",
+  cardio: "heart", respiratory: "lungs", digestive: "stomach",
+};
+var _bxEmojiCache = {};
+
+function bxEmojiOK(e) {
+  if (e in _bxEmojiCache) return _bxEmojiCache[e];
+  var ok = true;
+  try {
+    var c = document.createElement("canvas");
+    c.width = c.height = 20;
+    var x = c.getContext("2d");
+    x.textBaseline = "top";
+
+    x.font = '16px "Noto Color Emoji","Segoe UI Emoji","Apple Color Emoji",sans-serif';
+    var sig = function (s) {
+      x.clearRect(0, 0, 20, 20);
+      x.fillText(s, 0, 0);
+      return x.getImageData(0, 0, 20, 20).data.join(",");
+    };
+    var box = sig("￿");
+    var blank = sig(" ");
+    var g = sig(e);
+    ok = g !== box && g !== blank;
+  } catch (err) {
+    ok = true;
+  }
+  _bxEmojiCache[e] = ok;
+  return ok;
+}
+
+function bxNotoReady() {
+  try {
+    return !!(document.fonts && document.fonts.check && document.fonts.check('16px "Noto Color Emoji"'));
+  } catch (e) {
+    return false;
+  }
+}
+function bxUseEmoji(emoji) {
+  return bxNotoReady() || bxEmojiOK(emoji);
+}
+function bxGlyphHTML(iconKey) {
+  var g = BX_GLYPH[iconKey];
+  if (!g) return BX_ICON(iconKey);
+  if (bxUseEmoji(g.emoji)) return '<span class="bx-emoji">' + g.emoji + "</span>";
+  return '<span class="bx-ic-color" style="color:' + g.color + '">' + BX_ICON(iconKey) + "</span>";
+}
+window.bxGlyphHTML = bxGlyphHTML;
+function bxHexA(hex, a) {
+  var n = parseInt(hex.slice(1), 16);
+  return "rgba(" + ((n >> 16) & 255) + "," + ((n >> 8) & 255) + "," + (n & 255) + "," + a + ")";
+}
+
+
+var BX_CONSTELLATION_NODES = [
+  { k: "brain", x: 400, y: 120, c: "#a78bfa" },
+  { k: "lungs", x: 566, y: 236, c: "#38bdf8" },
+  { k: "heart", x: 246, y: 252, c: "#fb7185" },
+  { k: "stomach", x: 600, y: 430, c: "#fbbf24" },
+  { k: "muscle", x: 224, y: 436, c: "#f87171" },
+  { k: "bone", x: 408, y: 512, c: "#cbd5e1" },
+];
+var BX_CONSTELLATION_EDGES = [
+  ["brain", "lungs"], ["brain", "heart"], ["lungs", "heart"], ["lungs", "stomach"],
+  ["heart", "muscle"], ["heart", "bone"], ["heart", "stomach"], ["stomach", "bone"],
+  ["muscle", "bone"], ["brain", "bone"],
+];
+function BX_CONSTELLATION() {
+  var N = {};
+  BX_CONSTELLATION_NODES.forEach(function (n) { N[n.k] = n; });
+  var lines = BX_CONSTELLATION_EDGES.map(function (e, i) {
+    var a = N[e[0]], b = N[e[1]];
+    return (
+      '<line class="qamb-line" x1="' + a.x + '" y1="' + a.y + '" x2="' + b.x + '" y2="' + b.y +
+      '" style="animation-delay:' + (-i * 0.7).toFixed(1) + 's"/>'
+    );
+  }).join("");
+  var nodes = BX_CONSTELLATION_NODES.map(function (n, i) {
+    var g = BX_GLYPH[n.k];
+    var glyph;
+    if (g && bxUseEmoji(g.emoji)) {
+      glyph =
+        '<text class="qamb-emoji" x="' + n.x + '" y="' + (n.y + 1) +
+        '" text-anchor="middle" dominant-baseline="central">' + g.emoji + "</text>";
+    } else {
+      glyph =
+        '<svg x="' + (n.x - 17) + '" y="' + (n.y - 17) +
+        '" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="' + n.c +
+        '" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">' + BX_ICONS[n.k] + "</svg>";
+    }
+    return (
+      '<g class="qamb-node" style="--nc:' + n.c + ';animation-delay:' + (-i * 1.3).toFixed(1) + 's;transform-origin:' + n.x + 'px ' + n.y + 'px">' +
+      '<circle class="qamb-halo" cx="' + n.x + '" cy="' + n.y + '" r="40"/>' +
+      '<circle class="qamb-disc" cx="' + n.x + '" cy="' + n.y + '" r="29"/>' +
+      glyph +
+      "</g>"
+    );
+  }).join("");
+  return (
+    '<div class="qamb"><div class="qamb-glow"></div>' +
+    '<svg class="qamb-net" viewBox="0 0 800 620" preserveAspectRatio="xMidYMid slice">' +
+    '<g class="qamb-lines">' + lines + "</g>" +
+    '<g class="qamb-graph">' + nodes + "</g>" +
+    "</svg></div>"
+  );
+}
+window.BX_CONSTELLATION = BX_CONSTELLATION;
+
+function hydrateBxIcons() {
+  try {
+    var hosts = document.querySelectorAll("[data-bxicon]");
+    for (var i = 0; i < hosts.length; i++) {
+      var el = hosts[i];
+      if (el.getAttribute("data-bx-done")) continue;
+      el.innerHTML = BX_ICON(el.getAttribute("data-bxicon"));
+      el.setAttribute("data-bx-done", "1");
+    }
+
+    var sysHosts = document.querySelectorAll("[data-bxsys]");
+    for (var j = 0; j < sysHosts.length; j++) {
+      var se = sysHosts[j];
+      if (se.getAttribute("data-bx-done")) continue;
+      var ik = BX_SYS_TO_ICON[se.getAttribute("data-bxsys")] || se.getAttribute("data-bxsys");
+      var col = (BX_GLYPH[ik] || {}).color || "#8b5cf6";
+      se.innerHTML = bxGlyphHTML(ik);
+      se.style.background = "linear-gradient(135deg," + bxHexA(col, 0.3) + "," + bxHexA(col, 0.12) + ")";
+      se.style.border = "1px solid " + bxHexA(col, 0.42);
+      se.style.boxShadow = "0 3px 12px " + bxHexA(col, 0.26);
+      se.setAttribute("data-bx-done", "1");
+    }
+    var amb = document.getElementById("quizAmbient");
+    if (amb && !amb.getAttribute("data-bx-done")) {
+      amb.innerHTML = BX_CONSTELLATION();
+      amb.setAttribute("data-bx-done", "1");
+    }
+    makeCardsAccessible();
+  } catch (e) {}
+}
+window.hydrateBxIcons = hydrateBxIcons;
+
+
+function makeCardsAccessible() {
+  var cards = document.querySelectorAll(
+    ".system-card.ready, .home-feat-clickable, .home-feat-card.home-feat-clickable"
+  );
+  for (var i = 0; i < cards.length; i++) {
+    var el = cards[i];
+    if (el.getAttribute("data-kbd")) continue;
+    el.setAttribute("role", "button");
+    el.setAttribute("tabindex", "0");
+    el.setAttribute("data-kbd", "1");
+    if (!el.getAttribute("aria-label")) {
+      var h = el.querySelector("h3");
+      if (h) el.setAttribute("aria-label", h.textContent.trim());
+    }
+  }
+}
+document.addEventListener("keydown", function (e) {
+  if (e.key !== "Enter" && e.key !== " " && e.key !== "Spacebar") return;
+  var el = e.target;
+  if (el && el.getAttribute && el.getAttribute("data-kbd") === "1") {
+    e.preventDefault();
+    el.click();
+  }
+});
+
+function bxRefillEmoji() {
+  try {
+    var sysHosts = document.querySelectorAll("[data-bxsys]");
+    for (var j = 0; j < sysHosts.length; j++) {
+      var se = sysHosts[j];
+      var ik = BX_SYS_TO_ICON[se.getAttribute("data-bxsys")] || se.getAttribute("data-bxsys");
+      se.innerHTML = bxGlyphHTML(ik);
+    }
+    var amb = document.getElementById("quizAmbient");
+    if (amb && amb.getAttribute("data-bx-done")) amb.innerHTML = BX_CONSTELLATION();
+  } catch (e) {}
+}
+window.bxRefillEmoji = bxRefillEmoji;
+
+function bxHydrateWhenReady() {
+  hydrateBxIcons();
+  try {
+    if (document.fonts && document.fonts.load) {
+      document.fonts
+        .load('16px "Noto Color Emoji"')
+        .then(function () {
+          _bxEmojiCache = {};
+          bxRefillEmoji();
+        })
+        .catch(function () {});
+    }
+  } catch (e) {}
+}
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", bxHydrateWhenReady);
+} else {
+  bxHydrateWhenReady();
+}
+
 var ACHIEVEMENTS = [
   {
     id: "pionier",
@@ -4448,6 +4725,16 @@ var ACHIEVEMENTS = [
   },
 ];
 
+(function () {
+  var M = {
+    pionier: "compass", explorator: "mountain", anatomist: "medal", chirurg: "cross",
+    maestru: "star", colectionar: "gem", mentor: "bulb", veteran: "crown",
+    legenda: "sparkle", constant: "flame", curios: "search", partener: "people",
+    myolog: "muscle", sculptor: "chisel", sarcomer: "dna", kinetician: "bolt",
+  };
+  ACHIEVEMENTS.forEach(function (a) { a.ic = M[a.id] || null; });
+})();
+
 function getProfileData(user) {
   try {
     var raw = localStorage.getItem("bionexus_profile_" + user);
@@ -4484,7 +4771,7 @@ function renderBadges() {
     c.style.setProperty("--badge-c2", a.c2);
     c.innerHTML =
       '<div class="badge-icon">' +
-      a.icon +
+      bxBadgeIcon(a) +
       '</div><div class="badge-info"><div class="badge-name">' +
       a.name +
       '</div><div class="badge-sub">' +
@@ -5749,7 +6036,7 @@ window.renderBadges = function () {
     c.style.setProperty("--badge-c2", a.c2);
     c.innerHTML =
       '<div class="badge-icon">' +
-      a.icon +
+      bxBadgeIcon(a) +
       '</div><div class="badge-info"><div class="badge-name">' +
       a.name +
       '</div><div class="badge-sub">' +
@@ -6387,6 +6674,7 @@ if (typeof endQuiz === "function") {
       var el = document.getElementById(id);
       if (el) el.style.display = id === name ? "block" : "none";
     });
+    document.body.classList.toggle("quiz-inq", name === "quizQuestion");
   };
 
   window.pickQuizMode = function (mode) {
@@ -8486,6 +8774,14 @@ else setTimeout(renderDailyUI, 150);
   newOnes.forEach(function (n) {
     if (ids.indexOf(n.id) < 0) ACHIEVEMENTS.push(n);
   });
+
+  var QM = {
+    obs_easy: "eye", obs_med: "eye", obs_hard: "eye",
+    know_easy: "book", know_med: "book", know_hard: "book",
+    duel_easy: "atom", duel_med: "atom", duel_hard: "atom",
+    triathlon: "trophy",
+  };
+  ACHIEVEMENTS.forEach(function (a) { if (!a.ic && QM[a.id]) a.ic = QM[a.id]; });
 })();
 
 (function rewriteUnlock() {
@@ -8597,7 +8893,7 @@ else setTimeout(renderDailyUI, 150);
           "," +
           badge.c2 +
           ')">' +
-          badge.icon +
+          bxBadgeIcon(badge) +
           "</div></div>";
       }
       if (qEndTitle) {
@@ -16263,10 +16559,9 @@ window.scrollToSection = function (id) {
     Q.startTime = Date.now();
     var tot = document.getElementById("qTotal");
     if (tot) tot.textContent = Q.total;
-    if (mode === "visual") {
-      enterVisualScene(sys);
-    } else {
-      document.body.classList.add("mode-quiz");
+
+    enterVisualScene(sys);
+    if (mode !== "visual") {
       document.body.classList.remove("qmode-visual", "qmode-duel");
       document.body.classList.add("qmode-knowledge");
     }
@@ -16473,5 +16768,23 @@ window.scrollToSection = function (id) {
       document.body.classList.add("mode-skeleton", "mode-quiz");
     }
     return oRestart ? oRestart.apply(this, arguments) : undefined;
+  };
+})();
+
+
+(function () {
+  var orig = window.pickQuizSystem;
+  if (typeof orig !== "function") return;
+  window.pickQuizSystem = function (sys) {
+    var r = orig.apply(this, arguments);
+    try {
+      var vi = document.getElementById("quizModeVisualIcon");
+      if (vi && window.BX_ICON) {
+        vi.classList.remove("quiz-mode-icon-emoji");
+        vi.classList.add("quiz-mode-icon-svg");
+        vi.innerHTML = BX_ICON("eye");
+      }
+    } catch (e) {}
+    return r;
   };
 })();

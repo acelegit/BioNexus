@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# Model, texture and library assets add no SEO value
+Disallow: /models/
+Disallow: /textures/
+Disallow: /lib/
