@@ -359,7 +359,11 @@
           /></span>
           <span class="home-brand-text">BioNexus</span>
         </div>
-        <div class="home-nav-center">
+        <button class="home-hamburger" onclick="toggleHomeMenu()" aria-label="Meniu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+        <div class="home-nav-collapse" id="homeNavCollapse">
+          <div class="home-nav-center">
           <a href="#sisteme" data-i18n="home.nav.systems">Sisteme</a>
           <a href="#features" data-i18n="home.nav.features">Funcționalități</a>
           <a href="#invata" data-i18n="home.nav.learn">Învață</a>
@@ -398,6 +402,7 @@
               </button>
             </div>
           </div>
+        </div>
         </div>
       </div>
 
@@ -2855,6 +2860,11 @@
         </div>
       </div>
     </div>
+
+    <div class="sidebar-backdrop" onclick="closeMobileSidebar()" aria-hidden="true"></div>
+    <button class="mobile-sidebar-fab" onclick="toggleMobileSidebar()" aria-label="Structuri">
+      <span class="msf-ic">🔍</span><span data-i18n="mob.structures">Structuri</span>
+    </button>
 
     <script src="script.js"></script>
     <script src="supabase-integration.js"></script>

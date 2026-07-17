@@ -17639,3 +17639,67 @@ window.DUEL_BANKS = {"muscular":[{"text_ro":"Prin contracția unilaterală, ster
     }
   };
 })();
+
+
+(function mobileUI() {
+  if (typeof I18N !== "undefined") {
+    var t = { ro: "Structuri", en: "Structures", fr: "Structures", de: "Strukturen", es: "Estructuras", hu: "Struktúrák" };
+    Object.keys(t).forEach(function (k) { if (I18N[k]) I18N[k]["mob.structures"] = t[k]; });
+    if (typeof applyLanguage === "function") applyLanguage(CUR_LANG);
+  }
+
+  window.toggleHomeMenu = function () {
+    var open = document.body.classList.toggle("home-menu-open");
+    var h = document.querySelector(".home-hamburger");
+    if (h) h.setAttribute("aria-expanded", open ? "true" : "false");
+  };
+
+  document.addEventListener("click", function (e) {
+    if (!document.body.classList.contains("home-menu-open")) return;
+    var col = document.getElementById("homeNavCollapse");
+    var ham = document.querySelector(".home-hamburger");
+    if (ham && ham.contains(e.target)) return;
+    if (col && col.contains(e.target)) {
+      if (
+        e.target.closest(".home-nav-center a") ||
+        e.target.closest(".home-login-btn") ||
+        e.target.closest(".user-menu-item")
+      ) {
+        document.body.classList.remove("home-menu-open");
+      }
+      return;
+    }
+    document.body.classList.remove("home-menu-open");
+  });
+
+  window.toggleMobileSidebar = function () { document.body.classList.toggle("sidebar-open"); };
+  window.closeMobileSidebar = function () { document.body.classList.remove("sidebar-open"); };
+
+  document.addEventListener("click", function (e) {
+    if (!document.body.classList.contains("sidebar-open")) return;
+    if (!(e.target.closest && e.target.closest(".sidebar"))) return;
+    if (e.target.closest(".bone-item, .muscle-item, .struct-item, .ex-item, .comp-item")) {
+      setTimeout(function () { document.body.classList.remove("sidebar-open"); }, 220);
+    }
+  });
+
+  function addSidebarCloseButtons() {
+    var list = document.querySelectorAll(".sidebar");
+    for (var i = 0; i < list.length; i++) {
+      var sb = list[i];
+      if (sb.querySelector(".sidebar-mobile-close")) continue;
+      var b = document.createElement("button");
+      b.className = "sidebar-mobile-close";
+      b.setAttribute("aria-label", "Închide");
+      b.innerHTML = "&times;";
+      b.onclick = function () { document.body.classList.remove("sidebar-open"); };
+      sb.appendChild(b);
+    }
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", addSidebarCloseButtons);
+  else addSidebarCloseButtons();
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") document.body.classList.remove("sidebar-open", "home-menu-open");
+  });
+})();
