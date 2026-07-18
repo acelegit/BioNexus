@@ -2,7 +2,7 @@
 
 > Explorează toate cele **6 sisteme majore** ale corpului uman în 3D interactiv — cu quiz-uri, **duel online 1v1 în timp real**, asistent AI și interfață în **6 limbi**. Direct din browser, fără instalare.
 
-🌐 **Live:** https://bionexus.pages.dev &nbsp;·&nbsp; 💻 **Cod sursă:** https://github.com/acelegit/BioNexus &nbsp;·&nbsp; 📧 **Contact:** bionexusdevs@gmail.com
+🌐 **Live:** https://bionexus.ro/ &nbsp;·&nbsp; 💻 **Cod sursă:** https://github.com/acelegit/BioNexus &nbsp;·&nbsp; 📧 **Contact:** bionexusdevs@gmail.com
 
 ---
 
@@ -118,7 +118,7 @@ Proiectul a trecut printr-un audit de securitate (black-box) și implementează 
 
 ## 9. Cerințe de sistem
 
-- **Acces:** orice browser modern (Chrome, Firefox, Safari, Edge), pe desktop sau mobil — https://bionexus.pages.dev
+- **Acces:** orice browser modern (Chrome, Firefox, Safari, Edge), pe desktop sau mobil — https://bionexus.ro/
 - **Conexiune internet:** necesară pentru autentificare, sincronizarea progresului, duelul online și asistentul AI
 - **Instalare:** niciuna — rulează integral în browser
 
