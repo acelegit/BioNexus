@@ -1664,8 +1664,15 @@ document.getElementById("bone-search").addEventListener("keydown", function (e) 
   }
 });
 
+
+window.__bxRenderGate = function (dom) {
+  if (document.hidden) return false;
+  if (window.APP_MODE == null) return false;
+  return !dom || dom.offsetParent !== null;
+};
 function animate() {
   requestAnimationFrame(animate);
+  if (!window.__bxRenderGate(renderer.domElement)) return;
   if (!camAnim) controls.update();
   renderer.render(scene, camera);
 }
@@ -1707,7 +1714,10 @@ window.enterApp = function (mode) {
   var ov = document.getElementById("homeOverlay");
   if (!ov) return;
   window.__homeReturnY = ov.scrollTop || 0;
-  document.body.classList.remove("mode-skeleton", "mode-quiz", "mode-muscular");
+  document.body.classList.remove(
+    "mode-skeleton", "mode-quiz", "mode-muscular",
+    "mode-cardio", "mode-nervous", "mode-respiratory", "mode-digestive"
+  );
   if (mode === "skeleton") document.body.classList.add("mode-skeleton");
   else if (mode === "quiz") document.body.classList.add("mode-quiz");
   else if (mode === "muscular") document.body.classList.add("mode-muscular");
@@ -7819,26 +7829,7 @@ if (typeof chatbotReply === "function") {
   }
 })();
 
-(function () {
-  if (typeof animate !== "function") return;
-  var lastFrame = 0;
-  var targetFPS = 45;
-  var frameInterval = 1000 / targetFPS;
-  var rafId = null;
-  function loop(now) {
-    rafId = requestAnimationFrame(loop);
-    if (now - lastFrame < frameInterval) return;
-    lastFrame = now;
-    try {
-      if (typeof camAnim === "undefined" || !camAnim) controls.update();
-      renderer.render(scene, camera);
-    } catch (e) {}
-  }
-  if (typeof animate === "function") {
-    cancelAnimationFrame(rafId);
-    requestAnimationFrame(loop);
-  }
-})();
+
 
 (function () {
   if (typeof viewer === "undefined") return;
@@ -10369,6 +10360,7 @@ window.scrollToSection = function (id) {
 
     function animate() {
       requestAnimationFrame(animate);
+      if (window.__bxRenderGate && !window.__bxRenderGate(MU.renderer.domElement)) return;
       MU.controls.update();
       MU.renderer.render(MU.scene, MU.camera);
     }
@@ -15801,6 +15793,7 @@ window.scrollToSection = function (id) {
 
     function animate() {
       requestAnimationFrame(animate);
+      if (window.__bxRenderGate && !window.__bxRenderGate(S.renderer.domElement)) return;
       S.controls.update();
       S.renderer.render(S.scene, S.camera);
     }
