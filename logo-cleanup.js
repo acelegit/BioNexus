@@ -17,8 +17,8 @@
       if (minC >= threshold && avg >= threshold) d[i + 3] = 0;
       else if (minC > softness && avg > softness) {
         var k = (minC - softness) / (threshold - softness);
-        d[i + 3] = Math.round(d[i + 3] * (1 - k));
-      }
+        d[i + 3] = Math.round(d[i + 3] * (1 - k));                                
+      } 
     }
   }
   function process(img, mode, onDone) {

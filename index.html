@@ -59,7 +59,11 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="style.css" />
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.7"
+      integrity="sha384-BmlQlKlDvXvKoxkn5OQuUo/aJQCTXeB+Kls6EccBmG4Kf8AXvp89RtO9MtPxP/r5"
+      crossorigin="anonymous"
+    ></script>
   </head>
   <body>
     <div id="appSplash" class="app-splash">
@@ -364,8 +368,8 @@
         </button>
         <div class="home-nav-collapse" id="homeNavCollapse">
           <div class="home-nav-center">
-          <a href="#sisteme" data-i18n="home.nav.systems">Sisteme</a>
-          <a href="#features" data-i18n="home.nav.features">Funcționalități</a>
+          <a href="#" onclick="openSystemsPage();return false;" data-i18n="home.nav.systems">Sisteme</a>
+          <a href="#" onclick="openFeaturesPage();return false;" data-i18n="home.nav.features">Funcționalități</a>
           <a href="#invata" data-i18n="home.nav.learn">Învață</a>
         </div>
         <div class="home-nav-right">
@@ -406,13 +410,15 @@
         </div>
       </div>
 
+      <div class="home-nav-backdrop" onclick="toggleHomeMenu()" aria-hidden="true"></div>
+
       <section class="home-hero">
         <div class="home-hero-inner">
           <div class="home-hero-badge" data-i18n-html="home.hero.badge">
             Anatomia umană 3D &nbsp;&middot;&nbsp; <span>România</span>
           </div>
           <h1 class="home-hero-title" data-i18n-html="home.hero.title">
-            Toată anatomia umană în <span class="home-hero-grad">3D interactiv</span>
+            Anatomia umană în <span class="home-hero-grad">3D interactiv</span>
           </h1>
           <p class="home-hero-sub" data-i18n="home.hero.sub">
             Explorează sistematic toate sistemele corpului uman. Acum disponibile toate cele 6:
@@ -421,7 +427,7 @@
           <div class="home-hero-cta">
             <button
               class="home-cta-primary"
-              onclick="scrollToSection('sisteme')"
+              onclick="openSystemsPage()"
               data-i18n-html="home.hero.ctaPrimary"
             >
               Vezi modele 3D
@@ -507,6 +513,9 @@
                 <span class="daily-reward-ic">&#127942;</span>
                 <span data-i18n="daily.reward">Recompensă:</span> <b id="dailyXp">+30</b> XP
               </div>
+              <button class="daily-go-btn" id="dailyGo" onclick="goToDailyChallenge()">
+                <span data-i18n="daily.go">Începe provocarea</span> <span aria-hidden="true">&rarr;</span>
+              </button>
             </div>
             <div class="daily-calendar" id="dailyCalendar"></div>
           </div>
@@ -628,9 +637,9 @@
             </div>
             <h3 data-i18n="home.feat.notes.t">Notițe & Marcaje</h3>
             <p data-i18n="home.feat.notes.d">
-              Notează observații personale pe orice os sau mușchi. Marchează ca important, tag-uri
-              color, căutare rapidă, sincronizare cont. Util pentru studenți medicină și pregătire
-              examene.
+              Notează observații personale pe orice structură din oricare sistem — os, mușchi,
+              organ, nerv sau vas. Marchează ca important, tag-uri color, căutare rapidă,
+              sincronizare cont. Util pentru studenți medicină și pregătire examene.
             </p>
             <span class="home-feat-cta" data-i18n-html="home.feat.notes.cta"
               >Deschide notebook &rarr;</span
@@ -668,7 +677,7 @@
               >Deschide chatbox-ul &rarr;</span
             >
           </div>
-          <div class="home-feat-card home-feat-clickable" onclick="enterApp('skeleton')">
+          <div class="home-feat-card home-feat-clickable" onclick="openSystemsPage()">
             <div
               class="home-feat-icon home-feat-icon-img"
               style="background: linear-gradient(135deg, #8b5cf6, #6366f1)"
@@ -1589,8 +1598,9 @@
               <div class="quiz-intro-icon" data-bxicon="target"></div>
               <h3 data-i18n="quiz.sys.h">Alege sistemul anatomic</h3>
               <p data-i18n="quiz.sys.p">Pentru ce sistem vrei să te testezi?</p>
-              <button class="online-entry-btn" onclick="openOnlineDuel()" data-i18n="online.entry">
-                🌐 Joacă online cu un prieten
+              <button class="online-entry-btn" onclick="openOnlineDuel()">
+                <span class="online-emoji" aria-hidden="true">🌐</span>
+                <span data-i18n="online.entry">Joacă online cu un prieten</span>
               </button>
               <div class="quiz-modes">
                 <button class="quiz-mode-card" onclick="pickQuizSystem('osos')">
@@ -2440,7 +2450,7 @@
                 width: 100%;
                 font-family: &quot;SF Mono&quot;, Consolas, monospace;
                 font-size: 12px;
-                line-height: 1.5;
+                line-height: 1.5;     
               "
             ></textarea>
             <div style="font-size: 11px; color: #64748b; margin-top: 4px">
@@ -2470,7 +2480,38 @@
     <script src="lib/three.min.js"></script>
     <script src="lib/OrbitControls.js"></script>
     <script src="lib/GLTFLoader.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/DRACOLoader.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/DRACOLoader.js"
+      integrity="sha384-TNRcLasZnnfIJJskDY5XlrfmsKTjBSy98MtyLuX+3rQWRbpSQvtFIdikNpcOh3SN"
+      crossorigin="anonymous"
+    ></script>
+    <div class="subpage" id="systemsPage">
+      <button class="subpage-back" onclick="closeSystemsPage()">
+        <span aria-hidden="true">&larr;</span> <span data-i18n="subpage.back">Acasă</span>
+      </button>
+      <div class="subpage-inner">
+        <h1 class="subpage-title" data-i18n-html="home.systems.title">
+          Sisteme <span class="home-hero-grad">anatomice</span>
+        </h1>
+        <p class="subpage-sub" data-i18n="home.systems.sub">
+          Acoperim sistematic toate sistemele corpului uman.
+        </p>
+        <div class="subpage-grid" id="systemsPageGrid"></div>
+      </div>
+    </div>
+
+    <div class="subpage" id="featuresPage">
+      <button class="subpage-back" onclick="closeFeaturesPage()">
+        <span aria-hidden="true">&larr;</span> <span data-i18n="subpage.back">Acasă</span>
+      </button>
+      <div class="subpage-inner">
+        <h1 class="subpage-title" data-i18n-html="home.features.title">
+          Ce poți face cu <span class="home-hero-grad">BioNexus</span>
+        </h1>
+        <div class="subpage-grid" id="featuresPageGrid"></div>
+      </div>
+    </div>
+
     <div class="profile-page" id="profilePage">
       <button class="profile-back" onclick="closeProfile()">
         &larr; <span data-i18n="profile.back">Înapoi</span>
@@ -2725,15 +2766,27 @@
       </div>
     </div>
     <script src="logo-cleanup.js"></script>
-    <script src="ai-config.js"></script>
+    <script>
+      
+      (function () {
+        var h = location.hostname;
+        if (h === "localhost" || h === "127.0.0.1" || location.protocol === "file:") {
+          var s = document.createElement("script");
+          s.src = "ai-config.js";
+          s.onerror = function () {};
+          document.head.appendChild(s);
+        }
+      })();
+    </script>
     <div id="quizAmbient" aria-hidden="true"></div>
 
-    <div class="report-modal" id="reportModal" style="display: none" role="dialog" aria-modal="true">
-      <div class="report-overlay" onclick="closeReport()"></div>
+    <div class="report-page" id="reportModal" role="dialog" aria-modal="true">
+      <button class="report-back" onclick="closeReport()">
+        <span aria-hidden="true">&larr;</span> <span data-i18n="report.cancel">Anulează</span>
+      </button>
       <div class="report-card">
         <div class="report-head">
           <h3 data-i18n="report.title">Raportează o problemă</h3>
-          <button class="report-close" onclick="closeReport()" aria-label="Închide">&times;</button>
         </div>
         <div class="report-body">
           <p class="report-intro" data-i18n="report.intro">
@@ -2784,8 +2837,17 @@
       <div class="online-overlay" onclick="closeOnlineDuel()"></div>
       <div class="online-card">
         <div class="online-head">
-          <h3>🌐 <span data-i18n="online.title">Duel Online 1v1</span></h3>
+          <h3><span class="online-emoji" aria-hidden="true">🌐</span> <span data-i18n="online.title">Duel Online 1v1</span></h3>
           <button class="online-close" onclick="closeOnlineDuel()" aria-label="Închide">&times;</button>
+        </div>
+
+        <div class="online-loader" id="onlineLoader" style="display: none">
+          <div class="online-loader-ring">
+            <span></span><span></span><span></span>
+          </div>
+          <div class="online-loader-text" id="onlineLoaderText" data-i18n="online.connecting">
+            Se conectează...
+          </div>
         </div>
 
         <div class="online-view" id="onlineLobby">
@@ -2795,13 +2857,13 @@
           </p>
           <label class="online-lbl" for="onlineSystem" data-i18n="online.system">Sistem</label>
           <select id="onlineSystem">
-            <option value="all" data-i18n="online.sys.all">🎯 Toate sistemele</option>
-            <option value="osos" data-i18n="online.sys.osos">🦴 Osos</option>
-            <option value="muscular" data-i18n="online.sys.muscular">💪 Muscular</option>
-            <option value="nervous" data-i18n="online.sys.nervous">🧠 Nervos</option>
-            <option value="cardio" data-i18n="online.sys.cardio">❤️ Cardiovascular</option>
-            <option value="respiratory" data-i18n="online.sys.respiratory">💨 Respirator</option>
-            <option value="digestive" data-i18n="online.sys.digestive">🍽️ Digestiv</option>
+            <option value="all" data-i18n="online.sys.all">Toate</option>
+            <option value="osos" data-i18n="online.sys.osos">Osos</option>
+            <option value="muscular" data-i18n="online.sys.muscular">Muscular</option>
+            <option value="nervous" data-i18n="online.sys.nervous">Nervos</option>
+            <option value="cardio" data-i18n="online.sys.cardio">Cardiovascular</option>
+            <option value="respiratory" data-i18n="online.sys.respiratory">Respirator</option>
+            <option value="digestive" data-i18n="online.sys.digestive">Digestiv</option>
           </select>
           <button class="online-btn-primary" id="onlineCreateBtn" onclick="onlineCreateRoom()" data-i18n="online.create">
             Creează o cameră
@@ -2827,6 +2889,38 @@
           <div class="online-status" id="onlineWaitStatus" data-i18n="online.waiting">
             Aștept adversarul...
           </div>
+          <button class="online-btn-secondary" onclick="closeOnlineDuel()" data-i18n="online.cancel">
+            Anulează
+          </button>
+        </div>
+
+        <div class="online-view" id="onlineReady" style="display: none">
+          <div class="online-ready-top">
+            <span class="online-code-label" data-i18n="online.roomLbl">Camera</span>
+            <span class="online-code online-code-sm" id="onlineReadyCode">----</span>
+          </div>
+          <div class="online-ready-players">
+            <div class="online-player" id="onlineReadyYouCard">
+              <div class="online-player-av" id="onlineReadyYouAv">T</div>
+              <div class="online-player-name" id="onlineReadyYouName">Tu</div>
+              <div class="online-player-badge" id="onlineReadyYouStatus" data-i18n="online.notReady">
+                Nepregătit
+              </div>
+            </div>
+            <div class="online-ready-vs">VS</div>
+            <div class="online-player" id="onlineReadyOppCard">
+              <div class="online-player-av" id="onlineReadyOppAv">A</div>
+              <div class="online-player-name" id="onlineReadyOppName">Adversar</div>
+              <div class="online-player-badge" id="onlineReadyOppStatus" data-i18n="online.notReady">
+                Nepregătit
+              </div>
+            </div>
+          </div>
+          <button class="online-btn-primary" id="onlineReadyBtn" onclick="onlineSetReady()"
+            data-i18n="online.readyUp">
+            Sunt gata
+          </button>
+          <div class="online-status" id="onlineReadyStatus"></div>
           <button class="online-btn-secondary" onclick="closeOnlineDuel()" data-i18n="online.cancel">
             Anulează
           </button>

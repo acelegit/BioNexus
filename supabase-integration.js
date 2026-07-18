@@ -18,6 +18,36 @@
     });
   }
 
+
+  function showToast(msg, opts) {
+    opts = opts || {};
+    var wrap = document.getElementById("bxToastWrap");
+    if (!wrap) {
+      wrap = document.createElement("div");
+      wrap.id = "bxToastWrap";
+      wrap.className = "bx-toast-wrap";
+      document.body.appendChild(wrap);
+    }
+    var el = document.createElement("div");
+    el.className = "bx-toast";
+    el.setAttribute("role", "status");
+    el.setAttribute("aria-live", "polite");
+    var check =
+      opts.check === false
+        ? ""
+        : '<span class="bx-toast-check"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg></span>';
+    el.innerHTML = check + '<span class="bx-toast-msg">' + msg + "</span>";
+    wrap.appendChild(el);
+    var life = opts.duration || 3600;
+    setTimeout(function () {
+      el.classList.add("bx-toast-out");
+      setTimeout(function () {
+        el.remove();
+      }, 420);
+    }, life);
+  }
+  window.showToast = showToast;
+
   async function refreshSession() {
     try {
       var sess = await sb.auth.getSession();
@@ -53,6 +83,21 @@
   };
   window.saveUsers = function (u) {};
 
+
+  async function bxUsernameTaken(name) {
+    try {
+      var r = await sb.rpc("bx_username_taken", { name: name });
+      if (r && !r.error && typeof r.data === "boolean") return r.data;
+    } catch (e) {}
+    try {
+      var s = await sb.from("profiles").select("id").eq("username", name).maybeSingle();
+      return !!(s && s.data);
+    } catch (e) {
+      return false;
+    }
+  }
+  window.bxUsernameTaken = bxUsernameTaken;
+
   window.doLogin = async function () {
     var u = document.getElementById("loginUser").value.trim();
     var p = document.getElementById("loginPass").value;
@@ -65,13 +110,10 @@
     }
     var email = u;
     if (!u.includes("@")) {
-      var lookup = await sb.from("profiles").select("username,id").eq("username", u).maybeSingle();
-      if (!lookup.data) {
-        err.textContent =
-          "Folosește emailul pentru autentificare (sau verifică numele de utilizator).";
-        return;
-      }
-      err.textContent = "Te rog autentifică-te cu adresa de email, nu cu numele de utilizator.";
+      var exists = await bxUsernameTaken(u);
+      err.textContent = exists
+        ? "Te rog autentifică-te cu adresa de email, nu cu numele de utilizator."
+        : "Folosește emailul pentru autentificare (sau verifică numele de utilizator).";
       return;
     }
     btn.disabled = true;
@@ -89,6 +131,12 @@
     }
     await refreshSession();
     if (typeof applyUserBadge === "function") applyUserBadge();
+
+    try {
+      var nm = (CURRENT_USER && CURRENT_USER.user) || "BioNexus";
+      var tpl = (typeof t === "function" && t("auth.loginToast")) || "Welcome, {name}!";
+      showToast(tpl.replace("{name}", '<span class="bx-toast-name">' + escHTML(nm) + "</span>"));
+    } catch (e) {}
     closeLogin();
     if (typeof showHome === "function") showHome();
   };
@@ -143,8 +191,7 @@
       if (ce) ce.focus();
       return;
     }
-    var taken = await sb.from("profiles").select("id").eq("username", u).maybeSingle();
-    if (taken.data) {
+    if (await bxUsernameTaken(u)) {
       err.textContent = "Acest nume de utilizator este deja folosit.";
       return;
     }
@@ -402,13 +449,7 @@
       alert("Nu ești conectat.");
       return;
     }
-    var taken = await sb
-      .from("profiles")
-      .select("id")
-      .eq("username", newName)
-      .neq("id", CURRENT_USER.id)
-      .maybeSingle();
-    if (taken.data) {
+    if (await bxUsernameTaken(newName)) {
       alert("Acest nume este deja folosit.");
       return;
     }
@@ -427,14 +468,25 @@
   };
 
   function formatRevDate(ts) {
+    var lang = (typeof CUR_LANG !== "undefined" && CUR_LANG) || "ro";
+    var loc = { ro: "ro-RO", en: "en-US", fr: "fr-FR", de: "de-DE", es: "es-ES", hu: "hu-HU" }[lang] || "ro-RO";
+    var R = {
+      ro: { now: "acum câteva secunde", min: function (n) { return "acum " + n + " min"; }, h: function (n) { return "acum " + n + " h"; }, day: function (n) { return "acum " + n + (n === 1 ? " zi" : " zile"); } },
+      en: { now: "just now", min: function (n) { return n + " min ago"; }, h: function (n) { return n + " h ago"; }, day: function (n) { return n + (n === 1 ? " day ago" : " days ago"); } },
+      fr: { now: "à l'instant", min: function (n) { return "il y a " + n + " min"; }, h: function (n) { return "il y a " + n + " h"; }, day: function (n) { return "il y a " + n + " j"; } },
+      de: { now: "gerade eben", min: function (n) { return "vor " + n + " Min"; }, h: function (n) { return "vor " + n + " Std"; }, day: function (n) { return "vor " + n + (n === 1 ? " Tag" : " Tagen"); } },
+      es: { now: "hace un momento", min: function (n) { return "hace " + n + " min"; }, h: function (n) { return "hace " + n + " h"; }, day: function (n) { return "hace " + n + (n === 1 ? " día" : " días"); } },
+      hu: { now: "az imént", min: function (n) { return n + " perce"; }, h: function (n) { return n + " órája"; }, day: function (n) { return n + " napja"; } },
+    };
+    var r = R[lang] || R.ro;
     var d = new Date(ts),
       now = new Date(),
       diff = (now - d) / 1000;
-    if (diff < 60) return "acum câteva secunde";
-    if (diff < 3600) return "acum " + Math.floor(diff / 60) + " min";
-    if (diff < 86400) return "acum " + Math.floor(diff / 3600) + " h";
-    if (diff < 7 * 86400) return "acum " + Math.floor(diff / 86400) + " zile";
-    return d.toLocaleDateString("ro-RO", { day: "numeric", month: "short", year: "numeric" });
+    if (diff < 60) return r.now;
+    if (diff < 3600) return r.min(Math.floor(diff / 60));
+    if (diff < 86400) return r.h(Math.floor(diff / 3600));
+    if (diff < 7 * 86400) return r.day(Math.floor(diff / 86400));
+    return d.toLocaleDateString(loc, { day: "numeric", month: "short", year: "numeric" });
   }
   function renderStars(n) {
     var s = "";
@@ -603,9 +655,11 @@
             "</b> " +
             lbl +
             " &middot; " +
-            (lang === "en" ? "thank you!" : "mulțumim!");
+            ((window.t && window.t("reviews.thanks")) || (lang === "en" ? "thank you!" : "mulțumim!"));
         } else {
-          avgCount.textContent = lang === "en" ? "No reviews yet" : "Încă nicio recenzie";
+          avgCount.textContent =
+            (window.t && window.t("reviews.none")) ||
+            (lang === "en" ? "No reviews yet" : "Încă nicio recenzie");
         }
       }
       if (typeof refreshReviewsForm === "function") refreshReviewsForm();
@@ -746,4 +800,36 @@
   }
 
   console.log("[Supabase] Connected to", SUPABASE_URL);
+})();
+
+
+(function reviewsI18nSync() {
+  if (typeof I18N !== "undefined") {
+    var add = function (code, thanks, none) {
+      if (!I18N[code]) return;
+      I18N[code]["reviews.thanks"] = thanks;
+      I18N[code]["reviews.none"] = none;
+    };
+    add("ro", "mulțumim!", "Încă nicio recenzie");
+    add("en", "thank you!", "No reviews yet");
+    add("fr", "merci !", "Aucun avis pour l'instant");
+    add("de", "danke!", "Noch keine Bewertungen");
+    add("es", "¡gracias!", "Aún no hay reseñas");
+    add("hu", "köszönjük!", "Még nincs értékelés");
+  }
+  if (typeof window.applyLanguage === "function") {
+    var _lastLang = typeof CUR_LANG !== "undefined" ? CUR_LANG : "ro";
+    var _al = window.applyLanguage;
+    window.applyLanguage = function () {
+      var r = _al.apply(this, arguments);
+      try {
+        var cur = typeof CUR_LANG !== "undefined" ? CUR_LANG : null;
+        if (cur && cur !== _lastLang) {
+          _lastLang = cur;
+          if (typeof window.refreshReviewsList === "function") window.refreshReviewsList();
+        }
+      } catch (e) {}
+      return r;
+    };
+  }
 })();
