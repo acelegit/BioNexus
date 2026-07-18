@@ -19,8 +19,23 @@
   }
 
 
+  var bxSuccessAudio = null;
+  function bxPlaySuccess() {
+    try {
+      if (!bxSuccessAudio) {
+        bxSuccessAudio = new Audio("/sounds/success.mp3");
+        bxSuccessAudio.volume = 0.5;
+      }
+      bxSuccessAudio.currentTime = 0;
+      var pr = bxSuccessAudio.play();
+      if (pr && pr.catch) pr.catch(function () {});
+    } catch (e) {}
+  }
+  window.bxPlaySuccess = bxPlaySuccess;
+
   function showToast(msg, opts) {
     opts = opts || {};
+    if (opts.sound !== false && opts.check !== false) bxPlaySuccess();
     var wrap = document.getElementById("bxToastWrap");
     if (!wrap) {
       wrap = document.createElement("div");
@@ -146,6 +161,18 @@
     } catch (e) {}
     closeLogin();
     if (typeof showHome === "function") showHome();
+  };
+
+  window.loginWithGoogle = async function () {
+    try {
+      var res = await sb.auth.signInWithOAuth({
+        provider: "google",
+        options: { redirectTo: window.location.origin },
+      });
+      if (res && res.error) showToast(res.error.message || "Eroare Google", { check: false, sound: false });
+    } catch (e) {
+      showToast("Eroare la conectarea cu Google", { check: false, sound: false });
+    }
   };
 
   window.doRegister = async function () {

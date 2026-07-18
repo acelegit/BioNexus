@@ -11753,6 +11753,36 @@ html[data-theme="light"] .bx-rselect-opt {
     max-width: none;
   }
 }
+
+.auth-google-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 11px 16px;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #1f2937;
+  font: inherit;
+  font-weight: 600;
+  font-size: 14px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+  margin-bottom: 10px;
+  transition: filter 0.15s ease, transform 0.08s ease, box-shadow 0.15s ease;
+}
+.auth-google-btn:hover {
+  filter: brightness(0.98);
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.18);
+}
+.auth-google-btn:active {
+  transform: translateY(1px);
+}
+.auth-google-ic {
+  flex: none;
+  display: block;
+}
 @media (max-width: 768px) {
   .home-preview-grid {
     grid-template-columns: 1fr;

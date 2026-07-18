@@ -951,6 +951,15 @@
               Nu ai cont? <a onclick="showAuthMode('register')">Creează un cont</a>
             </div>
             <div class="auth-divider-new"><span data-i18n="auth.or">sau</span></div>
+            <button class="auth-google-btn" type="button" onclick="loginWithGoogle()">
+              <svg class="auth-google-ic" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                <path fill="#4285F4" d="M23.06 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h6.19a5.3 5.3 0 0 1-2.3 3.48v2.89h3.72c2.18-2 3.45-4.96 3.45-8.38Z"/>
+                <path fill="#34A853" d="M12 24c3.12 0 5.73-1.03 7.64-2.8l-3.72-2.89c-1.03.7-2.36 1.1-3.92 1.1-3.01 0-5.56-2.03-6.47-4.77H1.68v3c1.9 3.78 5.8 6.36 10.32 6.36Z"/>
+                <path fill="#FBBC05" d="M5.53 14.64a7.2 7.2 0 0 1 0-4.6v-3H1.68a12 12 0 0 0 0 10.6l3.85-3Z"/>
+                <path fill="#EA4335" d="M12 4.75c1.7 0 3.22.58 4.42 1.72l3.3-3.3C17.72 1.2 15.11 0 12 0 7.48 0 3.58 2.58 1.68 6.36l3.85 3C6.44 6.78 8.99 4.75 12 4.75Z"/>
+              </svg>
+              <span data-i18n="auth.google">Continuă cu Google</span>
+            </button>
             <button class="auth-secondary-new" onclick="closeLogin()" data-i18n="auth.guest">
               Continuă ca vizitator
             </button>
@@ -1049,6 +1058,16 @@
             <div class="auth-switch-line" data-i18n-html="reg.haveAccount">
               Ai deja un cont? <a onclick="showAuthMode('login')">Conectează-te</a>
             </div>
+            <div class="auth-divider-new"><span data-i18n="auth.or">sau</span></div>
+            <button class="auth-google-btn" type="button" onclick="loginWithGoogle()">
+              <svg class="auth-google-ic" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                <path fill="#4285F4" d="M23.06 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h6.19a5.3 5.3 0 0 1-2.3 3.48v2.89h3.72c2.18-2 3.45-4.96 3.45-8.38Z"/>
+                <path fill="#34A853" d="M12 24c3.12 0 5.73-1.03 7.64-2.8l-3.72-2.89c-1.03.7-2.36 1.1-3.92 1.1-3.01 0-5.56-2.03-6.47-4.77H1.68v3c1.9 3.78 5.8 6.36 10.32 6.36Z"/>
+                <path fill="#FBBC05" d="M5.53 14.64a7.2 7.2 0 0 1 0-4.6v-3H1.68a12 12 0 0 0 0 10.6l3.85-3Z"/>
+                <path fill="#EA4335" d="M12 4.75c1.7 0 3.22.58 4.42 1.72l3.3-3.3C17.72 1.2 15.11 0 12 0 7.48 0 3.58 2.58 1.68 6.36l3.85 3C6.44 6.78 8.99 4.75 12 4.75Z"/>
+              </svg>
+              <span data-i18n="auth.google">Continuă cu Google</span>
+            </button>
           </div>
         </div>
       </div>

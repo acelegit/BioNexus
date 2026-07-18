@@ -18466,6 +18466,10 @@ window.DUEL_BANKS = {"muscular":[{"text_ro":"Prin contracția unilaterală, ster
     var ci = clone.querySelectorAll("img");
     for (var k = 0; k < oi.length && k < ci.length; k++) {
       (function (o, c) {
+        c.removeAttribute("data-clean-bg");
+        c.removeAttribute("data-cleaned-done");
+        c.removeAttribute("data-cleaned-cb");
+        c.classList.remove("cleaned");
         function sync() { if (o.src && o.src !== c.src) c.src = o.src; }
         sync();
         try {
@@ -18573,12 +18577,12 @@ window.DUEL_BANKS = {"muscular":[{"text_ro":"Prin contracția unilaterală, ster
 (function bxLabelsAndBackFix() {
   if (window.I18N && typeof window.I18N === "object") {
     var NB = {
-      ro: { "nb.addNote": "📝 Adaugă notiță", "home.features.sub": "Instrumente interactive care transformă studiul anatomiei într-o experiență modernă." },
-      en: { "nb.addNote": "📝 Add note", "home.features.sub": "Interactive tools that turn studying anatomy into a modern experience." },
-      fr: { "nb.addNote": "📝 Ajouter une note", "home.features.sub": "Des outils interactifs qui transforment l'étude de l'anatomie en une expérience moderne." },
-      de: { "nb.addNote": "📝 Notiz hinzufügen", "home.features.sub": "Interaktive Werkzeuge, die das Anatomielernen zu einem modernen Erlebnis machen." },
-      es: { "nb.addNote": "📝 Añadir nota", "home.features.sub": "Herramientas interactivas que convierten el estudio de la anatomía en una experiencia moderna." },
-      hu: { "nb.addNote": "📝 Jegyzet hozzáadása", "home.features.sub": "Interaktív eszközök, amelyek modern élménnyé teszik az anatómia tanulását." },
+      ro: { "nb.addNote": "📝 Adaugă notiță", "home.features.sub": "Instrumente interactive care transformă studiul anatomiei într-o experiență modernă.", "auth.google": "Continuă cu Google" },
+      en: { "nb.addNote": "📝 Add note", "home.features.sub": "Interactive tools that turn studying anatomy into a modern experience.", "auth.google": "Continue with Google" },
+      fr: { "nb.addNote": "📝 Ajouter une note", "home.features.sub": "Des outils interactifs qui transforment l'étude de l'anatomie en une expérience moderne.", "auth.google": "Continuer avec Google" },
+      de: { "nb.addNote": "📝 Notiz hinzufügen", "home.features.sub": "Interaktive Werkzeuge, die das Anatomielernen zu einem modernen Erlebnis machen.", "auth.google": "Mit Google fortfahren" },
+      es: { "nb.addNote": "📝 Añadir nota", "home.features.sub": "Herramientas interactivas que convierten el estudio de la anatomía en una experiencia moderna.", "auth.google": "Continuar con Google" },
+      hu: { "nb.addNote": "📝 Jegyzet hozzáadása", "home.features.sub": "Interaktív eszközök, amelyek modern élménnyé teszik az anatómia tanulását.", "auth.google": "Folytatás Google-lel" },
     };
     Object.keys(NB).forEach(function (c) { if (I18N[c]) Object.assign(I18N[c], NB[c]); });
   }
@@ -18786,6 +18790,7 @@ window.DUEL_BANKS = {"muscular":[{"text_ro":"Prin contracția unilaterală, ster
       (badge.sub ? '<span class="bx-badge-toast-sub">' + badge.sub + "</span>" : "") +
       "</span>";
     wrap.appendChild(el);
+    if (typeof window.bxPlaySuccess === "function") window.bxPlaySuccess();
     requestAnimationFrame(function () {
       el.classList.add("bx-badge-toast-in");
     });
