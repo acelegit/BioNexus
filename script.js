@@ -17403,8 +17403,7 @@ window.scrollToSection = function (id) {
     }
 
     var isWeb = location.protocol === "https:" || location.protocol === "http:";
-    var isLocal = location.hostname === "localhost" || location.hostname === "127.0.0.1";
-    if (isWeb && !isLocal) {
+    if (isWeb) {
       if (btn) {
         btn.disabled = true;
         btn.textContent = L("report.sending");
