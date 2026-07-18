@@ -11631,11 +11631,12 @@ html[data-theme="light"] .bx-rselect-opt {
 .daily-go-btn span[aria-hidden="true"],
 .app-back-arrow {
   font-weight: 900;
-  -webkit-text-stroke: 0.06em currentColor;
-  font-size: 1.12em;
+  -webkit-text-stroke: 0.11em currentColor;
+  text-stroke: 0.11em currentColor;
+  font-size: 1.28em;
   display: inline-block;
   line-height: 1;
-  vertical-align: -0.02em;
+  vertical-align: -0.05em;
 }
 @media (max-width: 768px) {
   .home-preview-grid {
