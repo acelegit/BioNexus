@@ -122,15 +122,7 @@ Proiectul a trecut printr-un audit de securitate (black-box) și implementează 
 - **Conexiune internet:** necesară pentru autentificare, sincronizarea progresului, duelul online și asistentul AI
 - **Instalare:** niciuna — rulează integral în browser
 
-## 10. Planuri de viitor
-
-- Traducerea integrală a tuturor lecțiilor și întrebărilor în cele 6 limbi
-- Service worker complet pentru mod offline (cache pentru shell + modele)
-- Optimizări suplimentare de textură (webp/resize) și eliberarea resurselor 3D la schimbarea sistemului
-- Extinderea băncii de întrebări și a modului duel online (spectator, mai multe formate)
-- Notificări legate de provocări și noutăți
-
-## 11. Echipă
+## 10. Echipă
 
 Proiect realizat de **Ryan Dobrota** și **Gheorghe Alexandru**, elevi în clasa a **XI-a A** la **Colegiul Național „Tudor Vladimirescu", București** — concept, modelare și integrare 3D, front-end, back-end serverless, securitate și internaționalizare.
 
