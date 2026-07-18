@@ -11264,10 +11264,10 @@ html[data-theme="light"] #reportEmail {
 
 .bx-toast-wrap {
   position: fixed;
-  top: 20px;
+  top: 84px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 99999;
+  z-index: 9999;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -11303,11 +11303,11 @@ html[data-theme="light"] #reportEmail {
   width: 26px;
   height: 26px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  background: linear-gradient(135deg, #22c55e, #16a34a);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.18);
+  box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.2);
 }
 .bx-toast-check svg {
   width: 14px;

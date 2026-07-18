@@ -10,6 +10,7 @@ function originAllowed(origin, env) {
   }
   if (host === "localhost" || host === "127.0.0.1") return true;
   if (host === "bionexus.pages.dev" || host.endsWith(".pages.dev")) return true;
+  if (host === "bionexus.ro" || host === "www.bionexus.ro") return true;
   var extra = (env.ALLOWED_ORIGINS || "")
     .split(",")
     .map(function (s) {

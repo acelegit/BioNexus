@@ -28,6 +28,13 @@
       wrap.className = "bx-toast-wrap";
       document.body.appendChild(wrap);
     }
+    var hdr = document.querySelector(".header");
+    var topGap = 84;
+    if (hdr) {
+      var r = hdr.getBoundingClientRect();
+      if (r.bottom > 0) topGap = Math.round(r.bottom) + 14;
+    }
+    wrap.style.top = topGap + "px";
     var el = document.createElement("div");
     el.className = "bx-toast";
     el.setAttribute("role", "status");
