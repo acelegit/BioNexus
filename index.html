@@ -522,12 +522,7 @@
         </p>
         <div class="home-systems-grid">
           <div class="system-card ready" onclick="enterApp('skeleton')">
-            <div
-              class="system-icon system-icon-img"
-              style="background: linear-gradient(135deg, #3b82f6, #06b6d4)"
-            >
-              <img src="images/feat-skull.png" alt="Os" data-clean-bg="checkerboard" />
-            </div>
+            <div class="system-icon system-icon-sys" data-bxsys="osos"></div>
             <h3 data-i18n="home.sys.osos.t">Sistem Osos</h3>
             <p data-i18n="home.sys.osos.d">
               206 oase modelate 3D, cap · trunchi · membre, quiz interactiv.
@@ -542,12 +537,7 @@
             </div>
           </div>
           <div class="system-card ready" onclick="enterApp('muscular')">
-            <div
-              class="system-icon system-icon-img"
-              style="background: linear-gradient(135deg, #ef4444, #b91c1c)"
-            >
-              <img src="images/muscle.png" alt="Mușchi" data-clean-bg="light" />
-            </div>
+            <div class="system-icon system-icon-sys" data-bxsys="muscular"></div>
             <h3 data-i18n="home.sys.muscular.t">Sistem Muscular</h3>
             <p data-i18n="home.sys.muscular.d">
               Mușchi striați și netezi, grupe musculare, inserții și acțiuni.
@@ -562,12 +552,7 @@
             </div>
           </div>
           <div class="system-card ready" onclick="enterApp('nervous')">
-            <div
-              class="system-icon system-icon-img"
-              style="background: linear-gradient(135deg, #f59e0b, #b45309)"
-            >
-              <img src="images/brain.png" alt="Creier" data-clean-bg="light" />
-            </div>
+            <div class="system-icon system-icon-sys" data-bxsys="nervous"></div>
             <h3 data-i18n="home.sys.nervos.t">Sistem Nervos</h3>
             <p data-i18n="home.sys.nervos.d">
               Creier, măduvă spinării, nervii periferici, traseele neuronale.
@@ -582,12 +567,7 @@
             </div>
           </div>
           <div class="system-card ready" onclick="enterApp('cardio')">
-            <div
-              class="system-icon system-icon-img"
-              style="background: linear-gradient(135deg, #ec4899, #be185d)"
-            >
-              <img src="images/heart.png" alt="Inimă" data-clean-bg="dark" />
-            </div>
+            <div class="system-icon system-icon-sys" data-bxsys="cardio"></div>
             <h3 data-i18n="home.sys.cardio.t">Sistem Cardiovascular</h3>
             <p data-i18n="home.sys.cardio.d">
               Inima, artere, vene, capilare — circulația mare și mică.
@@ -602,12 +582,7 @@
             </div>
           </div>
           <div class="system-card ready" onclick="enterApp('digestive')">
-            <div
-              class="system-icon system-icon-img"
-              style="background: linear-gradient(135deg, #10b981, #047857)"
-            >
-              <img src="images/stomach.png" alt="Stomac" data-clean-bg="light" />
-            </div>
+            <div class="system-icon system-icon-sys" data-bxsys="digestive"></div>
             <h3 data-i18n="home.sys.digestiv.t">Sistem Digestiv</h3>
             <p data-i18n="home.sys.digestiv.d">
               Traseu complet: cavitate bucală → esofag → stomac → intestine.
@@ -622,12 +597,7 @@
             </div>
           </div>
           <div class="system-card ready" onclick="enterApp('respiratory')">
-            <div
-              class="system-icon system-icon-img"
-              style="background: linear-gradient(135deg, #8b5cf6, #6d28d9)"
-            >
-              <img src="images/lungs.png" alt="Plămâni" data-clean-bg="light" />
-            </div>
+            <div class="system-icon system-icon-sys" data-bxsys="respiratory"></div>
             <h3 data-i18n="home.sys.respirator.t">Sistem Respirator</h3>
             <p data-i18n="home.sys.respirator.d">
               Căi respiratorii, plămâni, alveole, mecanica respirației.
@@ -899,9 +869,13 @@
           <button class="home-footer-link" type="button" onclick="showTerms('privacy')" data-i18n="footer.privacy">
             Confidențialitate
           </button>
-          <span class="home-footer-sep" aria-hidden="true">&middot;</span>
-          <button class="home-footer-link" type="button" onclick="openReport()" data-i18n="footer.report">
-            Raportează o problemă
+          <button
+            class="home-footer-link home-footer-report"
+            type="button"
+            onclick="openReport()"
+          >
+            <span class="hfr-ic" aria-hidden="true">&#9873;</span>
+            <span data-i18n="footer.report">Raportează o problemă</span>
           </button>
         </div>
         <div data-i18n="home.footer">BioNexus &middot; Platformă educațională anatomică</div>
@@ -1414,9 +1388,9 @@
           </div>
           <div class="chat-msg chat-bot">
             <div class="chat-chips" id="chatChips">
-              <button class="chat-chip" data-chat-action="open-quiz">Pornește quiz</button>
-              <button class="chat-chip" data-chat-action="open-learn">Manuale</button>
-              <button class="chat-chip" data-chat-action="ask:Cum folosesc site-ul?">
+              <button class="chat-chip" data-chat-action="open-quiz" data-i18n="chat.chip.quiz">Pornește quiz</button>
+              <button class="chat-chip" data-chat-action="open-learn" data-i18n="chat.chip.manuals">Manuale</button>
+              <button class="chat-chip" data-chat-action="ask:Cum folosesc site-ul?" data-i18n="chat.chip.howto">
                 Cum folosesc site-ul
               </button>
             </div>
@@ -1804,17 +1778,50 @@
               </div>
             </div>
 
-            <div class="quiz-stage" id="quizEnd" style="display: none">
-              <div class="quiz-end-badge" id="qBadge">&#129351;</div>
-              <h3 id="qEndTitle" data-i18n="quiz.end.title">Felicitări!</h3>
-              <div class="quiz-final-score">
-                <b id="qFinalScore">0</b><span>/<b id="qFinalTotal">10</b></span>
+            <div class="quiz-stage quiz-end-stage" id="quizEnd" style="display: none">
+              <div class="qend-inner">
+                <div class="qend-ring" id="qEndRing" data-tier="gold" style="--pct: 0deg">
+                  <div class="qend-disc">
+                    <span class="quiz-end-badge bx-emoji" id="qBadge">&#127942;</span>
+                  </div>
+                  <div class="qend-pctbadge"><b id="qEndPct">0</b>%</div>
+                </div>
+                <h3 id="qEndTitle" data-i18n="quiz.end.title">Felicitări!</h3>
+                <div class="quiz-final-score">
+                  <b id="qFinalScore">0</b><span>/<b id="qFinalTotal">10</b></span>
+                </div>
+                <div class="quiz-end-msg" id="qEndMsg" data-i18n="quiz.end.msg">Bine!</div>
+                <div class="qend-stats">
+                  <div class="qend-stat">
+                    <span class="qend-stat-ic qend-ic-ok">&#10003;</span>
+                    <b id="qEndCorrect">0</b>
+                    <small data-i18n="quiz.end.correct">corecte</small>
+                  </div>
+                  <div class="qend-stat">
+                    <span class="qend-stat-ic qend-ic-no">&#10007;</span>
+                    <b id="qEndWrong">0</b>
+                    <small data-i18n="quiz.end.wrong">greșite</small>
+                  </div>
+                  <div class="qend-stat">
+                    <span class="qend-stat-ic qend-ic-t">&#9201;</span>
+                    <b id="qTime">0:00</b>
+                    <small data-i18n="quiz.end.timeword">timp</small>
+                  </div>
+                </div>
+                <div class="qend-actions">
+                  <button
+                    class="quiz-start-btn qend-retry"
+                    onclick="quizRetrySame()"
+                    data-i18n="quiz.end.retry"
+                  >
+                    Încearcă din nou
+                  </button>
+                  <button class="quiz-back-btn" onclick="quizBackToMinigames()">
+                    <span class="qbb-arrow">&#8592;</span>
+                    <span data-i18n="quiz.end.back">Înapoi la minijocuri</span>
+                  </button>
+                </div>
               </div>
-              <div class="quiz-end-msg" id="qEndMsg" data-i18n="quiz.end.msg">Bine!</div>
-              <div class="quiz-time" id="qTime"></div>
-              <button class="quiz-start-btn" onclick="restartQuiz()" data-i18n="quiz.end.retry">
-                Încearcă din nou
-              </button>
             </div>
           </div>
         </div>
@@ -1886,6 +1893,16 @@
           <div class="vl-name" id="mu-cur-label" data-i18n="view.muscleComplete">
             Sistem muscular
           </div>
+        </div>
+        <div class="vctrls vctrls-left">
+          <button
+            class="vbtn"
+            id="muSidebarToggleBtn"
+            onclick="window.toggleMuSidebar()"
+            title="Ascunde / arată panoul"
+          >
+            &#8592;
+          </button>
         </div>
         <div class="vctrls">
           <button class="vbtn" onclick="resetMuCam()" title="Resetează camera">&#8634;</button>

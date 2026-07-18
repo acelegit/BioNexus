@@ -589,13 +589,14 @@
       if (avgCount) {
         if (all.length) {
           var lbl =
-            lang === "en"
+            (window.t && window.t(all.length === 1 ? "reviews.word.one" : "reviews.word.many")) ||
+            (lang === "en"
               ? all.length === 1
                 ? "review"
                 : "reviews"
               : all.length === 1
                 ? "recenzie"
-                : "recenzii";
+                : "recenzii");
           avgCount.innerHTML =
             '<b style="color:#cbd5e1">' +
             all.length +

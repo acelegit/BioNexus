@@ -4073,9 +4073,50 @@ function endQuiz() {
   var min = Math.floor(elapsed / 60),
     sec = elapsed % 60;
   var qTime = document.getElementById("qTime");
-  if (qTime) qTime.innerHTML = "⏱ Timp: " + min + ":" + (sec < 10 ? "0" : "") + sec;
+  if (qTime) qTime.textContent = min + ":" + (sec < 10 ? "0" : "") + sec;
+  bxPaintQuizEnd(pct, QUIZ.score, QUIZ.total);
   showQuizStage("quizEnd");
+  var qEndStage = document.getElementById("quizEnd");
+  if (qEndStage) qEndStage.style.display = "flex";
 }
+
+
+function bxPaintQuizEnd(pct, score, total) {
+  pct = Math.max(0, Math.min(100, pct || 0));
+  var ring = document.getElementById("qEndRing");
+  if (ring) {
+    ring.style.setProperty("--pct", pct * 3.6 + "deg");
+    ring.setAttribute(
+      "data-tier",
+      pct >= 100 ? "perfect" : pct >= 90 ? "gold" : pct >= 70 ? "silver" : pct >= 50 ? "bronze" : "low"
+    );
+  }
+  var qEndPct = document.getElementById("qEndPct");
+  if (qEndPct) qEndPct.textContent = Math.round(pct);
+  var qEndCorrect = document.getElementById("qEndCorrect");
+  if (qEndCorrect) qEndCorrect.textContent = score;
+  var qEndWrong = document.getElementById("qEndWrong");
+  if (qEndWrong) qEndWrong.textContent = Math.max(0, (total || 0) - (score || 0));
+}
+window.bxPaintQuizEnd = bxPaintQuizEnd;
+
+
+window.quizBackToMinigames = function () {
+  if (typeof showQuizStage === "function") showQuizStage("quizSystemPick");
+};
+
+
+window.quizRetrySame = function () {
+  try {
+    if (window.QUIZ && QUIZ.mode === "duel") {
+      if (typeof window.restartQuiz === "function") return window.restartQuiz();
+    }
+    if (window.QUIZ && QUIZ.system && QUIZ.mode && typeof window.startQuiz === "function") {
+      return window.startQuiz(QUIZ.difficulty);
+    }
+  } catch (e) {}
+  if (typeof window.restartQuiz === "function") window.restartQuiz();
+};
 
 function restartQuiz() {
   showQuizStage("quizStart");
@@ -5712,7 +5753,11 @@ function refreshReviewsUI() {
       : '<span style="color:#475569">' + renderStars(0) + "</span>";
   }
   if (avgCount)
-    avgCount.textContent = all.length + " " + (all.length === 1 ? "recenzie" : "recenzii");
+    avgCount.textContent =
+      all.length +
+      " " +
+      ((window.t && window.t(all.length === 1 ? "reviews.word.one" : "reviews.word.many")) ||
+        (all.length === 1 ? "recenzie" : "recenzii"));
   refreshReviewsForm();
 }
 
@@ -6423,8 +6468,12 @@ function failByTimeout() {
   var qEndMsg = document.getElementById("qEndMsg");
   if (qEndMsg) qEndMsg.textContent = "Ai eșuat testul — nu ai răspuns la timp.";
   var qTime = document.getElementById("qTime");
-  if (qTime) qTime.innerHTML = "";
+  if (qTime) qTime.textContent = "—";
+  var qPct = QUIZ.total ? (QUIZ.score / QUIZ.total) * 100 : 0;
+  if (typeof bxPaintQuizEnd === "function") bxPaintQuizEnd(qPct, QUIZ.score, QUIZ.total);
   if (typeof showQuizStage === "function") showQuizStage("quizEnd");
+  var qEndStage = document.getElementById("quizEnd");
+  if (qEndStage) qEndStage.style.display = "flex";
 }
 
 if (typeof loadQuizQuestion === "function") {
@@ -8578,16 +8627,16 @@ window.renderDailyUI = function () {
   if (todayState.challengeId !== ch.id)
     todayState = { progress: 0, completed: false, challengeId: ch.id };
   var streak = computeStreakDays(state.history || []);
-  document.getElementById("dailyTask").textContent = ch.text;
+  document.getElementById("dailyTask").textContent = t("daily.ch." + ch.id) || ch.text;
   document.getElementById("dailyXp").textContent = "+" + ch.xp;
   document.getElementById("dailyStreakNum").textContent = streak;
   var status = document.getElementById("dailyStatus");
   if (todayState.completed) {
     status.className = "daily-status done";
-    status.textContent = "✓ Completat";
+    status.textContent = t("daily.done") || "✓ Completat";
   } else {
     status.className = "daily-status pending";
-    status.textContent = "În curs";
+    status.textContent = t("daily.pending") || "În curs";
   }
   var pct = Math.round((todayState.progress / ch.target) * 100);
   document.getElementById("dailyProgFill").style.width = pct + "%";
@@ -8968,6 +9017,27 @@ window.toggleSidebar = function () {
       renderer.setSize(viewer.clientWidth, viewer.clientHeight);
     }
   }, 340);
+};
+
+
+window.toggleMuSidebar = function () {
+  var app = document.getElementById("appMuscular");
+  if (!app) return;
+  var sb = app.querySelector(".sidebar");
+  if (!sb) return;
+  sb.classList.toggle("collapsed");
+  var hidden = sb.classList.contains("collapsed");
+  var btn = document.getElementById("muSidebarToggleBtn");
+  if (btn) {
+    btn.innerHTML = hidden ? "→" : "←";
+    var en = typeof CUR_LANG !== "undefined" && CUR_LANG === "en";
+    btn.title = hidden ? (en ? "Show panel" : "Arată panoul") : en ? "Hide panel" : "Ascunde panoul";
+  }
+  [60, 160, 260, 340, 420].forEach(function (d) {
+    setTimeout(function () {
+      if (typeof window.__muResize === "function") window.__muResize();
+    }, d);
+  });
 };
 
 (function expandDailyChallenges() {
@@ -10305,7 +10375,8 @@ window.scrollToSection = function (id) {
         h = viewerEl.clientHeight || 1;
       MU.camera.aspect = w / h;
       MU.camera.updateProjectionMatrix();
-      MU.renderer.setSize(w, h, false);
+
+      MU.renderer.setSize(w, h);
     }
     window.addEventListener("resize", onResize);
     window.__muResize = onResize;
@@ -14248,7 +14319,8 @@ window.scrollToSection = function (id) {
       countEl.textContent =
         notes.length +
         " " +
-        (nbEn ? (notes.length === 1 ? "note" : "notes") : notes.length === 1 ? "notiță" : "notițe");
+        ((window.t && window.t(notes.length === 1 ? "notebook.word.one" : "notebook.word.many")) ||
+          (nbEn ? (notes.length === 1 ? "note" : "notes") : notes.length === 1 ? "notiță" : "notițe"));
     }
     if (!list || !empty) return;
     if (filtered.length === 0) {
@@ -15786,7 +15858,8 @@ window.scrollToSection = function (id) {
         h = viewerEl.clientHeight || 1;
       S.camera.aspect = w / h;
       S.camera.updateProjectionMatrix();
-      S.renderer.setSize(w, h, false);
+
+      S.renderer.setSize(w, h);
     }
     window.addEventListener("resize", onResize);
     S.resize = onResize;
@@ -15830,8 +15903,14 @@ window.scrollToSection = function (id) {
         box.getCenter(c);
         var size = new THREE.Vector3();
         box.getSize(size);
-        var maxDim = Math.max(size.x, size.y, size.z);
-        var fitDist = (maxDim / 2 / Math.tan((S.camera.fov * Math.PI) / 180 / 2)) * 1.6;
+
+        var vFov = (S.camera.fov * Math.PI) / 180;
+        var tanV = Math.tan(vFov / 2);
+        var aspect = S.camera.aspect || (vw / vh) || 1.4;
+        var distH = size.y / 2 / tanV;
+        var distW = size.x / 2 / (tanV * aspect);
+        var fitScale = cfg.fitScale != null ? cfg.fitScale : 1.15;
+        var fitDist = Math.max(distH, distW) * fitScale;
         S.camera.position.set(c.x, c.y + size.y * 0.05, c.z + fitDist);
         S.controls.target.set(c.x, c.y, c.z);
         S.controls.update();
@@ -16346,9 +16425,12 @@ window.scrollToSection = function (id) {
           ? "Hide panel"
           : "Ascunde panoul";
     }
-    setTimeout(function () {
-      if (S.resize) S.resize();
-    }, 340);
+
+    [60, 160, 260, 340, 420].forEach(function (d) {
+      setTimeout(function () {
+        if (S.resize) S.resize();
+      }, d);
+    });
   };
   window.__extraNames = EXTRA_NAMES;
   window.__extraConfigs = CONFIGS;
@@ -17695,4 +17777,66 @@ window.DUEL_BANKS = {"muscular":[{"text_ro":"Prin contracția unilaterală, ster
   document.addEventListener("keydown", function (e) {
     if (e.key === "Escape") document.body.classList.remove("sidebar-open", "home-menu-open");
   });
+})();
+
+
+(function bxI18nExtra() {
+  if (typeof I18N === "undefined") return;
+  Object.assign(I18N.ro, {
+    "chat.chip.quiz": "Pornește quiz",
+    "chat.chip.manuals": "Manuale",
+    "chat.chip.howto": "Cum folosesc site-ul",
+    "daily.done": "✓ Completat",
+    "daily.pending": "În curs",
+    "reviews.word.one": "recenzie",
+    "reviews.word.many": "recenzii",
+    "notebook.word.one": "notiță",
+    "notebook.word.many": "notițe",
+  });
+  Object.assign(I18N.en, {
+    "chat.chip.quiz": "Start quiz",
+    "chat.chip.manuals": "Textbooks",
+    "chat.chip.howto": "How do I use the site",
+    "daily.done": "✓ Completed",
+    "daily.pending": "In progress",
+    "reviews.word.one": "review",
+    "reviews.word.many": "reviews",
+    "notebook.word.one": "note",
+    "notebook.word.many": "notes",
+  });
+  try {
+    (window.DAILY_CHALLENGES || []).forEach(function (c) {
+      if (I18N.ro["daily.ch." + c.id] == null) I18N.ro["daily.ch." + c.id] = c.text;
+    });
+  } catch (e) {}
+  if (typeof applyLanguage === "function") applyLanguage(CUR_LANG);
+})();
+
+
+
+;(function(){
+  if (typeof I18N === 'undefined') return;
+  I18N.en = I18N.en || {};
+  Object.assign(I18N.en, {"online.entry":"🌐 Play online with a friend","online.title":"Online 1v1 Duel","online.intro":"Challenge a friend to a real-time knowledge duel. Same questions, live score — whoever gets the most correct wins.","online.system":"System","online.sys.all":"🎯 All systems","online.sys.osos":"🦴 Skeletal","online.sys.muscular":"💪 Muscular","online.sys.nervous":"🧠 Nervous","online.sys.cardio":"❤️ Cardiovascular","online.sys.respiratory":"💨 Respiratory","online.sys.digestive":"🍽️ Digestive","online.create":"Create a room","online.or":"or","online.codePh":"CODE","online.join":"Join","online.codeLabel":"Room code","online.share":"Send the code to a friend. The game starts automatically when they join.","online.waiting":"Waiting for opponent...","online.cancel":"Cancel","online.q":"Question","online.aiSays":"Statement","online.true":"TRUE","online.false":"FALSE","online.waitOpp":"You're done! Waiting for your opponent to finish...","online.rematch":"Rematch","online.exit":"Exit","online.win":"You won! 🎉","online.lose":"You lost","online.tie":"Tie!","online.noRealtime":"Online play isn't available right now (no connection).","online.connErr":"Connection error. Try again.","online.badCode":"Enter the 4-character code.","online.joining":"Connecting to the room...","online.noRoom":"The room doesn't exist or the opponent left.","online.rematchWait":"Waiting for the host to start the rematch...","chat.chip.quiz":"Start quiz","chat.chip.manuals":"Manuals","chat.chip.howto":"How to use the site","daily.done":"✓ Completed","daily.pending":"In progress","reviews.word.one":"review","reviews.word.many":"reviews","notebook.word.one":"note","notebook.word.many":"notes","daily.ch.click_bones":"Click on 5 different bones in the 3D skeleton","daily.ch.click_bones_10":"Click on 10 different bones in the 3D skeleton","daily.ch.use_chatbot":"Use the chatbox 3 times","daily.ch.use_chatbot_5":"Ask the AI assistant 5 questions","daily.ch.visit_sections":"Visit all 4 anatomical sections (Head/Trunk/Upper Limbs/Lower)","daily.ch.try_minigame":"Play a minigame (any type)","daily.ch.try_visual_quiz":"Play \"Identify the Bone\"","daily.ch.try_know_quiz":"Play \"Knowledge Test\"","daily.ch.try_duel":"Play \"AI Duel\" — battle the AI","daily.ch.curiozitati_5":"View 5 fun facts in the chatbot","daily.ch.open_manual":"Open a manual from the Learn section","daily.ch.use_search":"Search for a bone in the search bar","daily.ch.mu_view_5":"Click on 5 different muscles in the muscular model","daily.ch.mu_view_10":"Click on 10 different muscles in the muscular model","daily.ch.mu_visual_quiz":"Play \"Identify the Muscle\"","daily.ch.mu_know_quiz":"Play \"Muscular Knowledge Test\"","daily.ch.mu_section_all":"Visit the 4 muscle groups (Head, Trunk, Upper/Lower Limbs)","daily.ch.mu_visual_perfect":"Finish \"Identify the Muscle\" Easy with over 70%","daily.ch.click_bones_15":"Click on 15 different bones in the 3D skeleton","daily.ch.click_bones_25":"Click on 25 different bones in the 3D skeleton","daily.ch.use_chatbot_10":"Ask the AI assistant 10 questions","daily.ch.curiozitati_3":"View 3 quick fun facts in the chatbot","daily.ch.curiozitati_10":"View 10 fun facts in the chatbot","daily.ch.try_quiz_2":"Play 2 minigames (any type)","daily.ch.try_quiz_3":"Play 3 minigames (any type)","daily.ch.try_visual_med":"Play \"Identify the Bone\" on Medium level","daily.ch.try_visual_hard":"Play \"Identify the Bone\" on Hard level","daily.ch.try_know_med":"Play \"Knowledge Test\" on Medium","daily.ch.try_know_hard":"Play \"Knowledge Test\" on Hard (Manuals)","daily.ch.try_duel_med":"Take on AI Duel at Medium level","daily.ch.try_duel_hard":"Take on AI Duel at Hard level","daily.ch.manual_2":"Open 2 different manuals from the Learn section","daily.ch.manual_3":"Open all 3 Stefaneț manuals","daily.ch.search_3":"Use the search bar 3 times","daily.ch.visit_2":"Visit 2 anatomical sections (Head/Trunk/etc)","daily.ch.visit_3":"Visit 3 anatomical sections","daily.ch.click_chat":"Open the chatbox and greet the AI"});
+  I18N.fr = I18N.fr || {};
+  Object.assign(I18N.fr, {"online.entry":"🌐 Joue en ligne avec un ami","online.title":"Duel en ligne 1v1","online.intro":"Défie un ami à un duel de connaissances en temps réel. Les mêmes questions, score en direct — gagne celui qui a le plus de bonnes réponses.","online.system":"Système","online.sys.all":"🎯 Tous les systèmes","online.sys.osos":"🦴 Osseux","online.sys.muscular":"💪 Musculaire","online.sys.nervous":"🧠 Nerveux","online.sys.cardio":"❤️ Cardiovasculaire","online.sys.respiratory":"💨 Respiratoire","online.sys.digestive":"🍽️ Digestif","online.create":"Créer une salle","online.or":"ou","online.codePh":"CODE","online.join":"Rejoindre","online.codeLabel":"Code de la salle","online.share":"Envoie le code à un ami. La partie commence automatiquement dès qu'il entre.","online.waiting":"En attente de l'adversaire...","online.cancel":"Annuler","online.q":"Question","online.aiSays":"Affirmation","online.true":"VRAI","online.false":"FAUX","online.waitOpp":"Tu as terminé ! En attente que l'adversaire termine...","online.rematch":"Revanche","online.exit":"Quitter","online.win":"Tu as gagné ! 🎉","online.lose":"Tu as perdu","online.tie":"Égalité !","online.noRealtime":"Le jeu en ligne n'est pas disponible pour le moment (pas de connexion).","online.connErr":"Erreur de connexion. Réessaie.","online.badCode":"Saisis le code à 4 caractères.","online.joining":"Connexion à la salle...","online.noRoom":"La salle n'existe pas ou l'adversaire est parti.","online.rematchWait":"En attente que l'hôte lance la revanche...","chat.chip.quiz":"Lancer le quiz","chat.chip.manuals":"Manuels","chat.chip.howto":"Comment utiliser le site","daily.done":"✓ Terminé","daily.pending":"En cours","reviews.word.one":"avis","reviews.word.many":"avis","notebook.word.one":"note","notebook.word.many":"notes","daily.ch.click_bones":"Clique sur 5 os différents dans le squelette 3D","daily.ch.click_bones_10":"Clique sur 10 os différents dans le squelette 3D","daily.ch.use_chatbot":"Utilise le chatbox 3 fois","daily.ch.use_chatbot_5":"Pose 5 questions à l'assistant AI","daily.ch.visit_sections":"Visite les 4 sections anatomiques (Tête/Tronc/Membres sup./inf.)","daily.ch.try_minigame":"Joue à un mini-jeu (n'importe lequel)","daily.ch.try_visual_quiz":"Joue à « Identifie l'os »","daily.ch.try_know_quiz":"Joue au « Test de connaissances »","daily.ch.try_duel":"Joue à « AI Duel » — affronte l'AI","daily.ch.curiozitati_5":"Découvre 5 curiosités dans le chatbot","daily.ch.open_manual":"Ouvre un manuel dans la section Apprendre","daily.ch.use_search":"Recherche un os dans la barre de recherche","daily.ch.mu_view_5":"Clique sur 5 muscles différents dans le modèle musculaire","daily.ch.mu_view_10":"Clique sur 10 muscles différents dans le modèle musculaire","daily.ch.mu_visual_quiz":"Joue à « Identifie le muscle »","daily.ch.mu_know_quiz":"Joue au « Test de connaissances musculaire »","daily.ch.mu_section_all":"Visite les 4 groupes musculaires (Tête, Tronc, Membres sup./inf.)","daily.ch.mu_visual_perfect":"Termine « Identifie le muscle » Facile avec plus de 70 %","daily.ch.click_bones_15":"Clique sur 15 os différents dans le squelette 3D","daily.ch.click_bones_25":"Clique sur 25 os différents dans le squelette 3D","daily.ch.use_chatbot_10":"Pose 10 questions à l'assistant AI","daily.ch.curiozitati_3":"Découvre 3 curiosités rapides dans le chatbot","daily.ch.curiozitati_10":"Découvre 10 curiosités dans le chatbot","daily.ch.try_quiz_2":"Joue à 2 mini-jeux (n'importe lesquels)","daily.ch.try_quiz_3":"Joue à 3 mini-jeux (n'importe lesquels)","daily.ch.try_visual_med":"Joue à « Identifie l'os » au niveau Moyen","daily.ch.try_visual_hard":"Joue à « Identifie l'os » au niveau Difficile","daily.ch.try_know_med":"Joue au « Test de connaissances » en Moyen","daily.ch.try_know_hard":"Joue au « Test de connaissances » en Difficile (Manuels)","daily.ch.try_duel_med":"Affronte AI Duel au niveau Moyen","daily.ch.try_duel_hard":"Affronte AI Duel au niveau Difficile","daily.ch.manual_2":"Ouvre 2 manuels différents dans la section Apprendre","daily.ch.manual_3":"Ouvre les 3 manuels Stefaneț","daily.ch.search_3":"Utilise la barre de recherche 3 fois","daily.ch.visit_2":"Visite 2 sections anatomiques (Tête/Tronc/etc.)","daily.ch.visit_3":"Visite 3 sections anatomiques","daily.ch.click_chat":"Ouvre le chatbox et salue l'AI"});
+  I18N.de = I18N.de || {};
+  Object.assign(I18N.de, {"online.entry":"🌐 Spiele online mit einem Freund","online.title":"Online-Duell 1v1","online.intro":"Fordere einen Freund zu einem Wissensduell in Echtzeit heraus. Gleiche Fragen, Live-Punktestand — wer mehr richtig hat, gewinnt.","online.system":"System","online.sys.all":"🎯 Alle Systeme","online.sys.osos":"🦴 Skelett","online.sys.muscular":"💪 Muskulatur","online.sys.nervous":"🧠 Nervensystem","online.sys.cardio":"❤️ Herz-Kreislauf","online.sys.respiratory":"💨 Atmung","online.sys.digestive":"🍽️ Verdauung","online.create":"Raum erstellen","online.or":"oder","online.codePh":"CODE","online.join":"Beitreten","online.codeLabel":"Raumcode","online.share":"Sende den Code einem Freund. Das Spiel startet automatisch, sobald er beitritt.","online.waiting":"Warte auf Gegner...","online.cancel":"Abbrechen","online.q":"Frage","online.aiSays":"Aussage","online.true":"WAHR","online.false":"FALSCH","online.waitOpp":"Fertig! Warte, bis der Gegner fertig ist...","online.rematch":"Revanche","online.exit":"Verlassen","online.win":"Du hast gewonnen! 🎉","online.lose":"Du hast verloren","online.tie":"Unentschieden!","online.noRealtime":"Das Online-Spiel ist momentan nicht verfügbar (keine Verbindung).","online.connErr":"Verbindungsfehler. Versuche es erneut.","online.badCode":"Gib den 4-stelligen Code ein.","online.joining":"Verbinde mit dem Raum...","online.noRoom":"Der Raum existiert nicht oder der Gegner ist gegangen.","online.rematchWait":"Warte, bis der Host die Revanche startet...","chat.chip.quiz":"Quiz starten","chat.chip.manuals":"Handbücher","chat.chip.howto":"Wie nutze ich die Seite","daily.done":"✓ Erledigt","daily.pending":"Läuft","reviews.word.one":"Bewertung","reviews.word.many":"Bewertungen","notebook.word.one":"Notiz","notebook.word.many":"Notizen","daily.ch.click_bones":"Klicke auf 5 verschiedene Knochen im 3D-Skelett","daily.ch.click_bones_10":"Klicke auf 10 verschiedene Knochen im 3D-Skelett","daily.ch.use_chatbot":"Nutze die Chatbox 3-mal","daily.ch.use_chatbot_5":"Stelle dem AI-Assistenten 5 Fragen","daily.ch.visit_sections":"Besuche alle 4 anatomischen Bereiche (Kopf/Rumpf/obere/untere Gliedmaßen)","daily.ch.try_minigame":"Spiele ein Minispiel (beliebiger Typ)","daily.ch.try_visual_quiz":"Spiele \"Erkenne den Knochen\"","daily.ch.try_know_quiz":"Spiele \"Wissenstest\"","daily.ch.try_duel":"Spiele \"AI Duel\" — kämpfe gegen die AI","daily.ch.curiozitati_5":"Sieh dir 5 Kuriositäten im Chatbot an","daily.ch.open_manual":"Öffne ein Handbuch im Bereich Lernen","daily.ch.use_search":"Suche einen Knochen in der Suchleiste","daily.ch.mu_view_5":"Klicke auf 5 verschiedene Muskeln im Muskelmodell","daily.ch.mu_view_10":"Klicke auf 10 verschiedene Muskeln im Muskelmodell","daily.ch.mu_visual_quiz":"Spiele \"Erkenne den Muskel\"","daily.ch.mu_know_quiz":"Spiele \"Wissenstest Muskulatur\"","daily.ch.mu_section_all":"Besuche die 4 Muskelgruppen (Kopf, Rumpf, obere/untere Gliedmaßen)","daily.ch.mu_visual_perfect":"Beende \"Erkenne den Muskel\" auf Leicht mit über 70%","daily.ch.click_bones_15":"Klicke auf 15 verschiedene Knochen im 3D-Skelett","daily.ch.click_bones_25":"Klicke auf 25 verschiedene Knochen im 3D-Skelett","daily.ch.use_chatbot_10":"Stelle dem AI-Assistenten 10 Fragen","daily.ch.curiozitati_3":"Sieh dir 3 schnelle Kuriositäten im Chatbot an","daily.ch.curiozitati_10":"Sieh dir 10 Kuriositäten im Chatbot an","daily.ch.try_quiz_2":"Spiele 2 Minispiele (beliebiger Typ)","daily.ch.try_quiz_3":"Spiele 3 Minispiele (beliebiger Typ)","daily.ch.try_visual_med":"Spiele \"Erkenne den Knochen\" auf Mittel","daily.ch.try_visual_hard":"Spiele \"Erkenne den Knochen\" auf Schwer","daily.ch.try_know_med":"Spiele \"Wissenstest\" auf Mittel","daily.ch.try_know_hard":"Spiele \"Wissenstest\" auf Schwer (Handbücher)","daily.ch.try_duel_med":"Fordere AI Duel auf Mittel heraus","daily.ch.try_duel_hard":"Fordere AI Duel auf Schwer heraus","daily.ch.manual_2":"Öffne 2 verschiedene Handbücher im Bereich Lernen","daily.ch.manual_3":"Öffne alle 3 Stefaneț-Handbücher","daily.ch.search_3":"Nutze die Suchleiste 3-mal","daily.ch.visit_2":"Besuche 2 anatomische Bereiche (Kopf/Rumpf/usw.)","daily.ch.visit_3":"Besuche 3 anatomische Bereiche","daily.ch.click_chat":"Öffne die Chatbox und begrüße die AI"});
+  I18N.es = I18N.es || {};
+  Object.assign(I18N.es, {"online.entry":"🌐 Juega en línea con un amigo","online.title":"Duelo en línea 1v1","online.intro":"Reta a un amigo a un duelo de conocimientos en tiempo real. Las mismas preguntas, puntuación en vivo — gana quien tenga más aciertos.","online.system":"Sistema","online.sys.all":"🎯 Todos los sistemas","online.sys.osos":"🦴 Óseo","online.sys.muscular":"💪 Muscular","online.sys.nervous":"🧠 Nervioso","online.sys.cardio":"❤️ Cardiovascular","online.sys.respiratory":"💨 Respiratorio","online.sys.digestive":"🍽️ Digestivo","online.create":"Crea una sala","online.or":"o","online.codePh":"CÓDIGO","online.join":"Entrar","online.codeLabel":"Código de la sala","online.share":"Envíale el código a un amigo. El juego empieza automáticamente cuando entre.","online.waiting":"Esperando al adversario...","online.cancel":"Cancelar","online.q":"Pregunta","online.aiSays":"Afirmación","online.true":"VERDADERO","online.false":"FALSO","online.waitOpp":"¡Has terminado! Esperando a que el adversario termine...","online.rematch":"Revancha","online.exit":"Salir","online.win":"¡Has ganado! 🎉","online.lose":"Has perdido","online.tie":"¡Empate!","online.noRealtime":"El juego en línea no está disponible en este momento (sin conexión).","online.connErr":"Error de conexión. Inténtalo de nuevo.","online.badCode":"Introduce el código de 4 caracteres.","online.joining":"Conectando a la sala...","online.noRoom":"La sala no existe o el adversario se ha ido.","online.rematchWait":"Esperando a que el anfitrión inicie la revancha...","chat.chip.quiz":"Iniciar quiz","chat.chip.manuals":"Manuales","chat.chip.howto":"Cómo uso el sitio","daily.done":"✓ Completado","daily.pending":"En curso","reviews.word.one":"reseña","reviews.word.many":"reseñas","notebook.word.one":"nota","notebook.word.many":"notas","daily.ch.click_bones":"Haz clic en 5 huesos diferentes del esqueleto 3D","daily.ch.click_bones_10":"Haz clic en 10 huesos diferentes del esqueleto 3D","daily.ch.use_chatbot":"Usa el chatbox 3 veces","daily.ch.use_chatbot_5":"Hazle 5 preguntas al asistente de IA","daily.ch.visit_sections":"Visita las 4 secciones anatómicas (Cabeza/Tronco/Miembros Sup./Inf.)","daily.ch.try_minigame":"Juega un minijuego (de cualquier tipo)","daily.ch.try_visual_quiz":"Juega \"Identifica el Hueso\"","daily.ch.try_know_quiz":"Juega \"Test de Conocimientos\"","daily.ch.try_duel":"Juega \"AI Duel\" — enfréntate a la IA","daily.ch.curiozitati_5":"Descubre 5 curiosidades en el chatbot","daily.ch.open_manual":"Abre un manual de la sección Aprende","daily.ch.use_search":"Busca un hueso en la barra de búsqueda","daily.ch.mu_view_5":"Haz clic en 5 músculos diferentes del modelo muscular","daily.ch.mu_view_10":"Haz clic en 10 músculos diferentes del modelo muscular","daily.ch.mu_visual_quiz":"Juega \"Identifica el Músculo\"","daily.ch.mu_know_quiz":"Juega \"Test de Conocimientos Muscular\"","daily.ch.mu_section_all":"Visita los 4 grupos musculares (Cabeza, Tronco, Miembros Sup./Inf.)","daily.ch.mu_visual_perfect":"Termina \"Identifica el Músculo\" Fácil con más del 70%","daily.ch.click_bones_15":"Haz clic en 15 huesos diferentes del esqueleto 3D","daily.ch.click_bones_25":"Haz clic en 25 huesos diferentes del esqueleto 3D","daily.ch.use_chatbot_10":"Hazle 10 preguntas al asistente de IA","daily.ch.curiozitati_3":"Descubre 3 curiosidades rápidas en el chatbot","daily.ch.curiozitati_10":"Descubre 10 curiosidades en el chatbot","daily.ch.try_quiz_2":"Juega 2 minijuegos (de cualquier tipo)","daily.ch.try_quiz_3":"Juega 3 minijuegos (de cualquier tipo)","daily.ch.try_visual_med":"Juega \"Identifica el Hueso\" en nivel Medio","daily.ch.try_visual_hard":"Juega \"Identifica el Hueso\" en nivel Difícil","daily.ch.try_know_med":"Juega \"Test de Conocimientos\" en Medio","daily.ch.try_know_hard":"Juega \"Test de Conocimientos\" en Difícil (Manuales)","daily.ch.try_duel_med":"Enfréntate a AI Duel en nivel Medio","daily.ch.try_duel_hard":"Enfréntate a AI Duel en nivel Difícil","daily.ch.manual_2":"Abre 2 manuales diferentes de la sección Aprende","daily.ch.manual_3":"Abre los 3 manuales de Stefaneț","daily.ch.search_3":"Usa la barra de búsqueda 3 veces","daily.ch.visit_2":"Visita 2 secciones anatómicas (Cabeza/Tronco/etc.)","daily.ch.visit_3":"Visita 3 secciones anatómicas","daily.ch.click_chat":"Abre el chatbox y saluda a la IA"});
+  I18N.hu = I18N.hu || {};
+  Object.assign(I18N.hu, {"online.entry":"🌐 Játssz online egy barátoddal","online.title":"Online 1v1 Párbaj","online.intro":"Hívd ki egy barátodat valós idejű tudáspárbajra. Ugyanazok a kérdések, élő pontszám — az nyer, akinek több a helyes válasza.","online.system":"Rendszer","online.sys.all":"🎯 Minden rendszer","online.sys.osos":"🦴 Csontrendszer","online.sys.muscular":"💪 Izomrendszer","online.sys.nervous":"🧠 Idegrendszer","online.sys.cardio":"❤️ Szív- és érrendszer","online.sys.respiratory":"💨 Légzőrendszer","online.sys.digestive":"🍽️ Emésztőrendszer","online.create":"Szoba létrehozása","online.or":"vagy","online.codePh":"KÓD","online.join":"Belépés","online.codeLabel":"Szoba kódja","online.share":"Küldd el a kódot egy barátodnak. A játék automatikusan elindul, amint belép.","online.waiting":"Ellenfélre várok...","online.cancel":"Mégse","online.q":"Kérdés","online.aiSays":"Állítás","online.true":"IGAZ","online.false":"HAMIS","online.waitOpp":"Végeztél! Várod, hogy az ellenfél is befejezze...","online.rematch":"Visszavágó","online.exit":"Kilépés","online.win":"Nyertél! 🎉","online.lose":"Vesztettél","online.tie":"Döntetlen!","online.noRealtime":"Az online játék jelenleg nem érhető el (nincs kapcsolat).","online.connErr":"Kapcsolódási hiba. Próbáld újra.","online.badCode":"Add meg a 4 karakteres kódot.","online.joining":"Csatlakozás a szobához...","online.noRoom":"A szoba nem létezik, vagy az ellenfél kilépett.","online.rematchWait":"Várod, hogy a házigazda elindítsa a visszavágót...","chat.chip.quiz":"Kvíz indítása","chat.chip.manuals":"Tankönyvek","chat.chip.howto":"Hogyan használom az oldalt","daily.done":"✓ Teljesítve","daily.pending":"Folyamatban","reviews.word.one":"értékelés","reviews.word.many":"értékelés","notebook.word.one":"jegyzet","notebook.word.many":"jegyzet","daily.ch.click_bones":"Kattints 5 különböző csontra a 3D csontvázon","daily.ch.click_bones_10":"Kattints 10 különböző csontra a 3D csontvázon","daily.ch.use_chatbot":"Használd a chatboxot 3 alkalommal","daily.ch.use_chatbot_5":"Tegyél fel 5 kérdést az AI asszisztensnek","daily.ch.visit_sections":"Látogasd meg mind a 4 anatómiai szakaszt (Fej/Törzs/Felső vég./Alsó vég.)","daily.ch.try_minigame":"Játssz egy minijátékot (bármelyik típust)","daily.ch.try_visual_quiz":"Játszd a \"Csont azonosítása\" játékot","daily.ch.try_know_quiz":"Játszd a \"Tudáspróba\" játékot","daily.ch.try_duel":"Játssz \"AI Duel\"-t — küzdj meg az AI-jal","daily.ch.curiozitati_5":"Nézz meg 5 érdekességet a chatbotban","daily.ch.open_manual":"Nyiss meg egy tankönyvet a Tanulj szakaszból","daily.ch.use_search":"Keress rá egy csontra a keresősávban","daily.ch.mu_view_5":"Kattints 5 különböző izomra az izommodellen","daily.ch.mu_view_10":"Kattints 10 különböző izomra az izommodellen","daily.ch.mu_visual_quiz":"Játszd az \"Izom azonosítása\" játékot","daily.ch.mu_know_quiz":"Játszd az \"Izom Tudáspróba\" játékot","daily.ch.mu_section_all":"Látogasd meg mind a 4 izomcsoportot (Fej, Törzs, Felső/Alsó vég.)","daily.ch.mu_visual_perfect":"Fejezd be az \"Izom azonosítása\" Könnyű szintet 70% felett","daily.ch.click_bones_15":"Kattints 15 különböző csontra a 3D csontvázon","daily.ch.click_bones_25":"Kattints 25 különböző csontra a 3D csontvázon","daily.ch.use_chatbot_10":"Tegyél fel 10 kérdést az AI asszisztensnek","daily.ch.curiozitati_3":"Nézz meg 3 gyors érdekességet a chatbotban","daily.ch.curiozitati_10":"Nézz meg 10 érdekességet a chatbotban","daily.ch.try_quiz_2":"Játssz 2 minijátékot (bármelyik típust)","daily.ch.try_quiz_3":"Játssz 3 minijátékot (bármelyik típust)","daily.ch.try_visual_med":"Játszd a \"Csont azonosítása\" játékot Közepes szinten","daily.ch.try_visual_hard":"Játszd a \"Csont azonosítása\" játékot Nehéz szinten","daily.ch.try_know_med":"Játszd a \"Tudáspróba\" játékot Közepes szinten","daily.ch.try_know_hard":"Játszd a \"Tudáspróba\" játékot Nehéz szinten (Tankönyvek)","daily.ch.try_duel_med":"Küzdj meg az AI Duel-lel Közepes szinten","daily.ch.try_duel_hard":"Küzdj meg az AI Duel-lel Nehéz szinten","daily.ch.manual_2":"Nyiss meg 2 különböző tankönyvet a Tanulj szakaszból","daily.ch.manual_3":"Nyisd meg mind a 3 Stefaneț tankönyvet","daily.ch.search_3":"Használd a keresősávot 3 alkalommal","daily.ch.visit_2":"Látogass meg 2 anatómiai szakaszt (Fej/Törzs/stb.)","daily.ch.visit_3":"Látogass meg 3 anatómiai szakaszt","daily.ch.click_chat":"Nyisd meg a chatboxot és köszönj az AI-nak"});
+
+  I18N.fr["report.mailto"] = "Nous avons ouvert ton application de messagerie avec le rapport pré-rempli — appuie sur <b>Envoyer</b> là-bas.<br><small style=\"color:var(--t3)\">Ça ne s'est pas ouvert ? Écris-nous directement à <b>ryan.dobrota@cntvb.ro</b></small>";
+  I18N.de["report.mailto"] = "Deine E-Mail-App wurde mit dem ausgefüllten Bericht geöffnet — tippe dort auf <b>Senden</b>.<br><small style=\"color:var(--t3)\">Nicht geöffnet? Schreib uns direkt an <b>ryan.dobrota@cntvb.ro</b></small>";
+  I18N.es["report.mailto"] = "Hemos abierto tu aplicación de correo con el informe completado — pulsa <b>Enviar</b> allí.<br><small style=\"color:var(--t3)\">¿No se abrió? Escríbenos directamente a <b>ryan.dobrota@cntvb.ro</b></small>";
+  I18N.hu["report.mailto"] = "Megnyitottuk az e-mail alkalmazásodat a kitöltött jelentéssel — nyomd meg ott a <b>Küldés</b> gombot.<br><small style=\"color:var(--t3)\">Nem nyílt meg? Írj nekünk közvetlenül a <b>ryan.dobrota@cntvb.ro</b></small> címre.";
+
+  Object.assign(I18N.ro, { "quiz.end.back": "Înapoi la minijocuri", "quiz.end.correct": "corecte", "quiz.end.wrong": "greșite", "quiz.end.timeword": "timp" });
+  Object.assign(I18N.en, { "quiz.end.back": "Back to minigames", "quiz.end.correct": "correct", "quiz.end.wrong": "wrong", "quiz.end.timeword": "time" });
+  Object.assign(I18N.fr, { "quiz.end.back": "Retour aux mini-jeux", "quiz.end.correct": "correctes", "quiz.end.wrong": "erreurs", "quiz.end.timeword": "temps" });
+  Object.assign(I18N.de, { "quiz.end.back": "Zurück zu den Minispielen", "quiz.end.correct": "richtig", "quiz.end.wrong": "falsch", "quiz.end.timeword": "Zeit" });
+  Object.assign(I18N.es, { "quiz.end.back": "Volver a los minijuegos", "quiz.end.correct": "correctas", "quiz.end.wrong": "erróneas", "quiz.end.timeword": "tiempo" });
+  Object.assign(I18N.hu, { "quiz.end.back": "Vissza a minijátékokhoz", "quiz.end.correct": "helyes", "quiz.end.wrong": "hibás", "quiz.end.timeword": "idő" });
+  try { if (typeof applyLanguage === 'function' && typeof CUR_LANG !== 'undefined') applyLanguage(CUR_LANG); } catch(e){}
 })();
