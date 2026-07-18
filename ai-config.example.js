@@ -6,3 +6,6 @@ window.BIONEXUS_AI = {
   apiKey: "PUNE_CHEIA_TA_AICI",
   model: "gpt-5.4-mini",
 };
+
+
+//salut!
