@@ -8513,15 +8513,9 @@ function pickDailyChallenge() {
   var hash = 0;
   for (var i = 0; i < today.length; i++) hash = (hash * 31 + today.charCodeAt(i)) | 0;
   hash = Math.abs(hash);
-  var d = new Date();
-  var wantsMuscle = d.getDate() % 2 === 1;
-  var muscleChallenges = DAILY_CHALLENGES.filter(function (c) {
-    return c.system === "muscular";
-  });
-  var boneChallenges = DAILY_CHALLENGES.filter(function (c) {
+  var pool = DAILY_CHALLENGES.filter(function (c) {
     return c.system !== "muscular";
   });
-  var pool = wantsMuscle && muscleChallenges.length > 0 ? muscleChallenges : boneChallenges;
   if (!pool.length) pool = DAILY_CHALLENGES;
   return pool[hash % pool.length];
 }
@@ -18446,12 +18440,12 @@ window.DUEL_BANKS = {"muscular":[{"text_ro":"Prin contracția unilaterală, ster
 ;(function bxSubpages(){
   if (typeof I18N !== "undefined") {
     var T = {
-      ro: { "subpage.back": "Acasă", "subpage.viewSystems": "Vezi toate sistemele", "subpage.viewFeatures": "Vezi toate funcționalitățile" },
-      en: { "subpage.back": "Home", "subpage.viewSystems": "See all systems", "subpage.viewFeatures": "See all features" },
-      fr: { "subpage.back": "Accueil", "subpage.viewSystems": "Voir tous les systèmes", "subpage.viewFeatures": "Voir toutes les fonctionnalités" },
-      de: { "subpage.back": "Startseite", "subpage.viewSystems": "Alle Systeme ansehen", "subpage.viewFeatures": "Alle Funktionen ansehen" },
-      es: { "subpage.back": "Inicio", "subpage.viewSystems": "Ver todos los sistemas", "subpage.viewFeatures": "Ver todas las funciones" },
-      hu: { "subpage.back": "Kezdőlap", "subpage.viewSystems": "Összes rendszer", "subpage.viewFeatures": "Összes funkció" },
+      ro: { "subpage.back": "Înapoi", "subpage.viewSystems": "Vezi toate sistemele", "subpage.viewFeatures": "Vezi toate funcționalitățile" },
+      en: { "subpage.back": "Back", "subpage.viewSystems": "See all systems", "subpage.viewFeatures": "See all features" },
+      fr: { "subpage.back": "Retour", "subpage.viewSystems": "Voir tous les systèmes", "subpage.viewFeatures": "Voir toutes les fonctionnalités" },
+      de: { "subpage.back": "Zurück", "subpage.viewSystems": "Alle Systeme ansehen", "subpage.viewFeatures": "Alle Funktionen ansehen" },
+      es: { "subpage.back": "Atrás", "subpage.viewSystems": "Ver todos los sistemas", "subpage.viewFeatures": "Ver todas las funciones" },
+      hu: { "subpage.back": "Vissza", "subpage.viewSystems": "Összes rendszer", "subpage.viewFeatures": "Összes funkció" },
     };
     Object.keys(T).forEach(function (c) { if (I18N[c]) Object.assign(I18N[c], T[c]); });
   }
@@ -18471,7 +18465,9 @@ window.DUEL_BANKS = {"muscular":[{"text_ro":"Prin contracția unilaterală, ster
     wrap.className = "home-preview-grid";
     var n = Math.min(count, cards.length);
     for (var i = 0; i < n; i++) wrap.appendChild(cards[i].cloneNode(true));
-    sec.appendChild(wrap);
+    var teaser = sec.querySelector(".subpage-teaser-btn");
+    if (teaser) sec.insertBefore(wrap, teaser);
+    else sec.appendChild(wrap);
   }
   function injectFeaturesSub() {
     var sec = document.getElementById("features");
@@ -18495,9 +18491,28 @@ window.DUEL_BANKS = {"muscular":[{"text_ro":"Prin contracția unilaterală, ster
     b.innerHTML = '<span data-i18n="' + labelKey + '">' + label + '</span> <span aria-hidden="true">&rarr;</span>';
     sec.appendChild(b);
   }
+  function buildFeaturePreviewWhenReady() {
+    var tries = 0;
+    function imgsReady() {
+      var imgs = document.querySelectorAll(".home-features-grid img");
+      if (!imgs.length) return true;
+      return Array.prototype.every.call(imgs, function (im) {
+        if (!im.hasAttribute("data-clean-bg")) return !!im.complete;
+        return im.classList.contains("cleaned") || (im.src && im.src.indexOf("data:") === 0);
+      });
+    }
+    (function poll() {
+      if (imgsReady() || tries > 60) {
+        buildPreview("features", ".home-features-grid", ".home-feat-card", 3);
+        try { if (typeof applyLanguage === "function" && typeof CUR_LANG !== "undefined") applyLanguage(CUR_LANG); } catch (e) {}
+        return;
+      }
+      tries++;
+      setTimeout(poll, 100);
+    })();
+  }
   function init() {
     buildPreview("sisteme", ".home-systems-grid", ".system-card", 3);
-    buildPreview("features", ".home-features-grid", ".home-feat-card", 3);
     injectFeaturesSub();
     moveGrid(".home-systems-grid", "systemsPageGrid");
     moveGrid(".home-features-grid", "featuresPageGrid");
@@ -18506,6 +18521,7 @@ window.DUEL_BANKS = {"muscular":[{"text_ro":"Prin contracția unilaterală, ster
     try { if (typeof hydrateBxIcons === "function") hydrateBxIcons(); } catch (e) {}
     try { if (typeof bxRefillEmoji === "function") bxRefillEmoji(); } catch (e) {}
     try { if (typeof applyLanguage === "function" && typeof CUR_LANG !== "undefined") applyLanguage(CUR_LANG); } catch (e) {}
+    buildFeaturePreviewWhenReady();
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();

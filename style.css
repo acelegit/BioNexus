@@ -11625,6 +11625,18 @@ html[data-theme="light"] .bx-rselect-opt {
 .home-preview-grid .system-card::after {
   display: none;
 }
+
+.subpage-back span[aria-hidden="true"],
+.subpage-teaser-btn span[aria-hidden="true"],
+.daily-go-btn span[aria-hidden="true"],
+.app-back-arrow {
+  font-weight: 900;
+  -webkit-text-stroke: 0.06em currentColor;
+  font-size: 1.12em;
+  display: inline-block;
+  line-height: 1;
+  vertical-align: -0.02em;
+}
 @media (max-width: 768px) {
   .home-preview-grid {
     grid-template-columns: 1fr;
