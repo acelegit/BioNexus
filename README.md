@@ -97,6 +97,7 @@ Proiectul a trecut printr-un audit de securitate (black-box) și implementează 
 
 - **Frontend:** HTML5, CSS3, JavaScript (vanilla, fără framework)
 - **3D:** Three.js (r128) — GLTFLoader, DRACOLoader (compresie Draco)
+- **Modelare 3D & grafică:** Blender (pregătire, curățare și optimizare a modelelor 3D), Adobe Photoshop (texturi și elemente grafice)
 - **Hosting & serverless:** Cloudflare Pages + Cloudflare Pages Functions (Node.js)
 - **Backend-as-a-Service:** Supabase — Auth, Postgres (RLS), Storage, Realtime
 - **AI:** model lingvistic (LLM) prin proxy server-side securizat
