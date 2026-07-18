@@ -7723,6 +7723,42 @@ var INFO_LABELS = {
     select: "Select a bone from the model<br>or from the list on the left",
     title: "Bone Info",
   },
+  fr: {
+    cat: "Catégorie",
+    type: "Type",
+    desc: "Description",
+    art: "Articulations",
+    det: "Détails",
+    select: "Sélectionne un os depuis le modèle<br>ou dans la liste à gauche",
+    title: "Infos sur l'os",
+  },
+  de: {
+    cat: "Kategorie",
+    type: "Typ",
+    desc: "Beschreibung",
+    art: "Gelenke",
+    det: "Details",
+    select: "Wähle einen Knochen im Modell<br>oder aus der Liste links",
+    title: "Knocheninfo",
+  },
+  es: {
+    cat: "Categoría",
+    type: "Tipo",
+    desc: "Descripción",
+    art: "Articulaciones",
+    det: "Detalles",
+    select: "Selecciona un hueso del modelo<br>o de la lista de la izquierda",
+    title: "Información del hueso",
+  },
+  hu: {
+    cat: "Kategória",
+    type: "Típus",
+    desc: "Leírás",
+    art: "Ízületek",
+    det: "Részletek",
+    select: "Válassz egy csontot a modellből<br>vagy a bal oldali listából",
+    title: "Csont infó",
+  },
 };
 
 window.localizedBone = function (id) {
@@ -7865,6 +7901,11 @@ if (typeof window.applyLanguage === "function") {
   window.applyLanguage = function (lang) {
     origLang(lang);
     if (typeof refreshLocalizedTexts === "function") refreshLocalizedTexts();
+    var __selBone = document.querySelector(".bone-item.selected");
+    var __infoCt = document.getElementById("info-ct");
+    if (__selBone && __infoCt && __infoCt.style.display === "block" && typeof window.showInfo === "function") {
+      window.showInfo(__selBone.getAttribute("data-bone"));
+    }
   };
 }
 
@@ -14703,7 +14744,8 @@ window.scrollToSection = function (id) {
         var btn = document.createElement("button");
         btn.id = "nbAddBoneBtn";
         btn.className = "nb-context-action";
-        btn.innerHTML = "📝 Adaugă notiță";
+        btn.setAttribute("data-i18n", "nb.addNote");
+        btn.textContent = (window.I18N && I18N[window.CUR_LANG] && I18N[window.CUR_LANG]["nb.addNote"]) || "📝 Adaugă notiță";
         btn.style.cssText =
           "display:none;margin:14px auto 0;position:relative;bottom:auto;right:auto;width:auto";
         btn.onclick = function () {
@@ -14726,7 +14768,8 @@ window.scrollToSection = function (id) {
         var btn2 = document.createElement("button");
         btn2.id = "nbAddMuBtn";
         btn2.className = "nb-context-action";
-        btn2.innerHTML = "📝 Adaugă notiță";
+        btn2.setAttribute("data-i18n", "nb.addNote");
+        btn2.textContent = (window.I18N && I18N[window.CUR_LANG] && I18N[window.CUR_LANG]["nb.addNote"]) || "📝 Adaugă notiță";
         btn2.style.cssText =
           "display:none;margin:14px auto 0;position:relative;bottom:auto;right:auto;width:auto";
         btn2.onclick = function () {
@@ -14757,7 +14800,8 @@ window.scrollToSection = function (id) {
           var eb = document.createElement("button");
           eb.id = bid;
           eb.className = "nb-context-action";
-          eb.innerHTML = "📝 Adaugă notiță";
+          eb.setAttribute("data-i18n", "nb.addNote");
+          eb.textContent = (window.I18N && I18N[window.CUR_LANG] && I18N[window.CUR_LANG]["nb.addNote"]) || "📝 Adaugă notiță";
           eb.style.cssText =
             "display:none;margin:14px auto 0;position:relative;bottom:auto;right:auto;width:auto";
           eb.onclick = function () {
@@ -16251,6 +16295,14 @@ window.scrollToSection = function (id) {
   function selectStruct(key, mesh) {
     var S = STATES[key];
     if (!S || !mesh) return;
+    var __exL = {
+      structure: { ro: "Structură", en: "Structure", fr: "Structure", de: "Struktur", es: "Estructura", hu: "Struktúra" },
+      sci: { ro: "Denumire științifică", en: "Scientific name", fr: "Nom scientifique", de: "Wissenschaftlicher Name", es: "Nombre científico", hu: "Tudományos név" },
+      system: { ro: "Sistem", en: "System", fr: "Système", de: "System", es: "Sistema", hu: "Rendszer" },
+      group: { ro: "Grupă", en: "Group", fr: "Groupe", de: "Gruppe", es: "Grupo", hu: "Csoport" },
+      desc: { ro: "Descriere", en: "Description", fr: "Description", de: "Beschreibung", es: "Descripción", hu: "Leírás" },
+    };
+    function exLbl(k) { var lg = lang(); return (__exL[k] && (__exL[k][lg] || __exL[k].ro)) || ""; }
     var cfg = S.cfg,
       ids = cfg.ids || {};
     if (S.selected && S.selected !== mesh) restoreSel(S.selected);
@@ -16298,26 +16350,26 @@ window.scrollToSection = function (id) {
         null;
       ct.innerHTML =
         '<div class="info-section"><h4>' +
-        (lang() === "en" ? "Structure" : "Structură") +
+        exLbl("structure") +
         "</h4>" +
         '<div class="info-tag" style="background:rgba(79,209,255,.15);border-color:rgba(79,209,255,.35);color:#7dd3fc">' +
         escapeHTML(name) +
         "</div></div>" +
         (info.la
           ? '<div class="info-section"><h4>' +
-            (lang() === "en" ? "Scientific name" : "Denumire științifică") +
+            exLbl("sci") +
             '</h4><p style="font-style:italic;color:#cbd5e1">' +
             escapeHTML(info.la) +
             "</p></div>"
           : "") +
         '<div class="info-section"><h4>' +
-        (lang() === "en" ? "System" : "Sistem") +
+        exLbl("system") +
         "</h4><p>" +
         escapeHTML(sys) +
         "</p></div>" +
         (grp
           ? '<div class="info-section"><h4>' +
-            (lang() === "en" ? "Group" : "Grupă") +
+            exLbl("group") +
             "</h4><p>" +
             gicon +
             " " +
@@ -16326,7 +16378,7 @@ window.scrollToSection = function (id) {
           : "") +
         (descObj
           ? '<div class="info-section"><h4>' +
-            (lang() === "en" ? "Description" : "Descriere") +
+            exLbl("desc") +
             "</h4><p>" +
             escapeHTML(lang() === "en" ? descObj.en : descObj.ro) +
             "</p></div>"
@@ -17498,7 +17550,9 @@ window.scrollToSection = function (id) {
       return;
     }
 
-    var typeLabel = typeEl ? typeEl.options[typeEl.selectedIndex].text : "?";
+    var typeLabel = window.__bxRepLabel
+      ? window.__bxRepLabel(typeEl && typeEl.getAttribute("data-value"))
+      : (typeEl && typeEl.getAttribute("data-value")) || "?";
     var contact = (emailEl && emailEl.value || "").trim() || "—";
     var subject = "BioNexus — raport: " + typeLabel;
     var body =
@@ -18407,6 +18461,31 @@ window.DUEL_BANKS = {"muscular":[{"text_ro":"Prin contracția unilaterală, ster
     var target = document.getElementById(targetId);
     if (grid && target && grid.parentElement !== target) target.appendChild(grid);
   }
+  function buildPreview(sectionId, gridSel, cardSel, count) {
+    var sec = document.getElementById(sectionId);
+    var grid = document.querySelector(gridSel);
+    if (!sec || !grid || sec.querySelector(".home-preview-grid")) return;
+    var cards = grid.querySelectorAll(cardSel);
+    if (!cards.length) return;
+    var wrap = document.createElement("div");
+    wrap.className = "home-preview-grid";
+    var n = Math.min(count, cards.length);
+    for (var i = 0; i < n; i++) wrap.appendChild(cards[i].cloneNode(true));
+    sec.appendChild(wrap);
+  }
+  function injectFeaturesSub() {
+    var sec = document.getElementById("features");
+    if (!sec || sec.querySelector(".home-features-sub")) return;
+    var title = sec.querySelector(".home-section-title");
+    if (!title) return;
+    var p = document.createElement("p");
+    p.className = "home-systems-sub home-features-sub";
+    p.setAttribute("data-i18n", "home.features.sub");
+    p.textContent =
+      (window.I18N && I18N[window.CUR_LANG] && I18N[window.CUR_LANG]["home.features.sub"]) ||
+      "Instrumente interactive care transformă studiul anatomiei într-o experiență modernă.";
+    title.parentNode.insertBefore(p, title.nextSibling);
+  }
   function injectTeaser(sectionId, openFn, labelKey, label) {
     var sec = document.getElementById(sectionId);
     if (!sec || sec.querySelector(".subpage-teaser-btn")) return;
@@ -18417,10 +18496,15 @@ window.DUEL_BANKS = {"muscular":[{"text_ro":"Prin contracția unilaterală, ster
     sec.appendChild(b);
   }
   function init() {
+    buildPreview("sisteme", ".home-systems-grid", ".system-card", 3);
+    buildPreview("features", ".home-features-grid", ".home-feat-card", 3);
+    injectFeaturesSub();
     moveGrid(".home-systems-grid", "systemsPageGrid");
     moveGrid(".home-features-grid", "featuresPageGrid");
     injectTeaser("sisteme", "openSystemsPage()", "subpage.viewSystems", "Vezi toate sistemele");
     injectTeaser("features", "openFeaturesPage()", "subpage.viewFeatures", "Vezi toate funcționalitățile");
+    try { if (typeof hydrateBxIcons === "function") hydrateBxIcons(); } catch (e) {}
+    try { if (typeof bxRefillEmoji === "function") bxRefillEmoji(); } catch (e) {}
     try { if (typeof applyLanguage === "function" && typeof CUR_LANG !== "undefined") applyLanguage(CUR_LANG); } catch (e) {}
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
@@ -18461,6 +18545,152 @@ window.DUEL_BANKS = {"muscular":[{"text_ro":"Prin contracția unilaterală, ster
     window.showHome = function () {
       try { closePage("systemsPage"); closePage("featuresPage"); } catch (e) {}
       return _sh.apply(this, arguments);
+    };
+  }
+})();
+
+(function bxLabelsAndBackFix() {
+  if (window.I18N && typeof window.I18N === "object") {
+    var NB = {
+      ro: { "nb.addNote": "📝 Adaugă notiță", "home.features.sub": "Instrumente interactive care transformă studiul anatomiei într-o experiență modernă." },
+      en: { "nb.addNote": "📝 Add note", "home.features.sub": "Interactive tools that turn studying anatomy into a modern experience." },
+      fr: { "nb.addNote": "📝 Ajouter une note", "home.features.sub": "Des outils interactifs qui transforment l'étude de l'anatomie en une expérience moderne." },
+      de: { "nb.addNote": "📝 Notiz hinzufügen", "home.features.sub": "Interaktive Werkzeuge, die das Anatomielernen zu einem modernen Erlebnis machen." },
+      es: { "nb.addNote": "📝 Añadir nota", "home.features.sub": "Herramientas interactivas que convierten el estudio de la anatomía en una experiencia moderna." },
+      hu: { "nb.addNote": "📝 Jegyzet hozzáadása", "home.features.sub": "Interaktív eszközök, amelyek modern élménnyé teszik az anatómia tanulását." },
+    };
+    Object.keys(NB).forEach(function (c) { if (I18N[c]) Object.assign(I18N[c], NB[c]); });
+  }
+
+  function setSub(v) { window.__curSubpage = v; }
+  function wrapSet(name, val) {
+    var o = window[name];
+    if (typeof o !== "function") return;
+    window[name] = function () { setSub(val); return o.apply(this, arguments); };
+  }
+  function wrapClear(name) {
+    var o = window[name];
+    if (typeof o !== "function") return;
+    window[name] = function () { setSub(null); return o.apply(this, arguments); };
+  }
+  wrapSet("openSystemsPage", "systems");
+  wrapSet("openFeaturesPage", "features");
+  wrapClear("closeSystemsPage");
+  wrapClear("closeFeaturesPage");
+
+  var oEnter = window.enterApp;
+  if (typeof oEnter === "function") {
+    window.enterApp = function () {
+      window.__appReturn = window.__curSubpage || "home";
+      window.__curSubpage = null;
+      return oEnter.apply(this, arguments);
+    };
+  }
+
+  function goReturn() {
+    var r = window.__appReturn;
+    window.__appReturn = null;
+    if (r === "systems" && typeof window.openSystemsPage === "function") window.openSystemsPage();
+    else if (r === "features" && typeof window.openFeaturesPage === "function") window.openFeaturesPage();
+  }
+  function wrapBack(name) {
+    var o = window[name];
+    if (typeof o !== "function") return;
+    window[name] = function () {
+      var r = o.apply(this, arguments);
+      goReturn();
+      return r;
+    };
+  }
+  wrapBack("goBackFromApp");
+  wrapBack("exitQuizMode");
+})();
+
+(function bxReportSelect() {
+  var REP_EMOJI = { bug: "🐞", content: "📄", suggestion: "💡", other: "❓" };
+  function stripEmoji(s) {
+    s = s || "";
+    var out = s.replace(/^\s*\S+\s+/, "").trim();
+    return out || s;
+  }
+  function repLabel(key) {
+    if (!key) key = "other";
+    var lg = window.CUR_LANG || "ro";
+    var raw =
+      (window.I18N && I18N[lg] && I18N[lg]["report.type." + key]) ||
+      (window.I18N && I18N.ro && I18N.ro["report.type." + key]) ||
+      key;
+    return stripEmoji(raw);
+  }
+  window.__bxRepLabel = repLabel;
+  function esc(s) {
+    return (s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+  function root() {
+    return document.getElementById("reportType");
+  }
+  function render() {
+    var r = root();
+    if (!r) return;
+    r.querySelectorAll(".bx-rselect-txt[data-rep]").forEach(function (t) {
+      t.textContent = repLabel(t.getAttribute("data-rep"));
+    });
+    var cur = document.getElementById("reportTypeCur");
+    var val = r.getAttribute("data-value") || "bug";
+    if (cur)
+      cur.innerHTML =
+        '<span class="bx-emoji bx-rselect-ic">' +
+        (REP_EMOJI[val] || "") +
+        '</span><span class="bx-rselect-txt">' +
+        esc(repLabel(val)) +
+        "</span>";
+  }
+  function open(o) {
+    var r = root();
+    if (!r) return;
+    var btn = document.getElementById("reportTypeBtn");
+    if (o) {
+      r.classList.add("open");
+      if (btn) btn.setAttribute("aria-expanded", "true");
+    } else {
+      r.classList.remove("open");
+      if (btn) btn.setAttribute("aria-expanded", "false");
+    }
+  }
+  function init() {
+    var r = root();
+    if (!r || r.__bxInit) return;
+    r.__bxInit = true;
+    var btn = document.getElementById("reportTypeBtn");
+    if (btn)
+      btn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        open(!r.classList.contains("open"));
+      });
+    r.querySelectorAll(".bx-rselect-opt").forEach(function (op) {
+      op.addEventListener("click", function (e) {
+        e.stopPropagation();
+        r.setAttribute("data-value", op.getAttribute("data-value"));
+        render();
+        open(false);
+      });
+    });
+    document.addEventListener("click", function (e) {
+      if (r.classList.contains("open") && (!e.target.closest || !e.target.closest("#reportType"))) open(false);
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && r.classList.contains("open")) open(false);
+    });
+    render();
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
+  else init();
+  if (typeof window.applyLanguage === "function") {
+    var oL = window.applyLanguage;
+    window.applyLanguage = function () {
+      var res = oL.apply(this, arguments);
+      try { render(); } catch (e) {}
+      return res;
     };
   }
 })();

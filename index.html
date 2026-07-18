@@ -2796,12 +2796,18 @@
             echipă.
           </p>
           <label class="report-lbl" for="reportType" data-i18n="report.lbl.type">Tip</label>
-          <select id="reportType">
-            <option value="bug" data-i18n="report.type.bug">🐛 Eroare / bug</option>
-            <option value="content" data-i18n="report.type.content">📚 Greșeală de conținut</option>
-            <option value="suggestion" data-i18n="report.type.suggestion">💡 Sugestie</option>
-            <option value="other" data-i18n="report.type.other">❓ Altceva</option>
-          </select>
+          <div class="bx-rselect" id="reportType" data-value="bug">
+            <button type="button" class="bx-rselect-btn" id="reportTypeBtn" aria-haspopup="listbox" aria-expanded="false">
+              <span class="bx-rselect-cur" id="reportTypeCur"></span>
+              <span class="bx-rselect-caret" aria-hidden="true">▾</span>
+            </button>
+            <div class="bx-rselect-list" id="reportTypeList" role="listbox">
+              <div class="bx-rselect-opt" role="option" data-value="bug"><span class="bx-emoji bx-rselect-ic">🐞</span><span class="bx-rselect-txt" data-rep="bug"></span></div>
+              <div class="bx-rselect-opt" role="option" data-value="content"><span class="bx-emoji bx-rselect-ic">📄</span><span class="bx-rselect-txt" data-rep="content"></span></div>
+              <div class="bx-rselect-opt" role="option" data-value="suggestion"><span class="bx-emoji bx-rselect-ic">💡</span><span class="bx-rselect-txt" data-rep="suggestion"></span></div>
+              <div class="bx-rselect-opt" role="option" data-value="other"><span class="bx-emoji bx-rselect-ic">❓</span><span class="bx-rselect-txt" data-rep="other"></span></div>
+            </div>
+          </div>
           <label class="report-lbl" for="reportMsg" data-i18n="report.lbl.msg">Descriere</label>
           <textarea
             id="reportMsg"
