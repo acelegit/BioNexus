@@ -17548,13 +17548,17 @@ window.scrollToSection = function (id) {
         .then(function (r) {
           return r.json();
         })
-        .then(function () {
-          if (status) {
-            status.className = "report-status ok";
-            status.textContent = L("report.ok");
+        .then(function (data) {
+          if (data && String(data.success) === "true") {
+            if (status) {
+              status.className = "report-status ok";
+              status.textContent = L("report.ok");
+            }
+            if (msgEl) msgEl.value = "";
+            setTimeout(window.closeReport, 1600);
+          } else {
+            mailtoFallback();
           }
-          if (msgEl) msgEl.value = "";
-          setTimeout(window.closeReport, 1600);
         })
         .catch(function () {
           mailtoFallback();
