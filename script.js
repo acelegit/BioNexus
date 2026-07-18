@@ -9069,6 +9069,7 @@ else setTimeout(renderDailyUI, 150);
           }
         });
         renderEndScreen(newlyUnlocked);
+        if (newlyUnlocked && typeof window.showBadgeToast === "function") window.showBadgeToast(newlyUnlocked);
       } catch (e) {
         console.warn("badge unlock check:", e);
       }
@@ -18460,6 +18461,21 @@ window.DUEL_BANKS = {"muscular":[{"text_ro":"Prin contracția unilaterală, ster
     var target = document.getElementById(targetId);
     if (grid && target && grid.parentElement !== target) target.appendChild(grid);
   }
+  function linkPreviewImages(orig, clone) {
+    var oi = orig.querySelectorAll("img");
+    var ci = clone.querySelectorAll("img");
+    for (var k = 0; k < oi.length && k < ci.length; k++) {
+      (function (o, c) {
+        function sync() { if (o.src && o.src !== c.src) c.src = o.src; }
+        sync();
+        try {
+          var mo = new MutationObserver(sync);
+          mo.observe(o, { attributes: true, attributeFilter: ["src"] });
+          setTimeout(function () { sync(); mo.disconnect(); }, 15000);
+        } catch (e) {}
+      })(oi[k], ci[k]);
+    }
+  }
   function buildPreview(sectionId, gridSel, cardSel, count) {
     var sec = document.getElementById(sectionId);
     var grid = document.querySelector(gridSel);
@@ -18469,7 +18485,11 @@ window.DUEL_BANKS = {"muscular":[{"text_ro":"Prin contracția unilaterală, ster
     var wrap = document.createElement("div");
     wrap.className = "home-preview-grid";
     var n = Math.min(count, cards.length);
-    for (var i = 0; i < n; i++) wrap.appendChild(cards[i].cloneNode(true));
+    for (var i = 0; i < n; i++) {
+      var clone = cards[i].cloneNode(true);
+      wrap.appendChild(clone);
+      linkPreviewImages(cards[i], clone);
+    }
     var teaser = sec.querySelector(".subpage-teaser-btn");
     if (teaser) sec.insertBefore(wrap, teaser);
     else sec.appendChild(wrap);
@@ -18496,28 +18516,9 @@ window.DUEL_BANKS = {"muscular":[{"text_ro":"Prin contracția unilaterală, ster
     b.innerHTML = '<span data-i18n="' + labelKey + '">' + label + '</span> <span aria-hidden="true">&rarr;</span>';
     sec.appendChild(b);
   }
-  function buildFeaturePreviewWhenReady() {
-    var tries = 0;
-    function imgsReady() {
-      var imgs = document.querySelectorAll(".home-features-grid img");
-      if (!imgs.length) return true;
-      return Array.prototype.every.call(imgs, function (im) {
-        if (!im.hasAttribute("data-clean-bg")) return !!im.complete;
-        return im.classList.contains("cleaned") || (im.src && im.src.indexOf("data:") === 0);
-      });
-    }
-    (function poll() {
-      if (imgsReady() || tries > 60) {
-        buildPreview("features", ".home-features-grid", ".home-feat-card", 3);
-        try { if (typeof applyLanguage === "function" && typeof CUR_LANG !== "undefined") applyLanguage(CUR_LANG); } catch (e) {}
-        return;
-      }
-      tries++;
-      setTimeout(poll, 100);
-    })();
-  }
   function init() {
     buildPreview("sisteme", ".home-systems-grid", ".system-card", 3);
+    buildPreview("features", ".home-features-grid", ".home-feat-card", 3);
     injectFeaturesSub();
     moveGrid(".home-systems-grid", "systemsPageGrid");
     moveGrid(".home-features-grid", "featuresPageGrid");
@@ -18526,7 +18527,6 @@ window.DUEL_BANKS = {"muscular":[{"text_ro":"Prin contracția unilaterală, ster
     try { if (typeof hydrateBxIcons === "function") hydrateBxIcons(); } catch (e) {}
     try { if (typeof bxRefillEmoji === "function") bxRefillEmoji(); } catch (e) {}
     try { if (typeof applyLanguage === "function" && typeof CUR_LANG !== "undefined") applyLanguage(CUR_LANG); } catch (e) {}
-    buildFeaturePreviewWhenReady();
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();
@@ -18750,4 +18750,49 @@ window.DUEL_BANKS = {"muscular":[{"text_ro":"Prin contracția unilaterală, ster
       if (fire(scope.querySelector(MAP[i][1]))) return;
     }
   });
+})();
+
+(function bxBadgeToast() {
+  var LABEL = {
+    ro: "Insignă nouă!",
+    en: "New badge!",
+    fr: "Nouveau badge !",
+    de: "Neues Abzeichen!",
+    es: "¡Nueva insignia!",
+    hu: "Új jelvény!",
+  };
+  window.showBadgeToast = function (badge) {
+    if (!badge) return;
+    var wrap = document.getElementById("bxBadgeToastWrap");
+    if (!wrap) {
+      wrap = document.createElement("div");
+      wrap.id = "bxBadgeToastWrap";
+      wrap.className = "bx-badge-toast-wrap";
+      document.body.appendChild(wrap);
+    }
+    var lg = window.CUR_LANG || "ro";
+    var title = LABEL[lg] || LABEL.ro;
+    var el = document.createElement("div");
+    el.className = "bx-badge-toast";
+    el.setAttribute("role", "status");
+    el.setAttribute("aria-live", "polite");
+    el.innerHTML =
+      '<span class="bx-badge-toast-ic" style="background:linear-gradient(135deg,' +
+      (badge.c1 || "#a78bfa") + "," + (badge.c2 || "#6d28d9") + ')">' +
+      '<span class="bx-emoji">' + (badge.icon || "🏅") + "</span></span>" +
+      '<span class="bx-badge-toast-txt">' +
+      '<span class="bx-badge-toast-label">' + title + "</span>" +
+      '<span class="bx-badge-toast-name">' + (badge.name || "") + "</span>" +
+      (badge.sub ? '<span class="bx-badge-toast-sub">' + badge.sub + "</span>" : "") +
+      "</span>";
+    wrap.appendChild(el);
+    requestAnimationFrame(function () {
+      el.classList.add("bx-badge-toast-in");
+    });
+    setTimeout(function () {
+      el.classList.remove("bx-badge-toast-in");
+      el.classList.add("bx-badge-toast-out");
+      setTimeout(function () { el.remove(); }, 500);
+    }, 5200);
+  };
 })();

@@ -11638,6 +11638,121 @@ html[data-theme="light"] .bx-rselect-opt {
   line-height: 1;
   vertical-align: -0.05em;
 }
+
+.bx-badge-toast-wrap {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 6000;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  pointer-events: none;
+}
+.bx-badge-toast {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 268px;
+  max-width: 348px;
+  padding: 14px 20px 14px 14px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(30, 27, 58, 0.97), rgba(15, 18, 36, 0.97));
+  border: 1px solid rgba(167, 139, 250, 0.38);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  color: #e2e8f0;
+  transform: translateX(120%);
+  opacity: 0;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
+  pointer-events: auto;
+  overflow: hidden;
+}
+.bx-badge-toast::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 20%, rgba(255, 255, 255, 0.12) 50%, transparent 80%);
+  transform: translateX(-120%);
+}
+.bx-badge-toast.bx-badge-toast-in {
+  transform: translateX(0);
+  opacity: 1;
+}
+.bx-badge-toast.bx-badge-toast-in::after {
+  animation: bxBadgeShine 1.1s ease 0.35s 1;
+}
+.bx-badge-toast.bx-badge-toast-out {
+  transform: translateX(120%);
+  opacity: 0;
+}
+@keyframes bxBadgeShine {
+  to {
+    transform: translateX(120%);
+  }
+}
+.bx-badge-toast-ic {
+  flex: none;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 20px rgba(109, 40, 217, 0.45);
+  animation: bxBadgePulse 2.2s ease-in-out infinite;
+}
+@keyframes bxBadgePulse {
+  0%,
+  100% {
+    box-shadow: 0 6px 20px rgba(109, 40, 217, 0.4);
+  }
+  50% {
+    box-shadow: 0 6px 30px rgba(167, 139, 250, 0.75);
+  }
+}
+.bx-badge-toast-ic .bx-emoji {
+  font-size: 28px;
+  line-height: 1;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.35));
+}
+.bx-badge-toast-txt {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.bx-badge-toast-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #c4b5fd;
+}
+.bx-badge-toast-name {
+  font-size: 16px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 0.02em;
+}
+.bx-badge-toast-sub {
+  font-size: 12px;
+  color: #94a3b8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+@media (max-width: 560px) {
+  .bx-badge-toast-wrap {
+    right: 12px;
+    bottom: 12px;
+    left: 12px;
+  }
+  .bx-badge-toast {
+    max-width: none;
+  }
+}
 @media (max-width: 768px) {
   .home-preview-grid {
     grid-template-columns: 1fr;
