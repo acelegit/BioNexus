@@ -9,6 +9,10 @@
   var sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
   window.sb = sb;
 
+  var __bxOAuthReturn =
+    /[?&]code=/.test(window.location.search) || /[#&]access_token=/.test(window.location.hash);
+  var __bxOAuthToastDone = false;
+
   var CURRENT_USER = null;
   var CURRENT_PROFILE = null;
 
@@ -68,6 +72,21 @@
     }, life);
   }
   window.showToast = showToast;
+
+  function bxWelcomeToast(user) {
+    try {
+      var md = (user && user.user_metadata) || {};
+      var nm =
+        md.username ||
+        md.full_name ||
+        md.name ||
+        (user && user.email ? user.email.split("@")[0] : "") ||
+        "BioNexus";
+      var tpl = (typeof t === "function" && t("auth.loginToast")) || "Welcome, {name}!";
+      showToast(tpl.replace("{name}", '<span class="bx-toast-name">' + escHTML(nm) + "</span>"));
+    } catch (e) {}
+  }
+  window.bxWelcomeToast = bxWelcomeToast;
 
   async function refreshSession() {
     try {
@@ -241,6 +260,10 @@
     if (res.data.user && !res.data.session) {
       err.style.color = "#6ee7b7";
       err.textContent = "Cont creat! Verifică emailul pentru confirmare, apoi conectează-te.";
+      try {
+        var tplR = (typeof t === "function" && t("auth.registerToast")) || "Cont creat! Verifică emailul.";
+        showToast(tplR);
+      } catch (e) {}
       btn.disabled = false;
       btn.textContent = orig || "Creează cont";
       setTimeout(function () {
@@ -256,6 +279,11 @@
       }
     }
     if (typeof applyUserBadge === "function") applyUserBadge();
+    try {
+      var nmR = (CURRENT_USER && CURRENT_USER.user) || u;
+      var tplW = (typeof t === "function" && t("auth.loginToast")) || "Welcome, {name}!";
+      showToast(tplW.replace("{name}", '<span class="bx-toast-name">' + escHTML(nmR) + "</span>"));
+    } catch (e) {}
     closeLogin();
     if (typeof showHome === "function") showHome();
   };
@@ -716,6 +744,13 @@
       CURRENT_PROFILE = null;
       localStorage.removeItem("bionexus_current");
       if (typeof applyUserBadge === "function") applyUserBadge();
+    }
+    if (__bxOAuthReturn && !__bxOAuthToastDone && event === "SIGNED_IN" && session && session.user) {
+      __bxOAuthToastDone = true;
+      bxWelcomeToast(session.user);
+      try {
+        if (history.replaceState) history.replaceState(null, "", window.location.pathname);
+      } catch (e) {}
     }
   });
 

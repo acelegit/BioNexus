@@ -18577,12 +18577,12 @@ window.DUEL_BANKS = {"muscular":[{"text_ro":"Prin contracția unilaterală, ster
 (function bxLabelsAndBackFix() {
   if (window.I18N && typeof window.I18N === "object") {
     var NB = {
-      ro: { "nb.addNote": "📝 Adaugă notiță", "home.features.sub": "Instrumente interactive care transformă studiul anatomiei într-o experiență modernă.", "auth.google": "Continuă cu Google" },
-      en: { "nb.addNote": "📝 Add note", "home.features.sub": "Interactive tools that turn studying anatomy into a modern experience.", "auth.google": "Continue with Google" },
-      fr: { "nb.addNote": "📝 Ajouter une note", "home.features.sub": "Des outils interactifs qui transforment l'étude de l'anatomie en une expérience moderne.", "auth.google": "Continuer avec Google" },
-      de: { "nb.addNote": "📝 Notiz hinzufügen", "home.features.sub": "Interaktive Werkzeuge, die das Anatomielernen zu einem modernen Erlebnis machen.", "auth.google": "Mit Google fortfahren" },
-      es: { "nb.addNote": "📝 Añadir nota", "home.features.sub": "Herramientas interactivas que convierten el estudio de la anatomía en una experiencia moderna.", "auth.google": "Continuar con Google" },
-      hu: { "nb.addNote": "📝 Jegyzet hozzáadása", "home.features.sub": "Interaktív eszközök, amelyek modern élménnyé teszik az anatómia tanulását.", "auth.google": "Folytatás Google-lel" },
+      ro: { "nb.addNote": "📝 Adaugă notiță", "home.features.sub": "Instrumente interactive care transformă studiul anatomiei într-o experiență modernă.", "auth.google": "Continuă cu Google", "auth.registerToast": "Cont creat! Verifică emailul pentru confirmare." },
+      en: { "nb.addNote": "📝 Add note", "home.features.sub": "Interactive tools that turn studying anatomy into a modern experience.", "auth.google": "Continue with Google", "auth.registerToast": "Account created! Check your email to confirm." },
+      fr: { "nb.addNote": "📝 Ajouter une note", "home.features.sub": "Des outils interactifs qui transforment l'étude de l'anatomie en une expérience moderne.", "auth.google": "Continuer avec Google", "auth.registerToast": "Compte créé ! Vérifie ton email pour confirmer." },
+      de: { "nb.addNote": "📝 Notiz hinzufügen", "home.features.sub": "Interaktive Werkzeuge, die das Anatomielernen zu einem modernen Erlebnis machen.", "auth.google": "Mit Google fortfahren", "auth.registerToast": "Konto erstellt! Bestätige deine E-Mail." },
+      es: { "nb.addNote": "📝 Añadir nota", "home.features.sub": "Herramientas interactivas que convierten el estudio de la anatomía en una experiencia moderna.", "auth.google": "Continuar con Google", "auth.registerToast": "¡Cuenta creada! Revisa tu correo para confirmar." },
+      hu: { "nb.addNote": "📝 Jegyzet hozzáadása", "home.features.sub": "Interaktív eszközök, amelyek modern élménnyé teszik az anatómia tanulását.", "auth.google": "Folytatás Google-lel", "auth.registerToast": "Fiók létrehozva! Erősítsd meg az e-mailedet." },
     };
     Object.keys(NB).forEach(function (c) { if (I18N[c]) Object.assign(I18N[c], NB[c]); });
   }
