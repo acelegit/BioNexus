@@ -18,7 +18,6 @@
     });
   }
 
-
   var bxSuccessAudio = null;
   function bxPlaySuccess() {
     try {

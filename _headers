@@ -6,3 +6,12 @@
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: accelerometer=(), autoplay=(), camera=(), display-capture=(), encrypted-media=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), usb=(), fullscreen=(self), browsing-topics=()
   ! Access-Control-Allow-Origin
+
+/style.css
+  Cache-Control: public, max-age=0, must-revalidate
+/script.js
+  Cache-Control: public, max-age=0, must-revalidate
+/supabase-integration.js
+  Cache-Control: public, max-age=0, must-revalidate
+/router.js
+  Cache-Control: public, max-age=0, must-revalidate
