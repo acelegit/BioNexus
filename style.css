@@ -11840,6 +11840,32 @@ html[data-theme="light"] .bx-rselect-opt {
     animation: none !important;
   }
 }
+
+#featuresPage {
+  background:
+    radial-gradient(ellipse 90% 80% at 50% 34%, transparent 55%, rgba(5, 6, 14, 0.9) 95%),
+    radial-gradient(ellipse 55% 45% at 22% -5%, rgba(79, 70, 229, 0.18), transparent 55%),
+    linear-gradient(rgba(130, 150, 190, 0.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(130, 150, 190, 0.09) 1px, transparent 1px),
+    linear-gradient(180deg, #070a14 0%, #05060e 100%);
+  background-size: auto, auto, 44px 44px, 44px 44px, auto;
+  background-position: center, center, center, center, center;
+}
+#featuresPage.active {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+#featuresPage .subpage-inner {
+  order: 1;
+  margin: auto auto 0;
+  width: 100%;
+}
+#featuresPage .subpage-back {
+  order: 2;
+  position: static;
+  margin: 26px auto auto;
+}
 @media (max-width: 768px) {
   .home-preview-grid {
     grid-template-columns: 1fr;
