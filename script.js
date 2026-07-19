@@ -1769,7 +1769,7 @@ window.enterApp = function (mode) {
     } else {
       if (typeof setQuizFadedSkeleton === "function") setQuizFadedSkeleton(false);
     }
-  }, 500);
+  }, 700);
 };
 window.exitQuizMode = function () {
   if (typeof QUIZ !== "undefined" && QUIZ.active) {
@@ -18582,17 +18582,26 @@ window.DUEL_BANKS = {"muscular":[{"text_ro":"Prin contracția unilaterală, ster
     if (!p) return;
     var s = document.getElementById("systemsPage");
     var f = document.getElementById("featuresPage");
-    if (s) s.classList.remove("active");
-    if (f) f.classList.remove("active");
+    if (s) s.classList.remove("active", "bx-closing");
+    if (f) f.classList.remove("active", "bx-closing");
+    p.classList.remove("bx-closing");
     p.classList.add("active");
     document.body.style.overflow = "hidden";
     p.scrollTop = 0;
     try { document.body.classList.remove("home-menu-open"); } catch (e) {}
   }
-  function closePage(id) {
+  function closePage(id, instant) {
     var p = document.getElementById(id);
-    if (p) p.classList.remove("active");
     document.body.style.overflow = "";
+    if (!p || !p.classList.contains("active")) return;
+    if (instant) {
+      p.classList.remove("active", "bx-closing");
+      return;
+    }
+    p.classList.add("bx-closing");
+    setTimeout(function () {
+      p.classList.remove("active", "bx-closing");
+    }, 480);
   }
   window.openSystemsPage = function () { openPage("systemsPage"); };
   window.closeSystemsPage = function () { closePage("systemsPage"); };
@@ -18602,15 +18611,15 @@ window.DUEL_BANKS = {"muscular":[{"text_ro":"Prin contracția unilaterală, ster
 
   document.addEventListener("click", function (e) {
     if (!e.target || !e.target.closest) return;
-    if (e.target.closest("#systemsPage") && e.target.closest(".system-card")) { closePage("systemsPage"); return; }
-    if (e.target.closest("#featuresPage") && e.target.closest(".home-feat-card")) { closePage("featuresPage"); }
+    if (e.target.closest("#systemsPage") && e.target.closest(".system-card")) { closePage("systemsPage", true); return; }
+    if (e.target.closest("#featuresPage") && e.target.closest(".home-feat-card")) { closePage("featuresPage", true); }
   }, true);
 
 
   if (typeof window.showHome === "function") {
     var _sh = window.showHome;
     window.showHome = function () {
-      try { closePage("systemsPage"); closePage("featuresPage"); } catch (e) {}
+      try { closePage("systemsPage", true); closePage("featuresPage", true); } catch (e) {}
       return _sh.apply(this, arguments);
     };
   }
@@ -18856,13 +18865,21 @@ window.DUEL_BANKS = {"muscular":[{"text_ro":"Prin contracția unilaterală, ster
 (function bxLiveBg() {
   function inject() {
     var home = document.getElementById("homeOverlay");
-    if (!home || home.querySelector(".bx-orbs")) return;
-    var wrap = document.createElement("div");
-    wrap.className = "bx-orbs";
-    wrap.setAttribute("aria-hidden", "true");
-    wrap.innerHTML =
-      '<span class="bx-orb bx-orb--a"></span><span class="bx-orb bx-orb--b"></span><span class="bx-orb bx-orb--c"></span>';
-    home.insertBefore(wrap, home.firstChild);
+    if (!home) return;
+    if (!home.querySelector(".bx-grid")) {
+      var grid = document.createElement("div");
+      grid.className = "bx-grid";
+      grid.setAttribute("aria-hidden", "true");
+      home.insertBefore(grid, home.firstChild);
+    }
+    if (!home.querySelector(".bx-orbs")) {
+      var wrap = document.createElement("div");
+      wrap.className = "bx-orbs";
+      wrap.setAttribute("aria-hidden", "true");
+      wrap.innerHTML =
+        '<span class="bx-orb bx-orb--a"></span><span class="bx-orb bx-orb--b"></span><span class="bx-orb bx-orb--c"></span>';
+      home.insertBefore(wrap, home.firstChild);
+    }
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", inject);
   else inject();

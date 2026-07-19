@@ -1388,8 +1388,8 @@ body.mode-quiz .quiz-end-stage {
   pointer-events: none;
   transform: scale(0.98);
   transition:
-    opacity 0.5s,
-    transform 0.5s;
+    opacity 0.65s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.65s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .home-nav {
   position: fixed;
@@ -11428,7 +11428,25 @@ html[data-theme="light"] .report-page {
     radial-gradient(ellipse at bottom left, rgba(59, 130, 246, 0.1), transparent 55%),
     linear-gradient(180deg, #0a0e1a 0%, #0d1224 100%);
   padding: 90px 22px 60px;
-  animation: reportPop 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+  animation: bxPageIn 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  transition:
+    opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+@keyframes bxPageIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.subpage.bx-closing {
+  opacity: 0;
+  transform: scale(0.985) translateY(6px);
+  pointer-events: none;
 }
 .subpage.active {
   display: block;
@@ -11865,6 +11883,25 @@ html[data-theme="light"] .bx-rselect-opt {
   order: 2;
   position: static;
   margin: 26px auto auto;
+}
+
+/* --- HOME GRID BACKGROUND (test) --- to revert: delete .bx-grid + the .bx-orbs hide rule below (orbs return) --- */
+.bx-grid {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 85% 75% at 50% 42%, transparent 55%, rgba(5, 6, 14, 0.82) 96%),
+    radial-gradient(ellipse 42% 55% at 6% 14%, rgba(79, 70, 229, 0.22), transparent 55%),
+    radial-gradient(ellipse 42% 55% at 95% 22%, rgba(124, 58, 237, 0.18), transparent 55%),
+    linear-gradient(rgba(130, 150, 190, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(130, 150, 190, 0.08) 1px, transparent 1px),
+    linear-gradient(180deg, #070a14 0%, #05060e 100%);
+  background-size: auto, auto, auto, 44px 44px, 44px 44px, auto;
+}
+.home-overlay .bx-orbs {
+  display: none;
 }
 @media (max-width: 768px) {
   .home-preview-grid {
