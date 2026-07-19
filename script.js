@@ -16113,6 +16113,34 @@ window.scrollToSection = function (id) {
       selectStruct(key, hits[0].object);
     });
 
+    var __exTap = { x: 0, y: 0, ok: false };
+    canvas.addEventListener("touchstart", function (e) {
+      if (!e.touches || e.touches.length !== 1) { __exTap.ok = false; return; }
+      __exTap.x = e.touches[0].clientX;
+      __exTap.y = e.touches[0].clientY;
+      __exTap.ok = true;
+    }, { passive: true });
+    canvas.addEventListener("touchmove", function (e) {
+      if (!__exTap.ok || !e.touches || !e.touches.length) return;
+      if (Math.abs(e.touches[0].clientX - __exTap.x) > 12 || Math.abs(e.touches[0].clientY - __exTap.y) > 12) __exTap.ok = false;
+    }, { passive: true });
+    canvas.addEventListener("touchend", function (e) {
+      if (!__exTap.ok || !S.loaded) return;
+      __exTap.ok = false;
+      var t = e.changedTouches && e.changedTouches[0];
+      if (!t) return;
+      var r = canvas.getBoundingClientRect();
+      S.mouse.x = ((t.clientX - r.left) / r.width) * 2 - 1;
+      S.mouse.y = -((t.clientY - r.top) / r.height) * 2 + 1;
+      S.__lastClickXY = { x: t.clientX, y: t.clientY };
+      S.raycaster.setFromCamera(S.mouse, S.camera);
+      var hits = S.raycaster.intersectObjects(S.meshes, false);
+      if (hits.length === 0) { clearExtraSelection(key); return; }
+      selectStruct(key, hits[0].object);
+    }, { passive: true });
+    canvas.addEventListener("touchcancel", function () { __exTap.ok = false; }, { passive: true });
+    canvas.style.touchAction = "none";
+
     function onResize() {
       var w = viewerEl.clientWidth || 1,
         h = viewerEl.clientHeight || 1;

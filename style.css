@@ -11903,6 +11903,156 @@ html[data-theme="light"] .bx-rselect-opt {
 .home-overlay .bx-orbs {
   display: none;
 }
+
+/* --- LIGHT MODE overrides for recent components --- */
+html[data-theme="light"] .bx-grid {
+  background:
+    radial-gradient(ellipse 85% 75% at 50% 42%, transparent 55%, rgba(226, 232, 240, 0.55) 96%),
+    radial-gradient(ellipse 42% 55% at 6% 14%, rgba(99, 102, 241, 0.1), transparent 55%),
+    radial-gradient(ellipse 42% 55% at 95% 22%, rgba(124, 58, 237, 0.08), transparent 55%),
+    linear-gradient(rgba(100, 116, 139, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(100, 116, 139, 0.07) 1px, transparent 1px),
+    linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+  background-size: auto, auto, auto, 44px 44px, 44px 44px, auto;
+}
+html[data-theme="light"] #featuresPage {
+  background:
+    radial-gradient(ellipse 90% 80% at 50% 34%, transparent 55%, rgba(226, 232, 240, 0.6) 95%),
+    radial-gradient(ellipse 55% 45% at 22% -5%, rgba(99, 102, 241, 0.1), transparent 55%),
+    linear-gradient(rgba(100, 116, 139, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(100, 116, 139, 0.07) 1px, transparent 1px),
+    linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+  background-size: auto, auto, 44px 44px, 44px 44px, auto;
+}
+html[data-theme="light"] .bx-badge-toast {
+  background: linear-gradient(135deg, #ffffff, #f8fafc);
+  border-color: rgba(124, 58, 237, 0.28);
+  box-shadow:
+    0 18px 50px rgba(15, 23, 42, 0.16),
+    0 0 0 1px rgba(15, 23, 42, 0.03) inset;
+  color: #1e293b;
+}
+html[data-theme="light"] .bx-badge-toast-label {
+  color: #6d28d9;
+}
+html[data-theme="light"] .bx-badge-toast-name {
+  color: #0f172a;
+}
+html[data-theme="light"] .bx-badge-toast-sub {
+  color: #475569;
+}
+html[data-theme="light"] .bx-badge-toast::after {
+  background: linear-gradient(120deg, transparent 20%, rgba(99, 102, 241, 0.1) 50%, transparent 80%);
+}
+html[data-theme="light"] .bx-rselect-opt:hover {
+  background: rgba(99, 102, 241, 0.12);
+  color: #4f46e5;
+}
+
+/* --- MOBILE UI FIXES --- */
+/* (E) systems preview: centered inset cluster + tidy subtitle */
+.home-preview-grid {
+  max-width: 1080px;
+  justify-content: center;
+}
+.home-systems-sub {
+  margin: 0 auto 30px !important;
+}
+/* (C) profile badge count on one line (all sizes) */
+.profile-badges-count {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.profile-badges-count b {
+  white-space: nowrap;
+}
+@media (max-width: 768px) {
+  /* (A) hero stats aligned: uniform number/icon box height */
+  .home-hero-stats {
+    align-items: start !important;
+    justify-items: center;
+  }
+  .home-hero-stats > div {
+    min-height: 0 !important;
+    align-items: center !important;
+    gap: 6px;
+    text-align: center;
+  }
+  .home-hero-stats b,
+  .home-stat-verified b {
+    height: 30px !important;
+    min-height: 30px !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+  }
+  .home-hero-stats .verified-badge {
+    width: 26px !important;
+    height: 26px !important;
+  }
+  .home-hero-stats > div > span {
+    min-height: 2.4em;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+  }
+}
+@media (max-width: 900px) {
+  /* (C) profile top: no back/tabs overlap */
+  .profile-back {
+    top: 10px !important;
+    left: 12px !important;
+    padding: 7px 12px !important;
+    font-size: 12px !important;
+  }
+  .profile-tabs-top {
+    left: auto !important;
+    right: 12px !important;
+    transform: none !important;
+  }
+  /* (B) hamburger drawer: full-width rows, lang grid, user card */
+  .home-nav-collapse .home-nav-center a {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 50px;
+    padding: 13px 16px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    transition: background 0.15s ease;
+  }
+  .home-nav-collapse .home-nav-center a:hover,
+  .home-nav-collapse .home-nav-center a:active {
+    background: rgba(99, 102, 241, 0.14);
+  }
+  .home-nav-collapse .lang-switch {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    width: 100%;
+  }
+  .home-nav-collapse .lang-btn {
+    min-height: 44px !important;
+    width: auto !important;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 13px;
+  }
+  .home-nav-collapse .user-menu {
+    width: 100%;
+  }
+  .home-nav-collapse .user-menu-trigger {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    background: rgba(99, 102, 241, 0.1);
+    border: 1px solid rgba(99, 102, 241, 0.25);
+    border-radius: 14px;
+  }
+}
 @media (max-width: 768px) {
   .home-preview-grid {
     grid-template-columns: 1fr;
