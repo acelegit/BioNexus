@@ -18912,3 +18912,88 @@ window.DUEL_BANKS = {"muscular":[{"text_ro":"Prin contracția unilaterală, ster
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", inject);
   else inject();
 })();
+
+(function bxBadgeOverhaul() {
+  if (typeof window.ACHIEVEMENTS === "undefined" || !window.ACHIEVEMENTS) return;
+  var A = window.ACHIEVEMENTS;
+
+  var SYS = [
+    { k: "osos", label: "Sistem Osos", icon: "🦴", ic: "bone", c1: "#e2e8f0", c2: "#64748b" },
+    { k: "muscular", label: "Sistem Muscular", icon: "💪", ic: "muscle", c1: "#fb7185", c2: "#be123c" },
+    { k: "nervous", label: "Sistem Nervos", icon: "🧠", ic: "brain", c1: "#c4b5fd", c2: "#6d28d9" },
+    { k: "cardio", label: "Sistem Cardiovascular", icon: "❤️", ic: "heart", c1: "#f87171", c2: "#b91c1c" },
+    { k: "respiratory", label: "Sistem Respirator", icon: "🫁", ic: "lungs", c1: "#7dd3fc", c2: "#0369a1" },
+    { k: "digestive", label: "Sistem Digestiv", icon: "🥘", ic: "stomach", c1: "#fbbf24", c2: "#b45309" },
+  ];
+  var MODES = [
+    { k: "visual", short: "IDENTIFICĂ", full: "Identifică structura" },
+    { k: "knowledge", short: "CUNOȘTINȚE", full: "Test de cunoștințe" },
+    { k: "duel", short: "AI DUEL", full: "Duel AI" },
+  ];
+
+  var STALE = ["anatomist", "chirurg", "maestru", "legenda", "obs_easy", "obs_med", "obs_hard", "know_easy", "know_med", "know_hard", "duel_easy", "duel_med", "duel_hard"];
+  for (var i = A.length - 1; i >= 0; i--) if (STALE.indexOf(A[i].id) >= 0) A.splice(i, 1);
+
+  function relabel(id, name, sub) {
+    for (var j = 0; j < A.length; j++) if (A[j].id === id) { if (name) A[j].name = name; if (sub) A[j].sub = sub; return; }
+  }
+  relabel("explorator", "EXPLORATOR OSOS", "50 oase descoperite — Sistem Osos");
+  relabel("sarcomer", "SARCOMER", "30 mușchi descoperiți — Sistem Muscular");
+  relabel("myolog", "MIOLOG", "Primul quiz — Sistem Muscular");
+  relabel("sculptor", "SCULPTOR", "Quiz Mediu perfect — Sistem Muscular");
+  relabel("kinetician", "KINETICIAN", "Quiz Greu — Sistem Muscular");
+
+  var have = {};
+  A.forEach(function (a) { have[a.id] = true; });
+  SYS.forEach(function (s) {
+    MODES.forEach(function (m) {
+      var id = "q_" + s.k + "_" + m.k;
+      if (have[id]) return;
+      A.push({ id: id, name: m.short, sub: m.full + " · " + s.label, icon: s.icon, ic: s.ic, c1: s.c1, c2: s.c2, lvl: 2, unlocked: false });
+    });
+  });
+
+  if (typeof window.trackEvent === "function") {
+    var oTE = window.trackEvent;
+    window.trackEvent = function (type, payload) {
+      var res = oTE.apply(this, arguments);
+      try {
+        if (type === "quizFinish" && typeof getProgress === "function") {
+          var p = getProgress();
+          var sys = (window.QUIZ && QUIZ.system) || "osos";
+          var mode = (window.QUIZ && QUIZ.mode) || "visual";
+          var diff = (payload && payload.diff) || (window.QUIZ && QUIZ.difficulty) || "easy";
+          var score = payload && payload.score != null ? payload.score : window.QUIZ && QUIZ.score;
+          var total = payload && payload.total != null ? payload.total : window.QUIZ && QUIZ.total;
+          p.quizStats = p.quizStats || {};
+          p.quizStats[sys] = p.quizStats[sys] || {};
+          p.quizStats[sys][mode] = p.quizStats[sys][mode] || { plays: { easy: 0, medium: 0, hard: 0 }, perfect: { easy: 0, medium: 0, hard: 0 } };
+          var st = p.quizStats[sys][mode];
+          if (st.plays[diff] != null) st.plays[diff]++;
+          if (total && score === total && st.perfect[diff] != null) st.perfect[diff]++;
+          if (typeof saveProgress === "function") saveProgress(p);
+        }
+      } catch (e) {}
+      return res;
+    };
+  }
+
+  if (typeof window.unlockedAchievements === "function") {
+    var oUA = window.unlockedAchievements;
+    window.unlockedAchievements = function () {
+      var map = oUA.apply(this, arguments) || {};
+      try {
+        var p = typeof getProgress === "function" ? getProgress() : {};
+        var qs = p.quizStats || {};
+        SYS.forEach(function (s) {
+          MODES.forEach(function (m) {
+            var st = (qs[s.k] || {})[m.k];
+            var played = st && st.plays && st.plays.easy + st.plays.medium + st.plays.hard > 0;
+            map["q_" + s.k + "_" + m.k] = !!played;
+          });
+        });
+      } catch (e) {}
+      return map;
+    };
+  }
+})();
