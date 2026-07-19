@@ -6103,6 +6103,10 @@ window.renderBadges = function () {
     c.style.setProperty("--badge-glow", a.c1);
     c.style.setProperty("--badge-c1", a.c1);
     c.style.setProperty("--badge-c2", a.c2);
+    var tryHtml =
+      !on && bxBadgeActionable(a.id)
+        ? '<button class="badge-try" type="button">' + bxTryLabel() + "</button>"
+        : "";
     c.innerHTML =
       '<div class="badge-icon">' +
       bxBadgeIcon(a) +
@@ -6112,11 +6116,63 @@ window.renderBadges = function () {
       a.sub +
       '</div><div class="badge-lvl">Lvl ' +
       a.lvl +
-      "</div></div>";
+      "</div></div>" +
+      tryHtml;
+    if (tryHtml) {
+      var btn = c.querySelector(".badge-try");
+      if (btn)
+        btn.addEventListener("click", function (e) {
+          e.stopPropagation();
+          bxTryBadge(a.id);
+        });
+    }
     grid.appendChild(c);
   });
   var cEl = document.getElementById("profileBadgesAchieved");
   if (cEl) cEl.textContent = achieved + " / " + ACHIEVEMENTS.length;
+};
+
+function bxTryLabel() {
+  var en = typeof CUR_LANG !== "undefined" && CUR_LANG === "en";
+  return en ? "Try it &rarr;" : "Încearcă &rarr;";
+}
+function bxBadgeAction(id) {
+  var m = id.match(/^q_([a-z]+)_([a-z]+)$/);
+  if (m) return { fn: "quiz", sys: m[1], mode: m[2] };
+  var MAP = {
+    pionier: { fn: "quiz", sys: "osos", mode: "visual" },
+    explorator: { fn: "app", arg: "skeleton" },
+    colectionar: { fn: "app", arg: "skeleton" },
+    sarcomer: { fn: "app", arg: "muscular" },
+    myolog: { fn: "quiz", sys: "muscular", mode: "visual" },
+    sculptor: { fn: "quiz", sys: "muscular", mode: "visual", diff: "medium" },
+    kinetician: { fn: "quiz", sys: "muscular", mode: "visual", diff: "hard" },
+    mentor: { fn: "ai" },
+    curios: { fn: "ai" },
+    veteran: { fn: "app", arg: "skeleton" },
+    constant: { fn: "app", arg: "skeleton" },
+  };
+  return MAP[id] || null;
+}
+function bxBadgeActionable(id) {
+  return !!bxBadgeAction(id);
+}
+window.bxTryBadge = function (id) {
+  var act = bxBadgeAction(id);
+  if (!act) return;
+  if (typeof closeProfile === "function") closeProfile();
+  setTimeout(function () {
+    try {
+      if (act.fn === "quiz" && typeof bxOpenDailyQuiz === "function") {
+        bxOpenDailyQuiz(act.sys, act.mode, act.diff);
+      } else if (act.fn === "app" && typeof enterApp === "function") {
+        enterApp(act.arg);
+      } else if (act.fn === "ai") {
+        if (typeof openAIFromFeature === "function") openAIFromFeature();
+        else if (typeof toggleChatbox === "function") toggleChatbox();
+      }
+    } catch (e) {}
+  }, 280);
 };
 
 (function () {
@@ -16488,6 +16544,35 @@ window.scrollToSection = function (id) {
     step();
   }
 
+  function focusOnBox(key, box) {
+    var S = STATES[key];
+    if (!S || !box || box.isEmpty()) return;
+    var c = new THREE.Vector3();
+    box.getCenter(c);
+    var s = new THREE.Vector3();
+    box.getSize(s);
+    var maxDim = Math.max(s.x, s.y, s.z, 0.01);
+    var fov = ((S.camera.fov || 45) * Math.PI) / 180;
+    var dist = maxDim / 2 / Math.tan(fov / 2);
+    if ((S.camera.aspect || 1) < 1) dist = dist / S.camera.aspect;
+    dist = Math.max(dist * 1.7, 0.35);
+    var endPos = new THREE.Vector3(c.x + dist * 0.15, c.y + dist * 0.1, c.z + dist);
+    var startPos = S.camera.position.clone(),
+      startTgt = S.controls.target.clone();
+    var t0 = performance.now(),
+      dur = 650;
+    function step() {
+      var t = (performance.now() - t0) / dur;
+      if (t > 1) t = 1;
+      var e = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+      S.camera.position.lerpVectors(startPos, endPos, e);
+      S.controls.target.lerpVectors(startTgt, c, e);
+      S.controls.update();
+      if (t < 1) requestAnimationFrame(step);
+    }
+    step();
+  }
+
   function buildExtraList(key) {
     var S = STATES[key];
     if (!S) return;
@@ -16649,6 +16734,8 @@ window.scrollToSection = function (id) {
       var selIn0 = groupKey === "all" || (sg0 && sg0.key === groupKey);
       if (!selIn0) clearExtraSelection(key);
     }
+    var gBox = new THREE.Box3();
+    var gAny = false;
     S.meshes.forEach(function (m) {
       if (!m.material) return;
       if (m.userData._navBaseOpacity === undefined) {
@@ -16665,6 +16752,13 @@ window.scrollToSection = function (id) {
           m.material.transparent = m.userData._navBaseTransparent;
           m.material.depthWrite = true;
         }
+        if (groupKey !== "all") {
+          var mb = new THREE.Box3().setFromObject(m);
+          if (!mb.isEmpty()) {
+            if (!gAny) { gBox.copy(mb); gAny = true; }
+            else gBox.union(mb);
+          }
+        }
       } else {
         m.material.transparent = true;
         m.material.opacity = 0.08;
@@ -16672,6 +16766,11 @@ window.scrollToSection = function (id) {
       }
       if (window.__bxSetPickable) window.__bxSetPickable(m, inGroup);
     });
+    if (groupKey === "all") {
+      if (window.__extraResetCam) window.__extraResetCam(key);
+    } else if (gAny) {
+      focusOnBox(key, gBox);
+    }
     var listEl = document.getElementById(ids.list);
     if (listEl) {
       listEl.querySelectorAll(".bone-group").forEach(function (gEl) {

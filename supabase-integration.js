@@ -434,9 +434,24 @@
     await refreshSession();
   };
 
+  function bxLocalProgKey(user) {
+    var u = user || (CURRENT_USER && CURRENT_USER.user) || null;
+    if (!u) {
+      try {
+        var cu = typeof getCurrentUser === "function" ? getCurrentUser() : null;
+        if (cu && cu.user) u = cu.user;
+      } catch (e) {}
+    }
+    return u ? "bionexus_progress_" + u : null;
+  }
   window.getProgress = function (user) {
-    if (!CURRENT_PROFILE) return {};
-    return {
+    var local = {};
+    try {
+      var k = bxLocalProgKey(user);
+      if (k) local = JSON.parse(localStorage.getItem(k) || "{}") || {};
+    } catch (e) {}
+    if (!CURRENT_PROFILE) return local;
+    var cloud = {
       bonesViewed: CURRENT_PROFILE.bones_viewed || [],
       sectionsVisited: CURRENT_PROFILE.sections_visited || [],
       chatbotUses: CURRENT_PROFILE.chatbot_uses || 0,
@@ -448,8 +463,13 @@
         ? new Date(CURRENT_PROFILE.created_at).getTime()
         : Date.now(),
     };
+    return Object.assign({}, local, cloud);
   };
   window.saveProgress = async function (p, user) {
+    try {
+      var k = bxLocalProgKey(user);
+      if (k) localStorage.setItem(k, JSON.stringify(p));
+    } catch (e) {}
     if (!CURRENT_USER) return;
     await sb
       .from("profiles")

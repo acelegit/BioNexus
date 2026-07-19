@@ -1635,8 +1635,8 @@ body.mode-quiz .quiz-end-stage {
   grid-template-columns: repeat(4, 1fr);
   gap: 24px;
   max-width: 560px;
-  padding-top: 32px;
-  border-top: 1px solid rgba(99, 102, 241, 0.15);
+  padding-top: 18px;
+  border-top: none;
 }
 .home-hero-stats div {
   display: flex;
@@ -4612,7 +4612,8 @@ html[data-theme="light"] .profile-placeholder {
   width: 3px;
   background: linear-gradient(180deg, var(--badge-glow, #6366f1), transparent);
 }
-.badge-card.locked {
+.badge-card.locked .badge-icon,
+.badge-card.locked .badge-info {
   opacity: 0.4;
   filter: grayscale(0.8);
 }
@@ -4660,6 +4661,30 @@ html[data-theme="light"] .profile-placeholder {
 }
 .badge-card.locked .badge-name {
   color: var(--t3);
+}
+.badge-try {
+  flex-shrink: 0;
+  align-self: center;
+  border: none;
+  cursor: pointer;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--badge-c1, #7c3aed), var(--badge-c2, #6366f1));
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+  transition: 0.18s;
+  white-space: nowrap;
+}
+.badge-try:hover {
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 8px 22px rgba(99, 102, 241, 0.5);
+}
+.badge-try:active {
+  transform: translateY(0) scale(0.98);
 }
 
 .settings-block {
@@ -12052,6 +12077,41 @@ html[data-theme="light"] .bx-rselect-opt:hover {
     border: 1px solid rgba(99, 102, 241, 0.25);
     border-radius: 14px;
   }
+}
+
+/* (#5) prominent "Vezi toate ..." teaser button */
+.subpage-teaser-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  width: fit-content;
+  margin: 24px auto 0;
+  padding: 14px 32px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #7c3aed, #6366f1);
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(124, 58, 237, 0.45);
+  animation: bxTeaserPulse 2.4s ease-in-out infinite;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, filter 0.15s ease;
+}
+.subpage-teaser-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 42px rgba(124, 58, 237, 0.62);
+  filter: brightness(1.08);
+}
+@keyframes bxTeaserPulse {
+  0%, 100% { box-shadow: 0 10px 30px rgba(124, 58, 237, 0.4); }
+  50% { box-shadow: 0 12px 40px rgba(124, 58, 237, 0.72); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .subpage-teaser-btn { animation: none; }
 }
 @media (max-width: 768px) {
   .home-preview-grid {
