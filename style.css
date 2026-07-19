@@ -11783,6 +11783,63 @@ html[data-theme="light"] .bx-rselect-opt {
   flex: none;
   display: block;
 }
+
+.bx-orbs {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: -1;
+}
+.bx-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  mix-blend-mode: screen;
+  will-change: transform, opacity;
+}
+.bx-orb--a {
+  top: -320px;
+  left: -280px;
+  width: 720px;
+  height: 720px;
+  background: radial-gradient(circle at 30% 30%, rgba(139, 92, 246, 0.5), rgba(124, 58, 237, 0.16), transparent 70%);
+  animation: bxDriftA 26s ease-in-out infinite;
+}
+.bx-orb--b {
+  bottom: -300px;
+  right: -260px;
+  width: 640px;
+  height: 640px;
+  background: radial-gradient(circle at 60% 40%, rgba(79, 70, 229, 0.42), rgba(37, 99, 235, 0.14), transparent 70%);
+  animation: bxDriftB 32s ease-in-out infinite;
+}
+.bx-orb--c {
+  top: 24%;
+  right: 10%;
+  width: 480px;
+  height: 480px;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.26), transparent 70%);
+  filter: blur(100px);
+  animation: bxBreathe 20s ease-in-out infinite;
+}
+@keyframes bxDriftA {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(70px, 50px, 0) scale(1.08); }
+}
+@keyframes bxDriftB {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(-60px, -40px, 0) scale(1.12); }
+}
+@keyframes bxBreathe {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(1.15); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bx-orb {
+    animation: none !important;
+  }
+}
 @media (max-width: 768px) {
   .home-preview-grid {
     grid-template-columns: 1fr;

@@ -1512,6 +1512,7 @@ function switchSection(sId) {
     rstMesh(m);
     m.material.transparent = false;
     m.material.opacity = 1;
+    if (window.__bxSetPickable) window.__bxSetPickable(m, true);
   });
   if (!isS && sId !== "all" && skeletonModel) {
     modelMeshes.forEach(function (m) {
@@ -1548,6 +1549,7 @@ function switchSection(sId) {
       }
       m.material.transparent = true;
       m.material.opacity = ok ? 1 : 0.04;
+      if (window.__bxSetPickable) window.__bxSetPickable(m, ok);
     });
   }
   bnoOverlay.classList.remove("visible");
@@ -12484,6 +12486,7 @@ window.scrollToSection = function (id) {
       var grp = window.__muscleGroupForMesh ? window.__muscleGroupForMesh(m.name) : null;
       var inSection = !target || grp === target;
       m.visible = true;
+      if (window.__bxSetPickable) window.__bxSetPickable(m, inSection);
       if (inSection) {
         m.material.transparent = false;
         m.material.opacity = 1;
@@ -12907,6 +12910,8 @@ window.scrollToSection = function (id) {
     if (!q) return;
     var qNum = document.getElementById("qNum");
     if (qNum) qNum.textContent = QUIZ.currentQ + 1;
+    var qTot = document.getElementById("qTotal");
+    if (qTot) qTot.textContent = QUIZ.total;
     var qScore = document.getElementById("qScore");
     if (qScore) qScore.textContent = QUIZ.score;
     var qProgFill = document.getElementById("qProgFill");
@@ -13223,9 +13228,23 @@ window.scrollToSection = function (id) {
         if (typeof window.__muResize === "function") window.__muResize();
       }, 200);
     } else if (QUIZ.system === "muscular" && QUIZ.mode === "knowledge") {
-      document.body.classList.add("mode-quiz");
-      document.body.classList.remove("qmode-visual");
+      document.body.classList.remove("mode-skeleton");
+      document.body.classList.add("mode-muscular", "mode-quiz");
       document.body.classList.add("qmode-knowledge");
+      document.body.classList.remove("qmode-visual", "qmode-duel");
+      var appBonesK = document.querySelector(".app:not(.app-muscular)");
+      if (appBonesK) appBonesK.style.display = "none";
+      var appMuK = document.getElementById("appMuscular");
+      if (appMuK) appMuK.style.display = "flex";
+      var quizPanelMuK = document.getElementById("quizPanel");
+      if (quizPanelMuK && appMuK && !appMuK.contains(quizPanelMuK)) {
+        var muViewerK = document.getElementById("mu-viewer");
+        if (muViewerK) muViewerK.appendChild(quizPanelMuK);
+      }
+      if (typeof window.__muInit === "function") window.__muInit();
+      setTimeout(function () {
+        if (typeof window.__muResize === "function") window.__muResize();
+      }, 200);
     }
     return origStart.apply(this, arguments);
   };
@@ -16597,11 +16616,34 @@ window.scrollToSection = function (id) {
     if (!S) return;
     var ids = S.cfg.ids || {};
     S._navGroup = groupKey;
+    if (S.selected) {
+      var sg0 = S.selected.userData._grp;
+      var selIn0 = groupKey === "all" || (sg0 && sg0.key === groupKey);
+      if (!selIn0) clearExtraSelection(key);
+    }
     S.meshes.forEach(function (m) {
+      if (!m.material) return;
+      if (m.userData._navBaseOpacity === undefined) {
+        m.userData._navBaseOpacity = m.material.opacity != null ? m.material.opacity : 1;
+        m.userData._navBaseTransparent = !!m.material.transparent;
+      }
       var g = m.userData._grp;
-      m.visible = groupKey === "all" || (g && g.key === groupKey);
+      var inGroup = groupKey === "all" || (g && g.key === groupKey);
+      var isSel = S.selected === m;
+      m.visible = true;
+      if (inGroup) {
+        if (!isSel) {
+          m.material.opacity = m.userData._navBaseOpacity;
+          m.material.transparent = m.userData._navBaseTransparent;
+          m.material.depthWrite = true;
+        }
+      } else {
+        m.material.transparent = true;
+        m.material.opacity = 0.08;
+        m.material.depthWrite = false;
+      }
+      if (window.__bxSetPickable) window.__bxSetPickable(m, inGroup);
     });
-    if (S.selected && S.selected.visible === false) clearExtraSelection(key);
     var listEl = document.getElementById(ids.list);
     if (listEl) {
       listEl.querySelectorAll(".bone-group").forEach(function (gEl) {
@@ -18800,4 +18842,28 @@ window.DUEL_BANKS = {"muscular":[{"text_ro":"Prin contracția unilaterală, ster
       setTimeout(function () { el.remove(); }, 500);
     }, 5200);
   };
+})();
+
+(function bxPickableHelper() {
+  function noRaycast() {}
+  window.__bxSetPickable = function (mesh, on) {
+    if (!mesh) return;
+    if (!mesh.userData.__origRaycast) mesh.userData.__origRaycast = mesh.raycast;
+    mesh.raycast = on ? mesh.userData.__origRaycast : noRaycast;
+  };
+})();
+
+(function bxLiveBg() {
+  function inject() {
+    var home = document.getElementById("homeOverlay");
+    if (!home || home.querySelector(".bx-orbs")) return;
+    var wrap = document.createElement("div");
+    wrap.className = "bx-orbs";
+    wrap.setAttribute("aria-hidden", "true");
+    wrap.innerHTML =
+      '<span class="bx-orb bx-orb--a"></span><span class="bx-orb bx-orb--b"></span><span class="bx-orb bx-orb--c"></span>';
+    home.insertBefore(wrap, home.firstChild);
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", inject);
+  else inject();
 })();
