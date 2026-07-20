@@ -60,7 +60,7 @@
       href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="style.css?v=19" />
+    <link rel="stylesheet" href="style.css?v=23" />
     <script
       src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.7"
       integrity="sha384-BmlQlKlDvXvKoxkn5OQuUo/aJQCTXeB+Kls6EccBmG4Kf8AXvp89RtO9MtPxP/r5"
@@ -365,15 +365,15 @@
           /></span>
           <span class="home-brand-text">BioNexus</span>
         </div>
-        <button class="home-hamburger" onclick="toggleHomeMenu()" aria-label="Meniu" aria-expanded="false">
-          <span></span><span></span><span></span>
-        </button>
-        <div class="home-nav-collapse" id="homeNavCollapse">
-          <div class="home-nav-center">
+        <div class="home-nav-center">
           <a href="#" onclick="openSystemsPage();return false;" data-i18n="home.nav.systems">Sisteme</a>
           <a href="#" onclick="openFeaturesPage();return false;" data-i18n="home.nav.features">Funcționalități</a>
           <a href="#invata" data-i18n="home.nav.learn">Învață</a>
         </div>
+        <button class="home-hamburger" onclick="toggleHomeMenu()" aria-label="Meniu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+        <div class="home-nav-collapse" id="homeNavCollapse">
         <div class="home-nav-right">
           <div class="lang-switch" id="langSwitchHome" title="Schimbă limba">
             <button class="lang-btn active" data-lang="ro">RO</button>
@@ -447,7 +447,7 @@
               <b><span class="verified-badge" title="Site educațional verificat">&#10003;</span></b
               ><span data-i18n="home.stats.verified">Site educațional · Verified</span>
             </div>
-            <div><b>6</b><span data-i18n="home.stats.systems">Sisteme planificate</span></div>
+            <div><b>6</b><span data-i18n="home.stats.systems">Sisteme disponibile</span></div>
             <div><b>50+</b><span data-i18n="home.stats.questions">Întrebări quiz</span></div>
             <div><b>AI</b><span data-i18n="home.stats.assistant">Asistent biologic</span></div>
           </div>
@@ -536,7 +536,7 @@
             <div class="system-icon system-icon-sys" data-bxsys="osos"></div>
             <h3 data-i18n="home.sys.osos.t">Sistem Osos</h3>
             <p data-i18n="home.sys.osos.d">
-              206 oase modelate 3D, cap · trunchi · membre, quiz interactiv.
+              Oase modelate 3D, cap · trunchi · membre, quiz interactiv.
             </p>
             <div class="system-card-foot">
               <span class="system-badge badge-ready" data-i18n="home.sys.badge.ready"
@@ -1629,7 +1629,7 @@
                   <div class="quiz-mode-info">
                     <div class="quiz-mode-title" data-i18n="quiz.sys.osos.t">Sistem Osos</div>
                     <div class="quiz-mode-sub" data-i18n="quiz.sys.osos.d">
-                      206 oase pe cap, trunchi, membre. Întrebări vizuale și de cunoștințe +
+                      Oase pe cap, trunchi, membre. Întrebări vizuale și de cunoștințe +
                       manualele Stefaneț (Greu).
                     </div>
                   </div>
@@ -1641,7 +1641,7 @@
                       Sistem Muscular
                     </div>
                     <div class="quiz-mode-sub" data-i18n="quiz.sys.muscular.d">
-                      350+ mușchi striați cu denumiri RO/latină, origini, inserții și acțiuni.
+                      Mușchi striați cu denumiri RO/latină, origini, inserții și acțiuni.
                     </div>
                   </div>
                 </button>
@@ -2435,26 +2435,63 @@
       </aside>
     </div>
 
-    <div class="admin-modal" id="adminModal" style="display: none">
-      <div class="admin-card">
-        <button class="admin-close" onclick="closeAdmin()">&times;</button>
-        <h2 data-i18n="admin.title">Mod Administrator — Editor de Conținut</h2>
-        <p class="admin-sub" data-i18n="admin.sub">
-          Editează conținutul întregului site — oase, mușchi, structurile sistemelor nervos,
-          cardiovascular, respirator și digestiv, precum și prompt-ul asistentului AI. Modificările
-          se salvează local și pot fi exportate.
-        </p>
-        <div class="admin-auth" id="adminAuth">
+    <div class="admin-page" id="adminModal" style="display: none">
+      <div class="admin-page-orbs" aria-hidden="true">
+        <span class="admin-orb admin-orb-a"></span>
+        <span class="admin-orb admin-orb-b"></span>
+      </div>
+      <button class="admin-close" onclick="closeAdmin()" title="Închide">&times;</button>
+
+      <div class="admin-auth" id="adminAuth">
+        <div class="admin-login-card">
+          <div class="admin-login-badge" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="4.5" y="10.5" width="15" height="10" rx="2.5" />
+              <path d="M8 10.5V7a4 4 0 0 1 8 0v3.5" />
+              <circle cx="12" cy="15.4" r="1.3" />
+            </svg>
+          </div>
+          <div class="admin-login-brand">BioNexus <span>Admin</span></div>
+          <h2 class="admin-login-title">Panou de administrare</h2>
+          <p class="admin-login-sub" data-i18n="admin.sub">
+            Editează conținutul întregului site — oase, mușchi, structurile sistemelor și prompt-ul
+            asistentului AI. Acces restricționat.
+          </p>
           <label data-i18n="admin.pass">Parolă administrator</label>
-          <input type="password" id="adminPass" placeholder="••••••••" />
-          <button onclick="adminLogin()" data-i18n="admin.login">Autentificare</button>
+          <input
+            type="password"
+            id="adminPass"
+            placeholder="••••••••"
+            onkeydown="if(event.key==='Enter')adminLogin()"
+          />
+          <button class="admin-login-btn" onclick="adminLogin()" data-i18n="admin.login">
+            Autentificare
+          </button>
           <div class="admin-err" id="adminErr"></div>
         </div>
-        <div class="admin-editor" id="adminEditor" style="display: none">
+      </div>
+
+      <div class="admin-editor" id="adminEditor" style="display: none">
+        <div class="admin-editor-head">
+          <div class="admin-editor-head-ic" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="4.5" y="10.5" width="15" height="10" rx="2.5" />
+              <path d="M8 10.5V7a4 4 0 0 1 8 0v3.5" />
+            </svg>
+          </div>
+          <div class="admin-editor-head-txt">
+            <h2 data-i18n="admin.title">Panou de administrare</h2>
+            <p class="admin-sub" data-i18n="admin.sub">
+              Editează conținutul întregului site — oase, mușchi, structurile sistemelor și
+              prompt-ul asistentului AI. Modificările se salvează local și pot fi exportate.
+            </p>
+          </div>
+        </div>
+        <div class="admin-editor-body">
           <div class="admin-bone-pick">
             <label data-i18n="admin.pickSys">Sistem / secțiune:</label>
             <select id="adminSysSel"></select>
-          </div> 
+          </div>
           <div class="admin-bone-pick" id="adminStructRow">
             <label data-i18n="admin.pickStruct">Structură:</label>
             <select id="adminStructSel"></select>
@@ -2475,7 +2512,7 @@
                 width: 100%;
                 font-family: &quot;SF Mono&quot;, Consolas, monospace;
                 font-size: 12px;
-                line-height: 1.5;     
+                line-height: 1.5;
               "
             ></textarea>
             <div style="font-size: 11px; color: #64748b; margin-top: 4px">
@@ -2486,7 +2523,7 @@
             <button onclick="adminSave()" data-i18n="admin.save">Salvează modificările</button>
             <button onclick="adminExport()" data-i18n="admin.export">Exportă JSON</button>
             <button onclick="adminReset()" class="admin-danger" data-i18n="admin.reset">
-              Resetează la valori implicite
+              Resetează la valori implicite  
             </button>
           </div>
         </div>
@@ -3004,10 +3041,10 @@
       <span class="msf-ic">🔍</span><span data-i18n="mob.structures">Structuri</span>
     </button>
 
-    <script src="i18n-content.js?v=19"></script>
-    <script src="script.js?v=19"></script>
-    <script src="supabase-integration.js?v=19"></script>
-    <script src="router.js?v=19"></script>
+    <script src="i18n-content.js?v=23"></script>
+    <script src="script.js?v=23"></script>
+    <script src="supabase-integration.js?v=23"></script>
+    <script src="router.js?v=23"></script>
   </body>
 </html>
 

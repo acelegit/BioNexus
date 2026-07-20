@@ -27,7 +27,7 @@
     try {
       if (!bxSuccessAudio) {
         bxSuccessAudio = new Audio("/sounds/success.mp3");
-        bxSuccessAudio.volume = 0.5;
+        bxSuccessAudio.volume = 0.25;
       }
       bxSuccessAudio.currentTime = 0;
       var pr = bxSuccessAudio.play();
