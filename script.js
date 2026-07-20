@@ -3941,7 +3941,7 @@ function loadQuizQuestion() {
     var shuffled = shuffle(q.options);
     var letters = ["A", "B", "C", "D"];
     shuffled.forEach(function (boneId, idx) {
-      var bd = boneData[boneId];
+      var bd = typeof window.localizedBone === "function" ? window.localizedBone(boneId) : boneData[boneId];
       var btn = document.createElement("button");
       btn.className = "quiz-opt";
       btn.dataset.bone = boneId;
@@ -3961,17 +3961,34 @@ function loadQuizQuestion() {
   if (hintEl) {
     if (q.hint) {
       hintEl.innerHTML =
-        'Cum se numeste osul evidentiat in <span style="color:#00aaff">albastru</span>?<br><small style="display:block;margin-top:6px;font-weight:400;color:#94a3b8;font-style:italic">Indiciu: ' +
+        tUI("qVisualBone") +
+        '<br><small style="display:block;margin-top:6px;font-weight:400;color:#94a3b8;font-style:italic">' +
+        tUI("hintLabel") + " " +
         escapeHTML(q.hint) +
         "</small>";
     } else {
-      hintEl.innerHTML =
-        'Cum se numeste osul evidentiat in <span style="color:#00aaff">albastru</span>?';
+      hintEl.innerHTML = tUI("qVisualBone");
     }
   }
   highlightQuizBone(q.bone);
 }
 
+function bxQuizDetailHTML(data) {
+  if (!data) return "";
+  var out = "";
+  var desc = data.description || data.descr || "";
+  var details = data.details || "";
+  if (desc) out += '<div class="qfb-desc">' + escapeHTML(desc) + "</div>";
+  if (details) {
+    out +=
+      '<button type="button" class="qfb-why" onclick="var m=this.nextElementSibling;m.classList.toggle(\'open\');this.classList.toggle(\'open\')">' +
+      (window.CUR_LANG === "en" ? "why?" : "de ce?") +
+      "</button>" +
+      '<div class="qfb-more">' + escapeHTML(details) + "</div>";
+  }
+  return out;
+}
+window.bxQuizDetailHTML = bxQuizDetailHTML;
 function answerQuiz(boneId, btn) {
   if (QUIZ.answered) return;
   QUIZ.answered = true;
@@ -3984,19 +4001,23 @@ function answerQuiz(boneId, btn) {
     else if (b === btn) b.classList.add("wrong");
   });
   var fb = document.getElementById("qFeedback");
-  var bdC = boneData[q.bone];
+  var bdC = typeof window.localizedBone === "function" ? window.localizedBone(q.bone) : boneData[q.bone];
   if (correct) {
     QUIZ.score++;
     if (fb) {
       fb.className = "quiz-feedback fb-correct";
-      fb.innerHTML = "✅ <b>Corect!</b> " + (bdC ? bdC.name + " — " + bdC.category : "");
+      fb.innerHTML =
+        "✅ <b>" + tUI("quizCorrect") + "</b> " + (bdC ? "<b>" + escapeHTML(bdC.name) + "</b>" : "") + bxQuizDetailHTML(bdC);
       fb.style.display = "block";
     }
   } else {
     QUIZ.wrong.push(q.bone);
     if (fb) {
       fb.className = "quiz-feedback fb-wrong";
-      fb.innerHTML = "❌ <b>Gresit.</b> Raspuns corect: <b>" + (bdC ? bdC.name : q.bone) + "</b>";
+      fb.innerHTML =
+        "❌ <b>" + tUI("quizWrong") + "</b> <b>" +
+        (bdC ? escapeHTML(bdC.name) : escapeHTML(q.bone)) +
+        "</b>" + bxQuizDetailHTML(bdC);
       fb.style.display = "block";
     }
   }
@@ -4005,7 +4026,7 @@ function answerQuiz(boneId, btn) {
   var nextBtn = document.getElementById("qNextBtn");
   if (nextBtn) {
     nextBtn.style.display = "inline-block";
-    nextBtn.textContent = QUIZ.currentQ + 1 >= QUIZ.total ? "Vezi rezultatul →" : "Urmatoarea →";
+    nextBtn.textContent = QUIZ.currentQ + 1 >= QUIZ.total ? tUI("quizResult") : tUI("quizNext");
   }
 }
 
@@ -4025,17 +4046,18 @@ function skipQuiz() {
     b.disabled = true;
     if (b.dataset.bone === q.bone) b.classList.add("correct");
   });
-  var bdC = boneData[q.bone];
+  var bdC = typeof window.localizedBone === "function" ? window.localizedBone(q.bone) : boneData[q.bone];
   var fb = document.getElementById("qFeedback");
   if (fb) {
     fb.className = "quiz-feedback fb-wrong";
-    fb.innerHTML = "⏭ Sarit. Raspuns: <b>" + (bdC ? bdC.name : q.bone) + "</b>";
+    fb.innerHTML =
+      "⏭ <b>" + tUI("quizSkipped") + "</b> <b>" + (bdC ? escapeHTML(bdC.name) : escapeHTML(q.bone)) + "</b>" + bxQuizDetailHTML(bdC);
     fb.style.display = "block";
   }
   var nextBtn = document.getElementById("qNextBtn");
   if (nextBtn) {
     nextBtn.style.display = "inline-block";
-    nextBtn.textContent = QUIZ.currentQ + 1 >= QUIZ.total ? "Vezi rezultatul →" : "Urmatoarea →";
+    nextBtn.textContent = QUIZ.currentQ + 1 >= QUIZ.total ? tUI("quizResult") : tUI("quizNext");
   }
 }
 window.skipQuiz = skipQuiz;
@@ -6099,7 +6121,7 @@ window.renderBadges = function () {
     a.unlocked = on;
     if (on) achieved++;
     var c = document.createElement("div");
-    c.className = "badge-card" + (on ? "" : " locked");
+    c.className = "badge-card tier-" + (a.lvl || 1) + (on ? "" : " locked");
     c.style.setProperty("--badge-glow", a.c1);
     c.style.setProperty("--badge-c1", a.c1);
     c.style.setProperty("--badge-c2", a.c2);
@@ -6107,16 +6129,30 @@ window.renderBadges = function () {
       !on && bxBadgeActionable(a.id)
         ? '<button class="badge-try" type="button">' + bxTryLabel() + "</button>"
         : "";
+    var prog = !on ? bxBadgeProgress(a.id) : null;
+    var progHtml =
+      prog && prog.target > 1
+        ? '<div class="badge-prog"><div class="badge-prog-bar"><i style="width:' +
+          Math.round((prog.cur / prog.target) * 100) +
+          '%"></i></div><span class="badge-prog-txt">' +
+          prog.cur +
+          " / " +
+          prog.target +
+          "</span></div>"
+        : "";
+    var bt = typeof window.tcBadge === "function" ? window.tcBadge(a) : a;
     c.innerHTML =
       '<div class="badge-icon">' +
       bxBadgeIcon(a) +
       '</div><div class="badge-info"><div class="badge-name">' +
-      a.name +
+      bt.name +
       '</div><div class="badge-sub">' +
-      a.sub +
+      bt.sub +
       '</div><div class="badge-lvl">Lvl ' +
       a.lvl +
-      "</div></div>" +
+      "</div>" +
+      progHtml +
+      "</div>" +
       tryHtml;
     if (tryHtml) {
       var btn = c.querySelector(".badge-try");
@@ -6151,11 +6187,52 @@ function bxBadgeAction(id) {
     curios: { fn: "ai" },
     veteran: { fn: "app", arg: "skeleton" },
     constant: { fn: "app", arg: "skeleton" },
+    neuro_explore: { fn: "app", arg: "nervous" },
+    neuro_quiz: { fn: "quiz", sys: "nervous", mode: "visual" },
+    neuro_master: { fn: "quiz", sys: "nervous", mode: "visual", diff: "hard" },
+    cardio_explore: { fn: "app", arg: "cardio" },
+    cardio_quiz: { fn: "quiz", sys: "cardio", mode: "visual" },
+    cardio_master: { fn: "quiz", sys: "cardio", mode: "visual", diff: "hard" },
+    resp_explore: { fn: "app", arg: "respiratory" },
+    resp_quiz: { fn: "quiz", sys: "respiratory", mode: "visual" },
+    resp_master: { fn: "quiz", sys: "respiratory", mode: "visual", diff: "hard" },
+    dig_explore: { fn: "app", arg: "digestive" },
+    dig_quiz: { fn: "quiz", sys: "digestive", mode: "visual" },
+    dig_master: { fn: "quiz", sys: "digestive", mode: "visual", diff: "hard" },
+    triatlon: { fn: "quiz", sys: "osos", mode: "visual" },
+    triathlon: { fn: "quiz", sys: "osos", mode: "visual" },
   };
   return MAP[id] || null;
 }
 function bxBadgeActionable(id) {
   return !!bxBadgeAction(id);
+}
+function bxBadgeProgress(id) {
+  try {
+    var u = typeof getCurrentUser === "function" && getCurrentUser();
+    if (!u) return null;
+    var p = ensureProgress(getProgress(u.user));
+    var streak = typeof computeStreak === "function" ? computeStreak(p.daysActive || []) : 0;
+    var ev = p.extraViewed || {};
+    var M = {
+      explorator: [(p.bonesViewed || []).length, 50],
+      colectionar: [(p.sectionsVisited || []).length, 4],
+      mentor: [p.chatbotUses || 0, 10],
+      curios: [p.chatbotUses || 0, 25],
+      veteran: [(p.daysActive || []).length, 30],
+      constant: [streak, 7],
+      sarcomer: [(p.musclesViewed || []).length, 30],
+      neuro_explore: [(ev.nervous || []).length, 10],
+      cardio_explore: [(ev.cardio || []).length, 8],
+      resp_explore: [(ev.respiratory || []).length, 8],
+      dig_explore: [(ev.digestive || []).length, 10],
+    };
+    var e = M[id];
+    if (!e) return null;
+    return { cur: Math.min(e[0], e[1]), target: e[1] };
+  } catch (err) {
+    return null;
+  }
 }
 window.bxTryBadge = function (id) {
   var act = bxBadgeAction(id);
@@ -6394,15 +6471,26 @@ function cleanText(s, boneName) {
 function buildInfoQuestions() {
   var easy = [],
     medium = [];
+  var lang = window.CUR_LANG || "ro";
+  var QP = {
+    ro: { desc: "Despre ce os este vorba?", art: "Cărui os îi aparțin aceste articulații?", det: "Despre ce os e descris detaliul:" },
+    en: { desc: "Which bone is this about?", art: "Which bone do these joints belong to?", det: "Which bone is this detail describing?" },
+    fr: { desc: "De quel os s'agit-il ?", art: "À quel os appartiennent ces articulations ?", det: "Quel os ce détail décrit-il ?" },
+    de: { desc: "Um welchen Knochen geht es?", art: "Zu welchem Knochen gehören diese Gelenke?", det: "Welchen Knochen beschreibt dieses Detail?" },
+    es: { desc: "¿De qué hueso se trata?", art: "¿A qué hueso pertenecen estas articulaciones?", det: "¿Qué hueso describe este detalle?" },
+    hu: { desc: "Melyik csontról van szó?", art: "Melyik csonthoz tartoznak ezek az ízületek?", det: "Melyik csontot ír le ez a részlet?" },
+  };
+  var P = QP[lang] || QP.ro;
+  var lb = function (id) { return typeof window.localizedBone === "function" ? window.localizedBone(id) : boneData[id]; };
   Object.keys(boneData).forEach(function (id) {
-    var b = boneData[id];
+    var b = lb(id);
     if (!b) return;
     if (b.description && b.description.length > 40 && b.description.length < 240) {
       var clean = cleanText(b.description, b.name).split(/(?<=\.)\s+/)[0];
       if (clean.length > 30) {
         easy.push({
           type: "desc",
-          prompt: "<i>Despre ce os este vorba?</i><br>„" + clean + '"',
+          prompt: "<i>" + P.desc + "</i><br>„" + clean + '"',
           bone: id,
           options: pickDistractors(id, 4),
         });
@@ -6411,7 +6499,7 @@ function buildInfoQuestions() {
     if (b.articulations && b.articulations.length > 15 && b.articulations.length < 200) {
       medium.push({
         type: "art",
-        prompt: "<i>Cărui os îi aparțin aceste articulații?</i><br>„" + b.articulations + '"',
+        prompt: "<i>" + P.art + "</i><br>„" + b.articulations + '"',
         bone: id,
         options: pickDistractors(id, 4),
       });
@@ -6421,7 +6509,7 @@ function buildInfoQuestions() {
       if (firstSentence.length > 25) {
         medium.push({
           type: "det",
-          prompt: "<i>Despre ce os e descris detaliul:</i><br>„" + firstSentence + '"',
+          prompt: "<i>" + P.det + "</i><br>„" + firstSentence + '"',
           bone: id,
           options: pickDistractors(id, 4),
         });
@@ -6432,8 +6520,14 @@ function buildInfoQuestions() {
 }
 
 function buildManualQuestions() {
-  return MANUAL_QUESTIONS.map(function (q) {
-    var opts = q.options.slice();
+  var lang = window.CUR_LANG || "ro";
+  return MANUAL_QUESTIONS.map(function (q, idx) {
+    var lq = q;
+    if (lang !== "ro" && window.CONTENT_I18N && window.CONTENT_I18N.manual && window.CONTENT_I18N.manual[idx] && window.CONTENT_I18N.manual[idx][lang]) {
+      var m = window.CONTENT_I18N.manual[idx][lang];
+      if (m && m.options && m.answer && m.prompt) lq = m;
+    }
+    var opts = (lq.options || q.options).slice();
     for (var i = opts.length - 1; i > 0; i--) {
       var j = Math.floor(Math.random() * (i + 1));
       var t = opts[i];
@@ -6442,28 +6536,30 @@ function buildManualQuestions() {
     }
     return {
       type: "manual",
-      prompt: "<i>" + q.prompt + "</i>",
-      correctText: q.answer,
+      prompt: "<i>" + (lq.prompt || q.prompt) + "</i>",
+      correctText: lq.answer || q.answer,
       options: opts,
     };
   });
 }
 
-(function rebuildQuizBank() {
+var __ORIG_QB_EASY = null,
+  __ORIG_QB_MEDIUM = null;
+function __rebuildQuizBank() {
   if (typeof quizBank === "undefined") return;
+  if (!__ORIG_QB_EASY) {
+    __ORIG_QB_EASY = quizBank.easy.slice();
+    __ORIG_QB_MEDIUM = quizBank.medium.slice();
+    __ORIG_QB_EASY.forEach(function (q) { q.type = "visual"; });
+    __ORIG_QB_MEDIUM.forEach(function (q) { q.type = "visual"; });
+  }
   var info = buildInfoQuestions();
-  var origEasy = quizBank.easy.slice();
-  var origMedium = quizBank.medium.slice();
-  origEasy.forEach(function (q) {
-    q.type = "visual";
-  });
-  origMedium.forEach(function (q) {
-    q.type = "visual";
-  });
-  quizBank.easy = origEasy.concat(info.easy);
-  quizBank.medium = origMedium.concat(info.medium);
+  quizBank.easy = __ORIG_QB_EASY.concat(info.easy);
+  quizBank.medium = __ORIG_QB_MEDIUM.concat(info.medium);
   quizBank.hard = buildManualQuestions();
-})();
+}
+__rebuildQuizBank();
+window.__rebuildQuizBank = __rebuildQuizBank;
 
 var QUIZ_TIMER = {
   interval: null,
@@ -6560,9 +6656,10 @@ if (typeof loadQuizQuestion === "function") {
     if (q.type === "visual" || !q.type) {
       if (qText)
         qText.innerHTML =
-          'Cum se numește osul evidențiat în <span style="color:#00aaff">albastru</span>?' +
+          tUI("qVisualBone") +
           (q.hint
-            ? '<br><small style="display:block;margin-top:6px;font-weight:400;color:#94a3b8;font-style:italic">Indiciu: ' +
+            ? '<br><small style="display:block;margin-top:6px;font-weight:400;color:#94a3b8;font-style:italic">' +
+              tUI("hintLabel") + " " +
               escapeHTML(q.hint) +
               "</small>"
             : "");
@@ -6595,7 +6692,7 @@ if (typeof loadQuizQuestion === "function") {
       } else {
         var shuffled = shuffle(q.options);
         shuffled.forEach(function (boneId, idx) {
-          var bd = boneData[boneId];
+          var bd = typeof window.localizedBone === "function" ? window.localizedBone(boneId) : boneData[boneId];
           var btn = document.createElement("button");
           btn.className = "quiz-opt";
           btn.dataset.bone = boneId;
@@ -6631,14 +6728,14 @@ window.answerQuizManual = function (picked, btn, correctText) {
     QUIZ.score++;
     if (fb) {
       fb.className = "quiz-feedback fb-correct";
-      fb.innerHTML = "✅ <b>Corect!</b>";
+      fb.innerHTML = "✅ <b>" + tUI("quizCorrect") + "</b>";
       fb.style.display = "block";
     }
   } else {
     QUIZ.wrong.push(correctText);
     if (fb) {
       fb.className = "quiz-feedback fb-wrong";
-      fb.innerHTML = "❌ <b>Greșit.</b> Răspuns corect: <b>" + escapeHTML(correctText) + "</b>";
+      fb.innerHTML = "❌ <b>" + tUI("quizWrong") + "</b> <b>" + escapeHTML(correctText) + "</b>";
       fb.style.display = "block";
     }
   }
@@ -6647,7 +6744,7 @@ window.answerQuizManual = function (picked, btn, correctText) {
   var nextBtn = document.getElementById("qNextBtn");
   if (nextBtn) {
     nextBtn.style.display = "inline-block";
-    nextBtn.textContent = QUIZ.currentQ + 1 >= QUIZ.total ? "Vezi rezultatul →" : "Următoarea →";
+    nextBtn.textContent = QUIZ.currentQ + 1 >= QUIZ.total ? tUI("quizResult") : tUI("quizNext");
   }
 };
 
@@ -6953,7 +7050,7 @@ if (typeof endQuiz === "function") {
       }
       var pick = available[Math.floor(Math.random() * available.length)];
       SHOWN_CURIOZ.push(pick);
-      var fact = CURIOZITATI[pick];
+      var fact = typeof window.bxCuriosity === "function" ? window.bxCuriosity(pick) : CURIOZITATI[pick];
       var panel = document.getElementById("chatboxPanel");
       var btn = document.getElementById("chatboxToggle");
       if (panel && !panel.classList.contains("active")) {
@@ -6961,7 +7058,9 @@ if (typeof endQuiz === "function") {
         if (btn) btn.classList.add("active");
       }
       if (typeof addChatMessage === "function") {
-        addChatMessage("<b>Curiozitate anatomică:</b><br>" + fact, false);
+        var __cl = { ro: "Curiozitate anatomică:", en: "Anatomy fun fact:", fr: "Le saviez-vous :", de: "Anatomie-Fakt:", es: "Dato curioso:", hu: "Anatómiai érdekesség:" };
+        var __lg = window.CUR_LANG || "ro";
+        addChatMessage("<b>" + (__cl[__lg] || __cl.ro) + "</b><br>" + fact, false);
       }
     };
   }
@@ -7819,8 +7918,9 @@ var INFO_LABELS = {
 
 window.localizedBone = function (id) {
   var lang = typeof CUR_LANG !== "undefined" ? CUR_LANG : "ro";
-  if (lang === "en" && BONES_EN[id]) return BONES_EN[id];
-  return boneData[id];
+  if (lang === "ro") return boneData[id];
+  if (lang === "en" && typeof BONES_EN !== "undefined" && BONES_EN[id]) return BONES_EN[id];
+  return typeof window.tcObj === "function" ? window.tcObj("bones", id, boneData[id]) : boneData[id];
 };
 
 window.renderBoneList = function () {
@@ -7835,7 +7935,9 @@ window.renderBoneList = function () {
   };
   var h = "";
   boneSections.forEach(function (s) {
-    var nm = lang === "en" && SECTION_NAMES_EN[s.name] ? SECTION_NAMES_EN[s.name] : s.name;
+    var nm = s.name;
+    if (lang === "en" && SECTION_NAMES_EN[s.name]) nm = SECTION_NAMES_EN[s.name];
+    else if (lang !== "ro" && window.SKEL_SECTION_I18N && SKEL_SECTION_I18N[s.name] && SKEL_SECTION_I18N[s.name][lang]) nm = SKEL_SECTION_I18N[s.name][lang];
     h +=
       '<div class="bone-group open" data-section="' +
       s.id +
@@ -7845,7 +7947,9 @@ window.renderBoneList = function () {
       nm +
       '</span></div><ul class="group-list">';
     s.groups.forEach(function (g) {
-      var gt = lang === "en" && GROUP_TITLES_EN[g.title] ? GROUP_TITLES_EN[g.title] : g.title;
+      var gt = g.title;
+      if (lang === "en" && GROUP_TITLES_EN[g.title]) gt = GROUP_TITLES_EN[g.title];
+      else if (lang !== "ro" && window.SKEL_GROUP_I18N && SKEL_GROUP_I18N[g.title] && SKEL_GROUP_I18N[g.title][lang]) gt = SKEL_GROUP_I18N[g.title][lang];
       h += '<li class="group-sub">' + gt + "</li>";
       g.bones.forEach(function (id) {
         var d = localizedBone(id);
@@ -7962,6 +8066,11 @@ if (typeof window.applyLanguage === "function") {
     if (__selBone && __infoCt && __infoCt.style.display === "block" && typeof window.showInfo === "function") {
       window.showInfo(__selBone.getAttribute("data-bone"));
     }
+    if (typeof window.__muRefreshInfo === "function") window.__muRefreshInfo();
+    if (typeof window.__muRebuildList === "function") window.__muRebuildList();
+    if (typeof window.__extraRefreshLang === "function") window.__extraRefreshLang();
+    if (typeof window.renderBadges === "function" && document.getElementById("profileBadgesGrid")) window.renderBadges();
+    if (typeof window.__rebuildQuizBank === "function") window.__rebuildQuizBank();
   };
 }
 
@@ -8351,7 +8460,7 @@ window.answerDuel = function (picked, btn) {
     QUIZ.score++;
     if (fb) {
       fb.className = "quiz-feedback fb-correct";
-      fb.innerHTML = '✅ <b>Corect!</b><div class="duel-explain">' + q.explain + "</div>";
+      fb.innerHTML = '✅ <b>' + tUI("quizCorrect") + '</b><div class="duel-explain">' + q.explain + "</div>";
       fb.style.display = "block";
     }
   } else {
@@ -8359,7 +8468,7 @@ window.answerDuel = function (picked, btn) {
     if (fb) {
       fb.className = "quiz-feedback fb-wrong";
       fb.innerHTML =
-        '❌ <b>Greșit.</b> AI-ul te-a păcălit.<div class="duel-explain">' + q.explain + "</div>";
+        '❌ <b>' + tUI("wrongShort") + '</b> ' + tUI("duelTricked") + '<div class="duel-explain">' + q.explain + "</div>";
       fb.style.display = "block";
     }
   }
@@ -8368,7 +8477,7 @@ window.answerDuel = function (picked, btn) {
   var nextBtn = document.getElementById("qNextBtn");
   if (nextBtn) {
     nextBtn.style.display = "inline-block";
-    nextBtn.textContent = QUIZ.currentQ + 1 >= QUIZ.total ? "Vezi rezultatul →" : "Următoarea →";
+    nextBtn.textContent = QUIZ.currentQ + 1 >= QUIZ.total ? tUI("quizResult") : tUI("quizNext");
   }
 };
 
@@ -10511,7 +10620,7 @@ window.scrollToSection = function (id) {
     initialized = true;
 
     MU.scene = new THREE.Scene();
-    MU.scene.background = new THREE.Color(0x0d1117);
+    MU.scene.background = null;
     var amb = new THREE.AmbientLight(0xffffff, 0.55);
     MU.scene.add(amb);
     var key = new THREE.DirectionalLight(0xffffff, 0.85);
@@ -10529,7 +10638,7 @@ window.scrollToSection = function (id) {
     MU.camera = new THREE.PerspectiveCamera(45, vw / vh, 0.01, 100);
     MU.camera.position.set(0, 1, 2.5);
 
-    MU.renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: false });
+    MU.renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
     MU.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     MU.renderer.setSize(vw, vh);
     if (THREE.sRGBEncoding !== undefined) MU.renderer.outputEncoding = THREE.sRGBEncoding;
@@ -10684,22 +10793,27 @@ window.scrollToSection = function (id) {
     var name = prettifyName(mesh.name);
     var data =
       typeof window.__findMuscleData === "function" ? window.__findMuscleData(mesh.name) : null;
-    var lang = typeof CUR_LANG !== "undefined" && CUR_LANG === "en" ? "en" : "ro";
-    var displayName = data && data[lang] ? data[lang] : data && data.ro ? data.ro : name;
-    var catMapRo = {
-      cap: "Cap si gat",
-      trunchi: "Trunchi",
-      membreSup: "Membre superioare",
-      membreInf: "Membre inferioare",
+    var lang = window.CUR_LANG || "ro";
+    var displayName;
+    if (data) {
+      var lname = null;
+      if (lang !== "ro" && typeof window.tcObj === "function" && window.__MUSCLE_DATA) {
+        var mk2 = null;
+        for (var kk2 in window.__MUSCLE_DATA) { if (window.__MUSCLE_DATA[kk2] === data) { mk2 = kk2; break; } }
+        if (mk2) { var td2 = window.tcObj("muscles", mk2, data); lname = td2.ro; }
+      }
+      displayName = lname || data[lang] || data.ro || name;
+    } else displayName = name;
+    var CATMAP = {
+      ro: { cap: "Cap si gat", trunchi: "Trunchi", membreSup: "Membre superioare", membreInf: "Membre inferioare" },
+      en: { cap: "Head & Neck", trunchi: "Trunk", membreSup: "Upper limbs", membreInf: "Lower limbs" },
+      fr: { cap: "Tête & cou", trunchi: "Tronc", membreSup: "Membres supérieurs", membreInf: "Membres inférieurs" },
+      de: { cap: "Kopf & Hals", trunchi: "Rumpf", membreSup: "Obere Gliedmaßen", membreInf: "Untere Gliedmaßen" },
+      es: { cap: "Cabeza y cuello", trunchi: "Tronco", membreSup: "Miembros superiores", membreInf: "Miembros inferiores" },
+      hu: { cap: "Fej és nyak", trunchi: "Törzs", membreSup: "Felső végtagok", membreInf: "Alsó végtagok" },
     };
-    var catMapEn = {
-      cap: "Head & Neck",
-      trunchi: "Trunk",
-      membreSup: "Upper limbs",
-      membreInf: "Lower limbs",
-    };
-    var catMap = lang === "en" ? catMapEn : catMapRo;
-    var sysName = lang === "en" ? "Muscular system" : "Sistem muscular";
+    var catMap = CATMAP[lang] || CATMAP.ro;
+    var sysName = typeof window.tUI === "function" ? window.tUI("muscularSystem") : "Sistem muscular";
     var category = data ? sysName + " - " + (catMap[data.group] || "General") : sysName;
     var n = document.getElementById("muBnoName");
     if (n) n.textContent = displayName;
@@ -10743,6 +10857,36 @@ window.scrollToSection = function (id) {
   }
   window.__muPretty = prettifyName;
   window.__muSelectMuscle = selectMuscle;
+  window.__muRefreshInfo = function () {
+    var titleEl = document.getElementById("mu-info-title");
+    var muLabel = document.getElementById("mu-cur-label");
+    if (MU.selected) {
+      var ct = document.getElementById("mu-info-ct");
+      if (ct && typeof window.__muscleInfoHTML === "function") ct.innerHTML = window.__muscleInfoHTML(MU.selected);
+      var data = typeof window.__findMuscleData === "function" ? window.__findMuscleData(MU.selected.name) : null;
+      var nm = prettifyName(MU.selected.name);
+      if (data) {
+        var lg = window.CUR_LANG || "ro",
+          lname = null;
+        if (lg !== "ro" && typeof window.tcObj === "function" && window.__MUSCLE_DATA) {
+          var mk = null;
+          for (var kk in window.__MUSCLE_DATA) { if (window.__MUSCLE_DATA[kk] === data) { mk = kk; break; } }
+          if (mk) lname = window.tcObj("muscles", mk, data).ro;
+        }
+        nm = lname || data[lg] || data.ro || nm;
+      }
+      if (titleEl) titleEl.textContent = nm;
+      if (muLabel) muLabel.textContent = nm;
+    } else {
+      if (titleEl && typeof window.tUI === "function") titleEl.textContent = window.tUI("muscleInfoTitle");
+      var phP = document.querySelector("#mu-ip-ph p");
+      if (phP && typeof window.tUI === "function") phP.innerHTML = window.tUI("musclePlaceholder");
+      if (muLabel && typeof window.tUI === "function") muLabel.textContent = window.tUI("muscularSystem");
+    }
+  };
+  window.__muRebuildList = function () {
+    try { if (MU.meshes && MU.meshes.length) buildMuscleList(); } catch (e) {}
+  };
 
   function loadMuscles() {
     var loadText = document.getElementById("mu-load-text");
@@ -10877,30 +11021,51 @@ window.scrollToSection = function (id) {
   function buildMuscleList() {
     var list = document.getElementById("mu-list");
     if (!list) return;
-    var lang = typeof CUR_LANG !== "undefined" && CUR_LANG === "en" ? "en" : "ro";
+    var lang = window.CUR_LANG || "ro";
+    function muKeyOf(d) {
+      if (!window.__MUSCLE_DATA || !d) return null;
+      if (!buildMuscleList._pairs) {
+        buildMuscleList._pairs = [];
+        for (var k in window.__MUSCLE_DATA) buildMuscleList._pairs.push([window.__MUSCLE_DATA[k], k]);
+      }
+      for (var i = 0; i < buildMuscleList._pairs.length; i++)
+        if (buildMuscleList._pairs[i][0] === d) return buildMuscleList._pairs[i][1];
+      return null;
+    }
     var groups = {};
     var seenInGroup = {};
     MU.meshes.forEach(function (m) {
       var grp = muscleGroupFromName(m.name);
       var data =
         typeof window.__findMuscleData === "function" ? window.__findMuscleData(m.name) : null;
-      var pretty = (data && data[lang]) || (data && data.ro) || prettifyName(m.name);
+      var pretty;
+      if (data) {
+        var lname = null;
+        if (lang !== "ro" && typeof window.tcObj === "function") {
+          var mk = muKeyOf(data);
+          if (mk) {
+            var td = window.tcObj("muscles", mk, data);
+            lname = td.ro;
+          }
+        }
+        pretty = lname || data[lang] || data.ro || prettifyName(m.name);
+      } else {
+        pretty = prettifyName(m.name);
+      }
       seenInGroup[grp] = seenInGroup[grp] || {};
       if (seenInGroup[grp][pretty]) return;
       seenInGroup[grp][pretty] = true;
       groups[grp] = groups[grp] || [];
       groups[grp].push({ mesh: m, pretty: pretty });
     });
-    var grpLabels =
-      lang === "en"
-        ? {
-            "Cap si gat": "Head & Neck",
-            Trunchi: "Trunk",
-            "Membre superioare": "Upper limbs",
-            "Membre inferioare": "Lower limbs",
-            Alte: "Other",
-          }
-        : {};
+    var GRPL = {
+      en: { "Cap si gat": "Head & Neck", Trunchi: "Trunk", "Membre superioare": "Upper limbs", "Membre inferioare": "Lower limbs", Alte: "Other" },
+      fr: { "Cap si gat": "Tête & cou", Trunchi: "Tronc", "Membre superioare": "Membres supérieurs", "Membre inferioare": "Membres inférieurs", Alte: "Autres" },
+      de: { "Cap si gat": "Kopf & Hals", Trunchi: "Rumpf", "Membre superioare": "Obere Gliedmaßen", "Membre inferioare": "Untere Gliedmaßen", Alte: "Sonstige" },
+      es: { "Cap si gat": "Cabeza y cuello", Trunchi: "Tronco", "Membre superioare": "Miembros superiores", "Membre inferioare": "Miembros inferiores", Alte: "Otros" },
+      hu: { "Cap si gat": "Fej és nyak", Trunchi: "Törzs", "Membre superioare": "Felső végtagok", "Membre inferioare": "Alsó végtagok", Alte: "Egyéb" },
+    };
+    var grpLabels = GRPL[lang] || {};
     var order = ["Cap si gat", "Trunchi", "Membre superioare", "Membre inferioare", "Alte"];
     var html = "";
     order.forEach(function (g) {
@@ -11504,7 +11669,7 @@ window.scrollToSection = function (id) {
     var raw = mesh.name || "";
     var pretty = typeof window.__muPretty === "function" ? window.__muPretty(raw) : raw;
     var data = findMuscleData(raw);
-    var lang = typeof CUR_LANG !== "undefined" && CUR_LANG === "en" ? "en" : "ro";
+    var lang = typeof CUR_LANG !== "undefined" ? CUR_LANG : "ro";
     var LBL = {
       ro: {
         name: "Denumire",
@@ -11534,8 +11699,32 @@ window.scrollToSection = function (id) {
         noData:
           "This muscle is in the 3D database but does not yet have a detailed description. Full anatomical data will be added progressively.",
       },
+      fr: {
+        name: "Nom", scientific: "Nom scientifique", descr: "Description", origin: "Origine",
+        insert: "Insertion", action: "Action", nerv: "Innervation", muscle: "Muscle",
+        id: "Identifiant", note: "Note",
+        noData: "Ce muscle est dans la base de données 3D mais n'a pas encore de description détaillée. Les données anatomiques complètes seront ajoutées progressivement.",
+      },
+      de: {
+        name: "Name", scientific: "Wissenschaftlicher Name", descr: "Beschreibung", origin: "Ursprung",
+        insert: "Ansatz", action: "Funktion", nerv: "Innervation", muscle: "Muskel",
+        id: "Kennung", note: "Hinweis",
+        noData: "Dieser Muskel ist in der 3D-Datenbank, hat aber noch keine detaillierte Beschreibung. Vollständige anatomische Daten werden schrittweise ergänzt.",
+      },
+      es: {
+        name: "Nombre", scientific: "Nombre científico", descr: "Descripción", origin: "Origen",
+        insert: "Inserción", action: "Acción", nerv: "Inervación", muscle: "Músculo",
+        id: "Identificador", note: "Nota",
+        noData: "Este músculo está en la base de datos 3D pero aún no tiene una descripción detallada. Los datos anatómicos completos se añadirán progresivamente.",
+      },
+      hu: {
+        name: "Név", scientific: "Tudományos név", descr: "Leírás", origin: "Eredés",
+        insert: "Tapadás", action: "Működés", nerv: "Beidegzés", muscle: "Izom",
+        id: "Azonosító", note: "Megjegyzés",
+        noData: "Ez az izom szerepel a 3D-adatbázisban, de még nincs részletes leírása. A teljes anatómiai adatok fokozatosan bővülnek.",
+      },
     };
-    var L = LBL[lang];
+    var L = LBL[lang] || LBL.ro;
     if (!data) {
       return (
         '<div class="info-section"><h4>' +
@@ -11549,7 +11738,12 @@ window.scrollToSection = function (id) {
         "</p></div>"
       );
     }
-    var displayName = data[lang] || data.ro;
+    var mkey = null;
+    for (var kk in MUSCLE_DATA) {
+      if (MUSCLE_DATA[kk] === data) { mkey = kk; break; }
+    }
+    var td = lang !== "ro" && mkey && typeof window.tcObj === "function" ? window.tcObj("muscles", mkey, data) : data;
+    var displayName = lang === "en" && data.en ? data.en : td.ro || data.ro;
     var html = "";
     html +=
       '<div class="info-section"><h4>' +
@@ -11563,11 +11757,11 @@ window.scrollToSection = function (id) {
       '</h4><p style="font-style:italic;color:#cbd5e1">' +
       data.la +
       "</p></div>";
-    var descr = lang === "en" && data.descr_en ? data.descr_en : data.descr;
-    var origin = lang === "en" && data.origin_en ? data.origin_en : data.origin;
-    var insert = lang === "en" && data.insert_en ? data.insert_en : data.insert;
-    var action = lang === "en" && data.action_en ? data.action_en : data.action;
-    var nerv = lang === "en" && data.nerv_en ? data.nerv_en : data.nerv;
+    var descr = lang === "en" && data.descr_en ? data.descr_en : td.descr || data.descr;
+    var origin = lang === "en" && data.origin_en ? data.origin_en : td.origin || data.origin;
+    var insert = lang === "en" && data.insert_en ? data.insert_en : td.insert || data.insert;
+    var action = lang === "en" && data.action_en ? data.action_en : td.action || data.action;
+    var nerv = lang === "en" && data.nerv_en ? data.nerv_en : td.nerv || data.nerv;
     if (descr)
       html += '<div class="info-section"><h4>' + L.descr + "</h4><p>" + descr + "</p></div>";
     if (origin)
@@ -12595,23 +12789,14 @@ window.scrollToSection = function (id) {
       window.__muSelectMuscle(window.__MU_REF.selected);
     }
     var phP = document.querySelector("#mu-ip-ph p");
-    if (phP) {
-      phP.innerHTML =
-        typeof CUR_LANG !== "undefined" && CUR_LANG === "en"
-          ? "Select a muscle from the model<br>or the list on the left"
-          : "Selectează un mușchi din model<br>sau din lista din stânga";
-    }
+    if (phP) phP.innerHTML = typeof window.tUI === "function" ? window.tUI("musclePlaceholder") : "Selectează un mușchi din model<br>sau din lista din stânga";
     var infoTitle = document.getElementById("mu-info-title");
     if (infoTitle && !(window.__MU_REF && window.__MU_REF.selected)) {
-      infoTitle.textContent =
-        typeof CUR_LANG !== "undefined" && CUR_LANG === "en" ? "Muscle Info" : "Informații Mușchi";
+      infoTitle.textContent = typeof window.tUI === "function" ? window.tUI("muscleInfoTitle") : "Informații Mușchi";
     }
     var muLabel = document.getElementById("mu-cur-label");
     if (muLabel && !(window.__MU_REF && window.__MU_REF.selected)) {
-      muLabel.textContent =
-        typeof CUR_LANG !== "undefined" && CUR_LANG === "en"
-          ? "Muscular system"
-          : "Sistem muscular";
+      muLabel.textContent = typeof window.tUI === "function" ? window.tUI("muscularSystem") : "Sistem muscular";
     }
     return r;
   };
@@ -12823,9 +13008,9 @@ window.scrollToSection = function (id) {
         .map(function (q) {
           return {
             type: "duel",
-            prompt: lg === "en" ? q.text_en : q.text_ro,
+            prompt: q["text_" + lg] || q.text_en || q.text_ro,
             correct: !!q.correct,
-            explain: lg === "en" ? q.explain_en : q.explain_ro,
+            explain: q["explain_" + lg] || q.explain_en || q.explain_ro,
           };
         });
     }
@@ -13011,8 +13196,7 @@ window.scrollToSection = function (id) {
     var hintEl = document.querySelector(".quiz-q-text");
     if (hintEl) {
       if (q.type === "visual") {
-        hintEl.innerHTML =
-          'Cum se numeste muschiul evidentiat in <span style="color:#29b6f6">albastru</span>?';
+        hintEl.innerHTML = tUI("qVisualMuscle");
       } else {
         hintEl.innerHTML = q.prompt;
       }
@@ -13060,7 +13244,7 @@ window.scrollToSection = function (id) {
       if (fb) {
         fb.className = "quiz-feedback fb-correct";
         fb.innerHTML =
-          "&#9989; <b>Corect!</b> " +
+          "&#9989; <b>" + tUI("quizCorrect") + "</b> " +
           q.answer +
           (q.muscleData && q.muscleData.la ? " &mdash; <i>" + q.muscleData.la + "</i>" : "");
         fb.style.display = "block";
@@ -13070,7 +13254,7 @@ window.scrollToSection = function (id) {
       if (fb) {
         fb.className = "quiz-feedback fb-wrong";
         fb.innerHTML =
-          "&#10060; <b>Gresit.</b> Raspuns corect: <b>" +
+          "&#10060; <b>" + tUI("quizWrong") + "</b> <b>" +
           q.answer +
           "</b>" +
           (q.muscleData && q.muscleData.la ? " &mdash; <i>" + q.muscleData.la + "</i>" : "");
@@ -13082,7 +13266,7 @@ window.scrollToSection = function (id) {
     var nextBtn = document.getElementById("qNextBtn");
     if (nextBtn) {
       nextBtn.style.display = "inline-block";
-      nextBtn.textContent = QUIZ.currentQ + 1 >= QUIZ.total ? "Vezi rezultatul →" : "Următoarea →";
+      nextBtn.textContent = QUIZ.currentQ + 1 >= QUIZ.total ? tUI("quizResult") : tUI("quizNext");
       nextBtn.onclick = function () {
         QUIZ.currentQ++;
         if (QUIZ.currentQ >= QUIZ.total) {
@@ -13111,7 +13295,7 @@ window.scrollToSection = function (id) {
       QUIZ.score++;
       if (fb) {
         fb.className = "quiz-feedback fb-correct";
-        fb.innerHTML = "&#9989; <b>" + (en ? "Correct!" : "Corect!") + "</b> " + (q.explain || "");
+        fb.innerHTML = "&#9989; <b>" + tUI("quizCorrect") + "</b> " + (q.explain || "");
         fb.style.display = "block";
       }
     } else {
@@ -13120,7 +13304,7 @@ window.scrollToSection = function (id) {
         fb.className = "quiz-feedback fb-wrong";
         fb.innerHTML =
           "&#10060; <b>" +
-          (q.correct ? (en ? "It was TRUE." : "Era ADEVĂRAT.") : en ? "It was FALSE." : "Era FALS.") +
+          (q.correct ? tUI("duelWasTrue") : tUI("duelWasFalse")) +
           "</b> " +
           (q.explain || "");
         fb.style.display = "block";
@@ -13131,10 +13315,7 @@ window.scrollToSection = function (id) {
     var nextBtn = document.getElementById("qNextBtn");
     if (nextBtn) {
       nextBtn.style.display = "inline-block";
-      nextBtn.textContent =
-        QUIZ.currentQ + 1 >= QUIZ.total
-          ? en ? "See result →" : "Vezi rezultatul →"
-          : en ? "Next →" : "Următoarea →";
+      nextBtn.textContent = QUIZ.currentQ + 1 >= QUIZ.total ? tUI("quizResult") : tUI("quizNext");
       nextBtn.onclick = function () {
         QUIZ.currentQ++;
         if (QUIZ.currentQ >= QUIZ.total) {
@@ -16006,7 +16187,14 @@ window.scrollToSection = function (id) {
   function exName(pretty) {
     var info = EXTRA_NAMES[pretty];
     if (!info) return { display: pretty, la: null };
-    return { display: lang() === "en" ? info.la || pretty : info.ro, la: info.la };
+    var lg = window.CUR_LANG || "ro";
+    var display = info.ro;
+    if (lg !== "ro") {
+      var t = window.CONTENT_I18N && window.CONTENT_I18N.extraNames && window.CONTENT_I18N.extraNames[pretty];
+      if (t && t[lg]) display = t[lg];
+      else if (lg === "en") display = info.la || info.ro;
+    }
+    return { display: display, la: info.la };
   }
 
   function lang() {
@@ -16073,8 +16261,32 @@ window.scrollToSection = function (id) {
     return s.charAt(0).toUpperCase() + s.slice(1);
   }
 
+  var EXTRA_GROUP_I18N = {
+    "Artere": { fr: "Artères", de: "Arterien", es: "Arterias", hu: "Artériák" },
+    "Vene": { fr: "Veines", de: "Venen", es: "Venas", hu: "Vénák" },
+    "Inimă": { fr: "Cœur", de: "Herz", es: "Corazón", hu: "Szív" },
+    "Creier": { fr: "Cerveau", de: "Gehirn", es: "Cerebro", hu: "Agy" },
+    "Membrane": { fr: "Membranes", de: "Membranen", es: "Membranas", hu: "Membránok" },
+    "Măduva spinării": { fr: "Moelle épinière", de: "Rückenmark", es: "Médula espinal", hu: "Gerincvelő" },
+    "Nervi": { fr: "Nerfs", de: "Nerven", es: "Nervios", hu: "Idegek" },
+    "Diafragmă": { fr: "Diaphragme", de: "Zwerchfell", es: "Diafragma", hu: "Rekeszizom" },
+    "Căi aeriene": { fr: "Voies respiratoires", de: "Atemwege", es: "Vías respiratorias", hu: "Légutak" },
+    "Plămâni": { fr: "Poumons", de: "Lungen", es: "Pulmones", hu: "Tüdő" },
+    "Laringe": { fr: "Larynx", de: "Kehlkopf", es: "Laringe", hu: "Gége" },
+    "Cavitate bucală": { fr: "Cavité buccale", de: "Mundhöhle", es: "Cavidad bucal", hu: "Szájüreg" },
+    "Limbă": { fr: "Langue", de: "Zunge", es: "Lengua", hu: "Nyelv" },
+    "Stomac & esofag": { fr: "Estomac & œsophage", de: "Magen & Speiseröhre", es: "Estómago y esófago", hu: "Gyomor és nyelőcső" },
+    "Intestin subțire": { fr: "Intestin grêle", de: "Dünndarm", es: "Intestino delgado", hu: "Vékonybél" },
+    "Intestin gros": { fr: "Gros intestin", de: "Dickdarm", es: "Intestino grueso", hu: "Vastagbél" },
+    "Ficat": { fr: "Foie", de: "Leber", es: "Hígado", hu: "Máj" },
+    "Pancreas & vezică biliară": { fr: "Pancréas & vésicule biliaire", de: "Bauchspeicheldrüse & Gallenblase", es: "Páncreas y vesícula biliar", hu: "Hasnyálmirigy és epehólyag" },
+  };
   function groupLabel(g) {
-    return (lang() === "en" ? g.en : g.ro) || g.key;
+    var lg = window.CUR_LANG || "ro";
+    if (lg === "ro") return g.ro || g.key;
+    if (lg === "en") return g.en || g.ro || g.key;
+    var t = EXTRA_GROUP_I18N[g.ro];
+    return (t && t[lg]) || g.en || g.ro || g.key;
   }
 
   function initSystem(key) {
@@ -16405,7 +16617,7 @@ window.scrollToSection = function (id) {
       group: { ro: "Grupă", en: "Group", fr: "Groupe", de: "Gruppe", es: "Grupo", hu: "Csoport" },
       desc: { ro: "Descriere", en: "Description", fr: "Description", de: "Beschreibung", es: "Descripción", hu: "Leírás" },
     };
-    function exLbl(k) { var lg = lang(); return (__exL[k] && (__exL[k][lg] || __exL[k].ro)) || ""; }
+    function exLbl(k) { var lg = window.CUR_LANG || "ro"; return (__exL[k] && (__exL[k][lg] || __exL[k].ro)) || ""; }
     var cfg = S.cfg,
       ids = cfg.ids || {};
     if (S.selected && S.selected !== mesh) restoreSel(S.selected);
@@ -16416,7 +16628,7 @@ window.scrollToSection = function (id) {
     var pretty = prettifyExtra(mesh.name);
     var info = exName(pretty);
     var name = info.display;
-    var sys = (cfg.sysName && (lang() === "en" ? cfg.sysName.en : cfg.sysName.ro)) || "";
+    var sys = typeof window.exSysName === "function" ? window.exSysName(cfg.mode, cfg.sysName) : (cfg.sysName && cfg.sysName.ro) || "";
     var cat = sys + (grp ? " — " + groupLabel(grp) : "");
     var bnoName = document.getElementById(ids.bnoName);
     if (bnoName) bnoName.textContent = name;
@@ -16483,7 +16695,16 @@ window.scrollToSection = function (id) {
           ? '<div class="info-section"><h4>' +
             exLbl("desc") +
             "</h4><p>" +
-            escapeHTML(lang() === "en" ? descObj.en : descObj.ro) +
+            escapeHTML(
+              (function () {
+                var lg = window.CUR_LANG || "ro";
+                if (lg === "ro") return descObj.ro;
+                if (lg === "en") return descObj.en || descObj.ro;
+                var C = window.CONTENT_I18N || {};
+                var t = (C.extraDesc && C.extraDesc[pretty]) || (grp && C.extraGroupDesc && C.extraGroupDesc[cfg.mode + "." + grp.key]);
+                return (t && t[lg]) || descObj.en || descObj.ro;
+              })()
+            ) +
             "</p></div>"
           : "");
     }
@@ -16708,7 +16929,7 @@ window.scrollToSection = function (id) {
     });
     var html =
       '<button class="nav-tab active" data-ex-grp="all">' +
-      (lang() === "en" ? "All" : "Toate") +
+      (typeof window.tUI === "function" ? window.tUI("allTab") : "Toate") +
       "</button>";
     (cfg.groups || []).forEach(function (g) {
       if (!present[g.key]) return;
@@ -16723,6 +16944,18 @@ window.scrollToSection = function (id) {
     });
   }
   window.__extraBuildNav = buildExtraNav;
+  window.__extraRefreshLang = function () {
+    Object.keys(STATES).forEach(function (key) {
+      var S = STATES[key];
+      if (!S || !S.loaded) return;
+      try {
+        buildExtraList(key);
+        buildExtraNav(key);
+        applyExtraNav(key, S._navGroup || "all");
+        if (S.selected) selectStruct(key, S.selected);
+      } catch (e) {}
+    });
+  };
 
   function applyExtraNav(key, groupKey) {
     var S = STATES[key];
@@ -16851,6 +17084,8 @@ window.scrollToSection = function (id) {
     });
   };
   window.__extraNames = EXTRA_NAMES;
+  window.__MESH_DESC = MESH_DESC;
+  window.__GROUP_DESC = GROUP_DESC;
   window.__extraConfigs = CONFIGS;
   window.__extraBuildList = function (sys) {
     if (typeof buildExtraList === "function") buildExtraList(sys);
@@ -17015,19 +17250,26 @@ window.scrollToSection = function (id) {
         buildExtraNav(mode);
         applyExtraNav(mode, S._navGroup || "all");
         if (S.selected) selectStruct(mode, S.selected);
+        var __xL = window.CUR_LANG || "ro";
+        var __xph = {
+          ro: "Selectează o structură din model<br>sau din lista din stânga",
+          en: "Select a structure from the model<br>or the list on the left",
+          fr: "Sélectionne une structure sur le modèle<br>ou dans la liste à gauche",
+          de: "Wähle eine Struktur im Modell<br>oder aus der Liste links",
+          es: "Selecciona una estructura del modelo<br>o de la lista de la izquierda",
+          hu: "Válassz egy szerkezetet a modellből<br>vagy a bal oldali listából",
+        };
+        var __xti = {
+          ro: "Informații Structură", en: "Structure information", fr: "Informations sur la structure",
+          de: "Strukturinformationen", es: "Información de la estructura", hu: "Szerkezet infó",
+        };
         var phP = document.querySelector("#" + ids.infoPh + " p");
-        if (phP)
-          phP.innerHTML =
-            lang() === "en"
-              ? "Select a structure from the model<br>or the list on the left"
-              : "Selectează o structură din model<br>sau din lista din stânga";
+        if (phP) phP.innerHTML = __xph[__xL] || __xph.ro;
         var titleEl = document.getElementById(ids.infoTitle);
-        if (titleEl && !S.selected)
-          titleEl.textContent = lang() === "en" ? "Structure information" : "Informații Structură";
+        if (titleEl && !S.selected) titleEl.textContent = __xti[__xL] || __xti.ro;
         var curEl = document.getElementById(ids.curLabel);
         if (curEl && !S.selected) {
-          var sn = S.cfg.sysName;
-          if (sn) curEl.textContent = lang() === "en" ? sn.en : sn.ro;
+          curEl.textContent = typeof window.exSysName === "function" ? window.exSysName(S.cfg.mode, S.cfg.sysName) : (S.cfg.sysName && S.cfg.sysName.ro) || "";
         }
       }
       return r;
@@ -17140,11 +17382,12 @@ window.scrollToSection = function (id) {
       return shuffle(dbank.slice())
         .slice(0, count)
         .map(function (q) {
+          var __lg = window.CUR_LANG || "ro";
           return {
             type: "duel",
-            prompt: tr(q.text_ro, q.text_en),
+            prompt: q["text_" + __lg] || q.text_en || q.text_ro,
             correct: !!q.correct,
-            explain: tr(q.explain_ro, q.explain_en),
+            explain: q["explain_" + __lg] || q.explain_en || q.explain_ro,
           };
         });
     }
@@ -17371,11 +17614,7 @@ window.scrollToSection = function (id) {
     }
     var hint = document.querySelector(".quiz-q-text");
     if (hint) {
-      if (q.type === "visual")
-        hint.innerHTML = tr(
-          'Cum se numește structura evidențiată cu <span style="color:#29b6f6">albastru</span>?',
-          'What is the structure highlighted in <span style="color:#29b6f6">blue</span>?'
-        );
+      if (q.type === "visual") hint.innerHTML = tUI("qVisualStruct");
       else hint.innerHTML = q.prompt;
     }
     var opts = document.getElementById("qOptions");
@@ -17420,7 +17659,7 @@ window.scrollToSection = function (id) {
         fb.className = "quiz-feedback fb-correct";
         fb.innerHTML =
           "&#9989; <b>" +
-          tr("Corect!", "Correct!") +
+          tUI("quizCorrect") +
           "</b> " +
           q.answer +
           (q.la ? " &mdash; <i>" + q.la + "</i>" : "");
@@ -17432,10 +17671,8 @@ window.scrollToSection = function (id) {
         fb.className = "quiz-feedback fb-wrong";
         fb.innerHTML =
           "&#10060; <b>" +
-          tr("Greșit.", "Wrong.") +
-          "</b> " +
-          tr("Răspuns corect:", "Correct answer:") +
-          " <b>" +
+          tUI("quizWrong") +
+          "</b> <b>" +
           q.answer +
           "</b>";
         fb.style.display = "block";
@@ -17448,8 +17685,8 @@ window.scrollToSection = function (id) {
       nb.style.display = "inline-block";
       nb.textContent =
         Q.currentQ + 1 >= Q.total
-          ? tr("Vezi rezultatul →", "See result →")
-          : tr("Următoarea →", "Next →");
+          ? tUI("quizResult")
+          : tUI("quizNext");
     }
   }
 
@@ -17491,7 +17728,7 @@ window.scrollToSection = function (id) {
     if (nb) {
       nb.style.display = "inline-block";
       nb.textContent =
-        Q.currentQ + 1 >= Q.total ? tr("Vezi rezultatul →", "See result →") : tr("Următoarea →", "Next →");
+        Q.currentQ + 1 >= Q.total ? tUI("quizResult") : tUI("quizNext");
     }
   }
   window.__answerDuelEx = answerDuelEx;
@@ -17537,7 +17774,7 @@ window.scrollToSection = function (id) {
       if (nbd) {
         nbd.style.display = "inline-block";
         nbd.textContent =
-          Q.currentQ + 1 >= Q.total ? tr("Vezi rezultatul →", "See result →") : tr("Următoarea →", "Next →");
+          Q.currentQ + 1 >= Q.total ? tUI("quizResult") : tUI("quizNext");
       }
       return;
     }
@@ -17559,8 +17796,8 @@ window.scrollToSection = function (id) {
       nb.style.display = "inline-block";
       nb.textContent =
         Q.currentQ + 1 >= Q.total
-          ? tr("Vezi rezultatul →", "See result →")
-          : tr("Următoarea →", "Next →");
+          ? tUI("quizResult")
+          : tUI("quizNext");
     }
   };
 
@@ -18943,8 +19180,13 @@ window.DUEL_BANKS = {"muscular":[{"text_ro":"Prin contracția unilaterală, ster
     es: "¡Nueva insignia!",
     hu: "Új jelvény!",
   };
-  window.showBadgeToast = function (badge) {
+  window.showBadgeToast = function (badge, labelOverride) {
     if (!badge) return;
+    var _id = badge.id || badge.name || "";
+    var _now = window.performance && performance.now ? performance.now() : +new Date();
+    window.__bxToastSeen = window.__bxToastSeen || {};
+    if (window.__bxToastSeen[_id] && _now - window.__bxToastSeen[_id] < 4000) return;
+    window.__bxToastSeen[_id] = _now;
     var wrap = document.getElementById("bxBadgeToastWrap");
     if (!wrap) {
       wrap = document.createElement("div");
@@ -18953,7 +19195,7 @@ window.DUEL_BANKS = {"muscular":[{"text_ro":"Prin contracția unilaterală, ster
       document.body.appendChild(wrap);
     }
     var lg = window.CUR_LANG || "ro";
-    var title = LABEL[lg] || LABEL.ro;
+    var title = labelOverride || LABEL[lg] || LABEL.ro;
     var el = document.createElement("div");
     el.className = "bx-badge-toast";
     el.setAttribute("role", "status");
@@ -19095,4 +19337,99 @@ window.DUEL_BANKS = {"muscular":[{"text_ro":"Prin contracția unilaterală, ster
       return map;
     };
   }
+})();
+
+(function bxCelebrateProgress() {
+  window.showLevelToast = function (level) {
+    var lg = window.CUR_LANG || "ro";
+    var L = { ro: "Nivel nou!", en: "Level up!", fr: "Niveau supérieur !", de: "Level up!", es: "¡Subiste de nivel!", hu: "Új szint!" };
+    var S = {
+      ro: "Ai ajuns la nivelul " + level, en: "You reached level " + level, fr: "Niveau " + level + " atteint",
+      de: "Level " + level + " erreicht", es: "Has llegado al nivel " + level, hu: level + ". szint elérve",
+    };
+    if (typeof window.showBadgeToast !== "function") return;
+    window.showBadgeToast(
+      { id: "__level_" + level, name: (lg === "en" ? "LEVEL " : "NIVEL ") + level, sub: S[lg] || S.ro, icon: "⭐", c1: "#fbbf24", c2: "#b45309" },
+      L[lg] || L.ro
+    );
+  };
+  function snap() {
+    try {
+      if (typeof getCurrentUser !== "function") return null;
+      var u = getCurrentUser();
+      if (!u) return null;
+      var un = (typeof unlockedAchievements === "function" ? unlockedAchievements() : null) || {};
+      var ids = {};
+      Object.keys(un).forEach(function (k) { if (un[k]) ids[k] = 1; });
+      var p = typeof ensureProgress === "function" && typeof getProgress === "function" ? ensureProgress(getProgress(u.user)) : {};
+      var lvlRes = typeof computeLevel === "function" ? computeLevel(p.xp || 0) : 1;
+      var lvl = lvlRes && lvlRes.level != null ? lvlRes.level : lvlRes || 1;
+      return { ids: ids, level: lvl };
+    } catch (e) {
+      return null;
+    }
+  }
+  function celebrate(before) {
+    if (!before || typeof ACHIEVEMENTS === "undefined") return;
+    var after = snap();
+    if (!after) return;
+    Object.keys(after.ids).forEach(function (id) {
+      if (before.ids[id]) return;
+      for (var i = 0; i < ACHIEVEMENTS.length; i++) {
+        if (ACHIEVEMENTS[i].id === id) {
+          if (window.showBadgeToast) window.showBadgeToast(ACHIEVEMENTS[i]);
+          break;
+        }
+      }
+    });
+    if (after.level > before.level && window.showLevelToast) window.showLevelToast(after.level);
+  }
+  function wrapCelebrate(name) {
+    if (typeof window[name] !== "function") return;
+    var prev = window[name];
+    window[name] = function () {
+      var before = snap();
+      var r = prev.apply(this, arguments);
+      setTimeout(function () { celebrate(before); }, 90);
+      return r;
+    };
+  }
+  wrapCelebrate("trackEvent");
+  wrapCelebrate("trackDaily");
+})();
+
+(function bxPatchDuelI18n() {
+  try {
+    var C = window.CONTENT_I18N && window.CONTENT_I18N.duel;
+    if (!C || !window.DUEL_BANKS) return;
+    Object.keys(C).forEach(function (sys) {
+      var bank = window.DUEL_BANKS[sys];
+      if (!bank) return;
+      Object.keys(C[sys]).forEach(function (idx) {
+        var e = C[sys][idx],
+          q = bank[+idx];
+        if (!q || !e) return;
+        ["fr", "de", "es", "hu"].forEach(function (lg) {
+          if (e[lg]) {
+            if (e[lg].text) q["text_" + lg] = e[lg].text;
+            if (e[lg].explain) q["explain_" + lg] = e[lg].explain;
+          }
+        });
+      });
+    });
+  } catch (e) {}
+})();
+
+(function bxExtraSidebarI18n() {
+  if (typeof I18N === "undefined") return;
+  var T = {
+    ro: { "sb.cardio": "Structuri cardiovasculare", "sb.nervous": "Structuri nervoase", "sb.resp": "Structuri respiratorii", "sb.footCardio": "Sistem cardiovascular:", "sb.footNervous": "Sistem nervos:", "sb.footResp": "Sistem respirator:", "sb.structuresWord": "structuri", "sb.searchStruct": "Caută o structură..." },
+    en: { "sb.cardio": "Cardiovascular structures", "sb.nervous": "Nervous structures", "sb.resp": "Respiratory structures", "sb.footCardio": "Cardiovascular system:", "sb.footNervous": "Nervous system:", "sb.footResp": "Respiratory system:", "sb.structuresWord": "structures", "sb.searchStruct": "Search a structure..." },
+    fr: { "sb.cardio": "Structures cardiovasculaires", "sb.nervous": "Structures nerveuses", "sb.resp": "Structures respiratoires", "sb.footCardio": "Système cardiovasculaire :", "sb.footNervous": "Système nerveux :", "sb.footResp": "Système respiratoire :", "sb.structuresWord": "structures", "sb.searchStruct": "Rechercher une structure..." },
+    de: { "sb.cardio": "Herz-Kreislauf-Strukturen", "sb.nervous": "Nervenstrukturen", "sb.resp": "Atemwegsstrukturen", "sb.footCardio": "Herz-Kreislauf-System:", "sb.footNervous": "Nervensystem:", "sb.footResp": "Atmungssystem:", "sb.structuresWord": "Strukturen", "sb.searchStruct": "Struktur suchen..." },
+    es: { "sb.cardio": "Estructuras cardiovasculares", "sb.nervous": "Estructuras nerviosas", "sb.resp": "Estructuras respiratorias", "sb.footCardio": "Sistema cardiovascular:", "sb.footNervous": "Sistema nervioso:", "sb.footResp": "Sistema respiratorio:", "sb.structuresWord": "estructuras", "sb.searchStruct": "Buscar una estructura..." },
+    hu: { "sb.cardio": "Keringési struktúrák", "sb.nervous": "Idegi struktúrák", "sb.resp": "Légzőszervi struktúrák", "sb.footCardio": "Keringési rendszer:", "sb.footNervous": "Idegrendszer:", "sb.footResp": "Légzőrendszer:", "sb.structuresWord": "struktúra", "sb.searchStruct": "Szerkezet keresése..." },
+  };
+  Object.keys(T).forEach(function (l) { if (I18N[l]) Object.assign(I18N[l], T[l]); });
+  try { if (typeof applyLanguage === "function" && typeof CUR_LANG !== "undefined") applyLanguage(CUR_LANG); } catch (e) {}
 })();
