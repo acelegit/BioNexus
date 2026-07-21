@@ -1172,7 +1172,8 @@ gltfLoader.load(
     })(gltf);
   },
   function (xhr) {
-    if (xhr && xhr.lengthComputable) {
+    if (xhr && xhr.lengthComputable && xhr.total) {
+      window.__modelFrac = xhr.loaded / xhr.total;
       var pct = Math.round((xhr.loaded / xhr.total) * 100);
       var f = document.getElementById("load-fill");
       if (f) f.style.width = pct + "%";
@@ -1517,6 +1518,8 @@ function switchSection(sId) {
     m.material.opacity = 1;
     if (window.__bxSetPickable) window.__bxSetPickable(m, true);
   });
+  var secBox = new THREE.Box3(), secHas = false;
+  if (skeletonModel) skeletonModel.updateMatrixWorld(true);
   if (!isS && sId !== "all" && skeletonModel) {
     modelMeshes.forEach(function (m) {
       var n = (m.name || "")
@@ -1553,6 +1556,7 @@ function switchSection(sId) {
       m.material.transparent = true;
       m.material.opacity = ok ? 1 : 0.04;
       if (window.__bxSetPickable) window.__bxSetPickable(m, ok);
+      if (ok) { try { secBox.expandByObject(m); secHas = true; } catch (e) {} }
     });
   }
   bnoOverlay.classList.remove("visible");
@@ -1562,12 +1566,14 @@ function switchSection(sId) {
   document.getElementById("ip-ph").style.display = "flex";
   document.getElementById("info-ct").style.display = "none";
   var p = camPresets[sId] || camPresets.all;
-  if (skeletonModel && sId !== "all" && sId !== "structura") {
-    var bx = new THREE.Box3().setFromObject(skeletonModel);
-    var ht = bx.max.y - bx.min.y;
-    var midY2 =
-      bx.min.y + ht * ({ cap: 0.92, trunchi: 0.65, membre: 0.6, inferioare: 0.3 }[sId] || 0.5);
-    animCam([p.pos[0], midY2, sId === "cap" ? ht * 0.4 : ht * 1.0], [0, midY2, 0]);
+  if (skeletonModel && sId !== "all" && sId !== "structura" && secHas && !secBox.isEmpty()) {
+    var ctr = new THREE.Vector3();
+    secBox.getCenter(ctr);
+    var sz = new THREE.Vector3();
+    secBox.getSize(sz);
+    var maxDim = Math.max(sz.x, sz.y, sz.z) || 0.4;
+    var dist = maxDim * 2.05 + 0.3;
+    animCam([ctr.x, ctr.y, ctr.z + dist], [ctr.x, ctr.y, ctr.z]);
   } else animCam(p.pos, p.target);
   document.getElementById("cur-label").textContent =
     {
@@ -4144,6 +4150,7 @@ window.bxPaintQuizEnd = bxPaintQuizEnd;
 
 
 window.quizBackToMinigames = function () {
+  if (typeof window.__quizTeardown === "function") try { window.__quizTeardown(); } catch (e) {}
   if (typeof showQuizStage === "function") showQuizStage("quizSystemPick");
 };
 
@@ -6161,9 +6168,11 @@ window.renderBadges = function () {
       bt.name +
       '</div><div class="badge-sub">' +
       bt.sub +
-      '</div><div class="badge-lvl">Lvl ' +
+      '</div><div class="badge-meta"><span class="badge-lvl">Lvl ' +
       a.lvl +
-      "</div>" +
+      '</span><span class="badge-xp">+' +
+      bxBadgeXP(a) +
+      " XP</span></div>" +
       progHtml +
       "</div>" +
       tryHtml;
@@ -6218,6 +6227,24 @@ function bxBadgeAction(id) {
 function bxBadgeActionable(id) {
   return !!bxBadgeAction(id);
 }
+function bxBadgeXP(a) {
+  var byLvl = { 1: 40, 2: 100, 3: 250 };
+  return byLvl[(a && a.lvl) || 1] || 40;
+}
+window.bxBadgeXP = bxBadgeXP;
+function bxAwardBadgeXP(badge) {
+  try {
+    var u = typeof getCurrentUser === "function" && getCurrentUser();
+    if (!u || !badge || !badge.id) return;
+    var p = ensureProgress(getProgress(u.user));
+    p.badgeXpAwarded = p.badgeXpAwarded || [];
+    if (p.badgeXpAwarded.indexOf(badge.id) >= 0) return;
+    p.badgeXpAwarded.push(badge.id);
+    p.xp = (p.xp || 0) + bxBadgeXP(badge);
+    saveProgress(p, u.user);
+  } catch (e) {}
+}
+window.bxAwardBadgeXP = bxAwardBadgeXP;
 function bxBadgeProgress(id) {
   try {
     var u = typeof getCurrentUser === "function" && getCurrentUser();
@@ -6233,7 +6260,7 @@ function bxBadgeProgress(id) {
       veteran: [(p.daysActive || []).length, 30],
       constant: [streak, 7],
       sarcomer: [(p.musclesViewed || []).length, 30],
-      neuro_explore: [(ev.nervous || []).length, 10],
+      neuro_explore: [(ev.nervous || []).length, 5],
       cardio_explore: [(ev.cardio || []).length, 8],
       resp_explore: [(ev.respiratory || []).length, 8],
       dig_explore: [(ev.digestive || []).length, 10],
@@ -6325,11 +6352,6 @@ var MANUAL_QUESTIONS = [
     ],
   },
   {
-    prompt: "Vol. I — Miologia: cel mai puternic mușchi raportat la greutate este:",
-    answer: "Maseterul (masticator)",
-    options: ["Maseterul (masticator)", "Gluteus maximus", "Sartorius", "Bicepsul brahial"],
-  },
-  {
     prompt: "Vol. I — Numărul total de oase din scheletul apendicular este:",
     answer: "126",
     options: ["100", "118", "126", "142"],
@@ -6345,94 +6367,9 @@ var MANUAL_QUESTIONS = [
     ],
   },
   {
-    prompt: "Vol. II Stefaneț — Stomacul este împărțit în câte regiuni anatomice?",
-    answer: "4 (cardia, fund, corp, pilor)",
-    options: ["3 regiuni", "4 (cardia, fund, corp, pilor)", "5 regiuni", "2 regiuni"],
-  },
-  {
-    prompt: "Vol. II — Plămânul drept are câți lobi?",
-    answer: "3 lobi",
-    options: ["2 lobi", "3 lobi", "4 lobi", "5 lobi"],
-  },
-  {
-    prompt: "Vol. II — Lungimea aproximativă a intestinului subțire la adult este:",
-    answer: "6-7 metri",
-    options: ["3-4 metri", "5-6 metri", "6-7 metri", "8-9 metri"],
-  },
-  {
-    prompt: "Vol. II — Ficatul are câți lobi anatomici principali?",
-    answer: "4 (drept, stâng, caudat, pătrat)",
-    options: ["2 (drept, stâng)", "3", "4 (drept, stâng, caudat, pătrat)", "6"],
-  },
-  {
-    prompt: "Vol. II — Cele 3 părți ale intestinului subțire sunt:",
-    answer: "Duoden, jejun, ileon",
-    options: [
-      "Duoden, jejun, ileon",
-      "Cec, colon, rect",
-      "Cardia, fundus, pilor",
-      "Antrul, corpul, pilorul",
-    ],
-  },
-  {
-    prompt: "Vol. II — Rinichiul are câte unități funcționale (nefroni)?",
-    answer: "~1 milion per rinichi",
-    options: ["~100.000", "~500.000", "~1 milion per rinichi", "~10 milioane"],
-  },
-  {
-    prompt: "Vol. III — Inima are câte valve atrio-ventriculare?",
-    answer: "2 (mitrală + tricuspidă)",
-    options: ["1 valvă", "2 (mitrală + tricuspidă)", "3 valve", "4 valve"],
-  },
-  {
-    prompt: "Vol. III — Câte perechi de nervi cranieni există?",
-    answer: "12 perechi",
-    options: ["10 perechi", "11 perechi", "12 perechi", "13 perechi"],
-  },
-  {
-    prompt: "Vol. III — Nervul olfactiv este perechea de nervi cranieni cu numărul:",
-    answer: "I",
-    options: ["I", "II", "V", "VII"],
-  },
-  {
-    prompt: "Vol. III — Ochiul uman are câți mușchi extrinseci (oculo-motori)?",
-    answer: "6",
-    options: ["4", "5", "6", "8"],
-  },
-  {
     prompt: "Vol. III — Urechea medie conține câte oscioare?",
     answer: "3 (ciocan, nicovală, scăriță)",
     options: ["2", "3 (ciocan, nicovală, scăriță)", "4", "5"],
-  },
-  {
-    prompt: "Vol. III — Creierul uman cântărește aproximativ:",
-    answer: "1.300-1.400 g",
-    options: ["~800 g", "1.000 g", "1.300-1.400 g", "2.000 g"],
-  },
-  {
-    prompt: "Vol. III — Sistemul nervos central include:",
-    answer: "Encefalul și măduva spinării",
-    options: [
-      "Doar encefalul",
-      "Encefalul și măduva spinării",
-      "Nervii cranieni și spinali",
-      "Encefalul și sistemul vegetativ",
-    ],
-  },
-  {
-    prompt: "Vol. III — Cele 4 camere ale inimii sunt:",
-    answer: "2 atrii + 2 ventricule",
-    options: [
-      "2 atrii + 1 ventricul",
-      "2 atrii + 2 ventricule",
-      "3 atrii + 1 ventricul",
-      "1 atriu + 3 ventricule",
-    ],
-  },
-  {
-    prompt: "Vol. III — Retina conține 2 tipuri de fotoreceptori:",
-    answer: "Conuri și bastonașe",
-    options: ["Conuri și piramide", "Conuri și bastonașe", "Filamente și sfere", "Cili și flageli"],
   },
   {
     prompt: "Vol. I — Coloana vertebrală adultă are câte vertebre articulate?",
@@ -8196,19 +8133,9 @@ var DUEL_BANK = [
       "Corect — toate mamiferele (cu mici excepții) au exact 7 vertebre cervicale, indiferent de mărimea gâtului.",
   },
   {
-    text: "Inima are 3 camere: 1 atriu și 2 ventricule.",
-    correct: false,
-    explain: "Inima are 4 camere: 2 atrii (drept, stâng) + 2 ventricule (drept, stâng).",
-  },
-  {
     text: "Mandibula este singurul os mobil al craniului.",
     correct: true,
     explain: "Corect — toate celelalte oase craniene sunt unite prin suturi fibroase imobile.",
-  },
-  {
-    text: "Plămânul stâng are 3 lobi, iar cel drept 2.",
-    correct: false,
-    explain: "Invers — plămânul drept are 3 lobi, iar cel stâng 2 lobi (mai mic, face loc inimii).",
   },
   {
     text: "Corpul uman adult are 206 oase.",
@@ -8230,12 +8157,6 @@ var DUEL_BANK = [
     text: "Calcaneul este cel mai mare os al tarsului.",
     correct: true,
     explain: "Corect — formează călcâiul și suportă greutatea corpului în mers.",
-  },
-  {
-    text: "Sângele este albastru înainte de a întâlni aerul.",
-    correct: false,
-    explain:
-      "Sângele este ÎNTOTDEAUNA roșu. Sângele venos e roșu închis, cel arterial roșu aprins. Aspectul albastru al venelor e datorat refracției luminii prin piele.",
   },
   {
     text: "Sternul are 3 părți: manubriu, corp și proces xifoid.",
@@ -8283,11 +8204,6 @@ var DUEL_BANK = [
     text: "Hioidul nu se articulează direct cu niciun alt os.",
     correct: true,
     explain: "Corect — e suspendat de mușchi și ligamente, unic în corp.",
-  },
-  {
-    text: "Adultul are 32 de dinți permanenți, inclusiv măselele de minte.",
-    correct: true,
-    explain: "Corect — 8 incisivi + 4 canini + 8 premolari + 12 molari (cu măselele).",
   },
   {
     text: "Cubitusul și ulna sunt două oase diferite ale antebrațului.",
@@ -8340,17 +8256,6 @@ var DUEL_BANK = [
     text: "Talusul (astragal) se articulează cu tibia, fibula și calcaneul.",
     correct: true,
     explain: "Corect — formează articulația tibio-tarsiană (glezna).",
-  },
-  {
-    text: "Aparatul masticator are 4 perechi de mușchi principali: maseter, temporal, pterigoidieni.",
-    correct: true,
-    explain: "Corect — toți sunt inervați de nervul trigemen (V3).",
-  },
-  {
-    text: "Mușchii striați (scheletici) au control involuntar.",
-    correct: false,
-    explain:
-      "Mușchii striați sunt VOLUNTARI. Mușchii NETEZI (intestin, vase) și cardiac sunt involuntari.",
   },
   {
     text: 'Vertebra a 7-a cervicală se mai numește "vertebra prominens" datorită procesului spinos lung.',
@@ -9231,14 +9136,17 @@ else setTimeout(renderDailyUI, 150);
         var afterUnlocks = typeof unlockedAchievements === "function" ? unlockedAchievements() : {};
         var newlyUnlocked = null;
         Object.keys(afterUnlocks).forEach(function (k) {
-          if (afterUnlocks[k] && !beforeUnlocks[k] && !newlyUnlocked) {
+          if (afterUnlocks[k] && !beforeUnlocks[k]) {
             var found = null;
             for (var i = 0; i < ACHIEVEMENTS.length; i++)
               if (ACHIEVEMENTS[i].id === k) {
                 found = ACHIEVEMENTS[i];
                 break;
               }
-            if (found) newlyUnlocked = found;
+            if (found) {
+              if (typeof bxAwardBadgeXP === "function") bxAwardBadgeXP(found);
+              if (!newlyUnlocked) newlyUnlocked = found;
+            }
           }
         });
         renderEndScreen(newlyUnlocked);
@@ -13110,6 +13018,7 @@ window.scrollToSection = function (id) {
 
   window.pickQuizSystem = function (sys) {
     QUIZ.system = sys;
+    QUIZ.mode = "visual";
     var visualIcon = document.getElementById("quizModeVisualIcon");
     var visualTitle = document.getElementById("quizModeVisualTitle");
     var visualDesc = document.getElementById("quizModeVisualDesc");
@@ -13152,6 +13061,7 @@ window.scrollToSection = function (id) {
   };
 
   window.backToSystemPick = function () {
+    if (typeof window.__quizTeardown === "function") try { window.__quizTeardown(); } catch (e) {}
     if (typeof showQuizStage === "function") showQuizStage("quizSystemPick");
   };
 
@@ -13396,6 +13306,8 @@ window.scrollToSection = function (id) {
     }
     if (q.type === "visual" && typeof highlightMuscleQuiz === "function") {
       highlightMuscleQuiz(q.muscleKey);
+    } else if (typeof window.clearMuscleQuizHighlight === "function") {
+      window.clearMuscleQuizHighlight();
     }
     if (typeof startQuestionTimer === "function") startQuestionTimer();
   }
@@ -13445,6 +13357,9 @@ window.scrollToSection = function (id) {
       nextBtn.style.display = "inline-block";
       nextBtn.textContent = QUIZ.currentQ + 1 >= QUIZ.total ? tUI("quizResult") : tUI("quizNext");
       nextBtn.onclick = function () {
+        if (QUIZ.system !== "muscular") {
+          if (typeof window.nextQuiz === "function") return window.nextQuiz();
+        }
         QUIZ.currentQ++;
         if (QUIZ.currentQ >= QUIZ.total) {
           if (typeof endQuiz === "function") endQuiz();
@@ -13494,6 +13409,9 @@ window.scrollToSection = function (id) {
       nextBtn.style.display = "inline-block";
       nextBtn.textContent = QUIZ.currentQ + 1 >= QUIZ.total ? tUI("quizResult") : tUI("quizNext");
       nextBtn.onclick = function () {
+        if (QUIZ.system !== "muscular") {
+          if (typeof window.nextQuiz === "function") return window.nextQuiz();
+        }
         QUIZ.currentQ++;
         if (QUIZ.currentQ >= QUIZ.total) {
           if (typeof endQuiz === "function") endQuiz();
@@ -13524,6 +13442,7 @@ window.scrollToSection = function (id) {
       return;
     }
     clearMuscleQuizHighlight();
+    if (!muscleKey) return;
     var target = null;
     function norm(s) {
       return String(s || "")
@@ -13621,6 +13540,9 @@ window.scrollToSection = function (id) {
   var origStart = window.startQuiz;
   if (typeof origStart !== "function") return;
   window.startQuiz = function (difficulty) {
+    if (QUIZ.system === "muscular" && QUIZ.mode !== "visual") {
+      if (typeof window.clearMuscleQuizHighlight === "function") window.clearMuscleQuizHighlight();
+    }
     if (QUIZ.system === "muscular" && QUIZ.mode === "visual") {
       document.body.classList.remove("mode-skeleton");
       document.body.classList.add("mode-muscular", "mode-quiz");
@@ -17999,15 +17921,28 @@ window.scrollToSection = function (id) {
         window.__extraQuizClear(window.QUIZ.system);
       } catch (e) {}
     restorePanel();
+    if (typeof stopQuestionTimer === "function") try { stopQuestionTimer(); } catch (e) {}
+    if (typeof QUIZ_TIMER !== "undefined" && QUIZ_TIMER.maxPerDiff_backup) {
+      QUIZ_TIMER.maxPerDiff = QUIZ_TIMER.maxPerDiff_backup;
+      QUIZ_TIMER.maxPerDiff_backup = null;
+    }
+    if (typeof clearQuizHighlight === "function") try { clearQuizHighlight(); } catch (e) {}
+    if (typeof window.clearMuscleQuizHighlight === "function") try { window.clearMuscleQuizHighlight(); } catch (e) {}
+    window.QUIZ.active = false;
+    window.QUIZ.answered = false;
     document.body.classList.remove(
       "qmode-visual",
       "qmode-knowledge",
+      "qmode-duel",
       "mode-cardio",
       "mode-nervous",
       "mode-respiratory",
-      "mode-digestive"
+      "mode-digestive",
+      "mode-muscular"
     );
+    document.body.classList.add("mode-skeleton");
   }
+  window.__quizTeardown = cleanup;
   var oExit = window.exitQuizMode;
   window.exitQuizMode = function () {
     var wasEx = isEx();
@@ -18035,6 +17970,7 @@ window.scrollToSection = function (id) {
   var orig = window.pickQuizSystem;
   if (typeof orig !== "function") return;
   window.pickQuizSystem = function (sys) {
+    if (typeof window.__quizTeardown === "function") try { window.__quizTeardown(); } catch (e) {}
     var r = orig.apply(this, arguments);
     try {
       var vi = document.getElementById("quizModeVisualIcon");
@@ -18940,7 +18876,7 @@ window.DUEL_BANKS = {"muscular":[{"text_ro":"Prin contracția unilaterală, ster
 
 
   var NEW = [
-    { id: "neuro_explore", name: "NEURONAUT", sub: "Explorează 10 structuri nervoase", icon: "🧠", ic: "brain", c1: "#c4b5fd", c2: "#6d28d9", lvl: 2 },
+    { id: "neuro_explore", name: "NEURONAUT", sub: "Explorează 5 structuri nervoase", icon: "🧠", ic: "brain", c1: "#c4b5fd", c2: "#6d28d9", lvl: 2 },
     { id: "neuro_quiz", name: "NEUROLOG", sub: "Quiz nervos reușit (≥70%)", icon: "🧠", ic: "brain", c1: "#a78bfa", c2: "#6d28d9", lvl: 1 },
     { id: "neuro_master", name: "NEUROCHIRURG", sub: "Quiz nervos Greu — perfect", icon: "🧠", ic: "brain", c1: "#8b5cf6", c2: "#5b21b6", lvl: 3 },
     { id: "cardio_explore", name: "CARDIO-EXPLORATOR", sub: "Explorează 8 structuri cardiace", icon: "🫀", ic: "heart", c1: "#fb7185", c2: "#9f1239", lvl: 2 },
@@ -18957,7 +18893,7 @@ window.DUEL_BANKS = {"muscular":[{"text_ro":"Prin contracția unilaterală, ster
   ACHIEVEMENTS.forEach(function (a) { have[a.id] = 1; });
   NEW.forEach(function (b) { if (!have[b.id]) { b.unlocked = false; ACHIEVEMENTS.push(b); } });
 
-  var THRESH = { nervous: 10, cardio: 8, respiratory: 8, digestive: 10 };
+  var THRESH = { nervous: 5, cardio: 8, respiratory: 8, digestive: 10 };
 
 
   if (typeof window.trackEvent === "function") {
@@ -19614,6 +19550,7 @@ window.DUEL_BANKS = {"muscular":[{"text_ro":"Prin contracția unilaterală, ster
       if (before.ids[id]) return;
       for (var i = 0; i < ACHIEVEMENTS.length; i++) {
         if (ACHIEVEMENTS[i].id === id) {
+          if (typeof bxAwardBadgeXP === "function") bxAwardBadgeXP(ACHIEVEMENTS[i]);
           if (window.showBadgeToast) window.showBadgeToast(ACHIEVEMENTS[i]);
           break;
         }
@@ -19669,4 +19606,148 @@ window.DUEL_BANKS = {"muscular":[{"text_ro":"Prin contracția unilaterală, ster
   };
   Object.keys(T).forEach(function (l) { if (I18N[l]) Object.assign(I18N[l], T[l]); });
   try { if (typeof applyLanguage === "function" && typeof CUR_LANG !== "undefined") applyLanguage(CUR_LANG); } catch (e) {}
+})();
+
+(function bxScrollReveal() {
+  var root = document.getElementById("homeOverlay");
+  if (!root || !("IntersectionObserver" in window)) return;
+  var reduce = false;
+  try { reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
+  if (reduce) return;
+
+  var io = new IntersectionObserver(function (ents) {
+    for (var i = 0; i < ents.length; i++) {
+      if (ents[i].isIntersecting) { ents[i].target.classList.add("bx-in"); io.unobserve(ents[i].target); }
+    }
+  }, { root: root, threshold: 0.1, rootMargin: "0px 0px -6% 0px" });
+
+  function add(el) { if (el && !el.classList.contains("bx-reveal")) { el.classList.add("bx-reveal"); io.observe(el); } }
+
+  var SINGLES = [".home-hero-badge", ".home-hero-title", ".home-hero-sub", ".home-hero-cta", ".home-hero-visual", ".home-section-title", ".home-systems-sub", ".home-learn-sub", ".home-cta-box", ".home-reviews-sub", ".home-review-form"];
+  var STAGGER = [".system-card", ".home-feat-card", ".home-learn-card", ".home-review-card", ".home-hero-stats > *"];
+
+  var started = false;
+  function start() {
+    if (started) return;
+    started = true;
+    SINGLES.forEach(function (s) { root.querySelectorAll(s).forEach(add); });
+    STAGGER.forEach(function (s) {
+      root.querySelectorAll(s).forEach(function (c, i) {
+        c.style.setProperty("--bx-rev-d", i * 70 + "ms");
+        add(c);
+      });
+    });
+  }
+
+  if (!document.documentElement.classList.contains("app-booting")) start();
+  else {
+    var mo = new MutationObserver(function () {
+      if (!document.documentElement.classList.contains("app-booting")) { start(); mo.disconnect(); }
+    });
+    mo.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+  }
+  setTimeout(start, 3500);
+})();
+
+(function bxAvatarBorders() {
+  var BORDERS = [
+    { id: "slate", lvl: 1, cls: "bxb-1", ro: "Ardezie", en: "Slate" },
+    { id: "bronze", lvl: 2, cls: "bxb-2", ro: "Bronz", en: "Bronze" },
+    { id: "silver", lvl: 3, cls: "bxb-3", ro: "Argint", en: "Silver" },
+    { id: "gold", lvl: 4, cls: "bxb-4", ro: "Aur", en: "Gold" },
+    { id: "emerald", lvl: 6, cls: "bxb-5", ro: "Smarald", en: "Emerald" },
+    { id: "sapphire", lvl: 8, cls: "bxb-6", ro: "Safir", en: "Sapphire" },
+    { id: "amethyst", lvl: 11, cls: "bxb-7", ro: "Ametist", en: "Amethyst" },
+    { id: "ruby", lvl: 14, cls: "bxb-8", ro: "Rubin", en: "Ruby" },
+    { id: "diamond", lvl: 18, cls: "bxb-9", ro: "Diamant", en: "Diamond" },
+    { id: "legend", lvl: 25, cls: "bxb-10", ro: "Legendar", en: "Legendary" },
+  ];
+  window.BX_BORDERS = BORDERS;
+  var ALL_CLS = BORDERS.map(function (b) { return b.cls; });
+
+  function bname(b) { var lg = window.CUR_LANG || "ro"; return b[lg] || b.en || b.ro; }
+  function u() { try { return typeof getCurrentUser === "function" && getCurrentUser(); } catch (e) { return null; } }
+  function level() {
+    try {
+      var us = u(); if (!us) return 1;
+      var d = typeof getProfileData === "function" ? getProfileData(us.user) : null;
+      var xp = (d && d.xp) || 0;
+      var lv = typeof computeLevel === "function" ? computeLevel(xp) : { level: 1 };
+      return lv.level || 1;
+    } catch (e) { return 1; }
+  }
+  function highest() {
+    var lv = level(), best = BORDERS[0];
+    for (var i = 0; i < BORDERS.length; i++) if (lv >= BORDERS[i].lvl) best = BORDERS[i];
+    return best;
+  }
+  function selKey() { var us = u(); return us ? "bionexus_avatarborder_" + us.user : null; }
+  function selectedId() {
+    try { var k = selKey(); return k ? localStorage.getItem(k) : null; } catch (e) { return null; }
+  }
+  function current() {
+    var id = selectedId(), lv = level();
+    if (id) { for (var i = 0; i < BORDERS.length; i++) if (BORDERS[i].id === id && lv >= BORDERS[i].lvl) return BORDERS[i]; }
+    return highest();
+  }
+  function applyTo(el) {
+    if (!el) return;
+    for (var i = 0; i < ALL_CLS.length; i++) el.classList.remove(ALL_CLS[i]);
+    var c = current();
+    if (c) { el.classList.add("bxb"); el.classList.add(c.cls); }
+  }
+  function applyAll() {
+    if (!u()) return;
+    applyTo(document.getElementById("profileAvatar"));
+    applyTo(document.getElementById("userMenuAvatar"));
+    applyTo(document.getElementById("reviewsFormAvatar"));
+  }
+  window.bxApplyAvatarBorders = applyAll;
+
+  function select(id) {
+    var us = u(); if (!us) return;
+    var lv = level(), b = null;
+    for (var i = 0; i < BORDERS.length; i++) if (BORDERS[i].id === id) b = BORDERS[i];
+    if (!b || lv < b.lvl) return;
+    var k = selKey(); if (k) try { localStorage.setItem(k, id); } catch (e) {}
+    applyAll(); renderPicker();
+  }
+  window.bxSelectBorder = select;
+
+  function renderPicker() {
+    var grid = document.getElementById("bxBorderGrid");
+    if (!grid) return;
+    var lv = level(), curId = current().id, unlocked = 0, html = "";
+    BORDERS.forEach(function (b) {
+      var locked = lv < b.lvl;
+      if (!locked) unlocked++;
+      html +=
+        '<div class="bx-border-item' + (locked ? " locked" : "") + (b.id === curId ? " selected" : "") + '"' +
+        (locked ? "" : ' data-id="' + b.id + '" role="button" tabindex="0"') + ">" +
+        '<span class="bx-border-swatch ' + b.cls + '">' + (b.id === curId ? "✓" : "") + "</span>" +
+        '<span class="bx-border-lbl">' + bname(b) + "</span>" +
+        (locked ? '<span class="bx-border-req">Niv. ' + b.lvl + "</span>" : "") +
+        "</div>";
+    });
+    grid.innerHTML = html;
+    var cnt = document.getElementById("bxBorderCount");
+    if (cnt) cnt.textContent = unlocked + " / " + BORDERS.length;
+    grid.querySelectorAll(".bx-border-item[data-id]").forEach(function (el) {
+      el.addEventListener("click", function () { select(el.getAttribute("data-id")); });
+    });
+  }
+  window.bxRenderBorderPicker = renderPicker;
+
+  function wrap(name, after) {
+    var o = window[name];
+    if (typeof o !== "function") return;
+    window[name] = function () { var r = o.apply(this, arguments); try { after(); } catch (e) {} return r; };
+  }
+  wrap("goProfile", function () { setTimeout(function () { applyAll(); renderPicker(); }, 30); });
+  wrap("applyUserBadge", function () { setTimeout(applyAll, 20); });
+  wrap("refreshReviewsForm", function () { setTimeout(applyAll, 20); });
+
+  function init() { setTimeout(applyAll, 400); }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
+  else init();
 })();

@@ -60,7 +60,7 @@
       href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="style.css?v=23" />
+    <link rel="stylesheet" href="style.css?v=30" />
     <script
       src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.7"
       integrity="sha384-BmlQlKlDvXvKoxkn5OQuUo/aJQCTXeB+Kls6EccBmG4Kf8AXvp89RtO9MtPxP/r5"
@@ -70,10 +70,30 @@
   <body>
     <div id="appSplash" class="app-splash">
       <div class="splash-stage">
-        <div class="splash-logo"><img src="images/favicon-256.png" alt="BioNexus" /></div>
+        <div class="splash-hero">
+          <canvas id="splashDna" class="splash-dna" aria-hidden="true"></canvas>
+          <div class="splash-logo"><img src="images/favicon-256.png" alt="BioNexus" /></div>
+        </div>
         <div class="splash-brand">BioNexus</div>
-        <div class="splash-tag">Anatomia umană 3D</div>
-        <div class="splash-bar"><div class="splash-bar-fill"></div></div>
+        <div class="splash-counter"><span id="splashPct">0</span><i>%</i></div>
+        <div class="splash-tag" id="splashStatus">Se pregătește scena</div>
+        <svg class="splash-ecg" viewBox="0 0 240 40" fill="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="ecgGrad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#8b5cf6" />
+              <stop offset="1" stop-color="#ec4899" />
+            </linearGradient>
+          </defs>
+          <path
+            id="ecgPath"
+            d="M0 20 H70 l6 -14 l8 28 l6 -14 H150 l5 -9 l5 9 H240"
+            stroke="url(#ecgGrad)"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <circle id="ecgPen" r="3.2" fill="#ec4899" />
+        </svg>
       </div>
     </div>
     <style>
@@ -81,22 +101,41 @@
         position: fixed;
         inset: 0;
         z-index: 99999;
+        overflow: hidden;
         background:
-          radial-gradient(ellipse at top right, rgba(99, 102, 241, 0.18), transparent 50%),
-          radial-gradient(ellipse at bottom left, rgba(59, 130, 246, 0.14), transparent 50%),
-          linear-gradient(180deg, #0a0e1a 0%, #0d1224 100%);
+          radial-gradient(ellipse at top right, rgba(99, 102, 241, 0.16), transparent 50%),
+          radial-gradient(ellipse at bottom left, rgba(59, 130, 246, 0.12), transparent 50%),
+          linear-gradient(180deg, #070a14 0%, #0b1022 55%, #0d1327 100%);
         display: flex;
         align-items: center;
         justify-content: center;
+        font-family: "Inter", system-ui, sans-serif;
+        clip-path: inset(0 0 0 0);
         transition:
           opacity 0.6s ease,
-          visibility 0.6s ease;
-        font-family: "Inter", system-ui, sans-serif;
+          visibility 0.6s ease,
+          clip-path 0.65s cubic-bezier(0.7, 0, 0.3, 1),
+          transform 0.65s cubic-bezier(0.7, 0, 0.3, 1);
+      }
+      .app-splash::before {
+        content: "";
+        position: absolute;
+        inset: -25%;
+        z-index: 0;
+        background:
+          radial-gradient(28% 28% at 26% 30%, rgba(99, 102, 241, 0.55), transparent 60%),
+          radial-gradient(30% 30% at 74% 34%, rgba(139, 92, 246, 0.45), transparent 60%),
+          radial-gradient(34% 34% at 55% 74%, rgba(236, 72, 153, 0.4), transparent 60%);
+        filter: blur(70px) saturate(1.35);
+        opacity: 0.6;
+        animation: auroraDrift 18s ease-in-out infinite alternate;
       }
       .app-splash.hidden {
         opacity: 0;
         visibility: hidden;
         pointer-events: none;
+        clip-path: inset(0 0 100% 0);
+        transform: scale(1.06);
       }
       html.app-booting body > *:not(#appSplash) {
         visibility: hidden !important;
@@ -105,15 +144,33 @@
         visibility: visible !important;
       }
       .splash-stage {
+        position: relative;
+        z-index: 1;
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 14px;
-        animation: splashIn 0.6s cubic-bezier(0.22, 0.61, 0.36, 1);
+        gap: 10px;
+        animation: splashIn 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+      }
+      .splash-hero {
+        position: relative;
+        width: 300px;
+        height: 300px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .splash-dna {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
       }
       .splash-logo {
-        width: 120px;
-        height: 120px;
+        position: relative;
+        z-index: 2;
+        width: 104px;
+        height: 104px;
         border-radius: 24px;
         overflow: hidden;
         background: rgba(99, 102, 241, 0.08);
@@ -123,13 +180,22 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        animation: splashPulse 2.4s ease-in-out infinite;
+        animation: splashPulse 2.6s ease-in-out infinite;
+      }
+      .splash-logo::after {
+        content: "";
+        position: absolute;
+        inset: -32%;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(139, 92, 246, 0.5), transparent 65%);
+        opacity: 0.5;
+        z-index: -1;
+        animation: splashGlow 2.6s ease-in-out infinite;
       }
       .splash-logo img {
         width: 90%;
         height: 90%;
         object-fit: contain;
-        object-position: center center;
         display: block;
         margin: auto;
         filter: drop-shadow(0 6px 18px rgba(139, 92, 246, 0.4));
@@ -137,85 +203,86 @@
       .splash-brand {
         font-family: "Space Grotesk", "Inter", system-ui, sans-serif;
         font-weight: 700;
-        font-size: 34px;
+        font-size: 30px;
         letter-spacing: 0.5px;
         background: linear-gradient(135deg, #fff, #a78bfa);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
-        margin-top: 8px;
+      }
+      .splash-counter {
+        font-family: "Space Grotesk", "Inter", sans-serif;
+        font-weight: 700;
+        font-size: clamp(44px, 11vw, 84px);
+        line-height: 1;
+        letter-spacing: -1px;
+        font-variant-numeric: tabular-nums;
+        background: linear-gradient(135deg, #fff, #a78bfa);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-top: 2px;
+      }
+      .splash-counter i {
+        font-size: 0.4em;
+        font-style: normal;
+        -webkit-text-fill-color: #8b5cf6;
+        margin-left: 3px;
       }
       .splash-tag {
-        font-size: 13px;
+        font-size: 12px;
         color: #94a3b8;
         letter-spacing: 2.5px;
         text-transform: uppercase;
-        margin-top: -4px;
+        min-height: 15px;
       }
-      .splash-bar {
-        width: 200px;
-        height: 3px;
-        background: rgba(99, 102, 241, 0.18);
-        border-radius: 99px;
-        overflow: hidden;
-        margin-top: 18px;
-        position: relative;
+      .splash-ecg {
+        width: 240px;
+        height: 40px;
+        margin-top: 12px;
+        overflow: visible;
+        filter: drop-shadow(0 0 6px rgba(236, 72, 153, 0.5));
       }
-      .splash-bar-fill {
-        position: absolute;
-        top: 0;
-        left: -40%;
-        width: 40%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, #8b5cf6, #ec4899, transparent);
-        border-radius: 99px;
-        animation: splashSlide 1.4s ease-in-out infinite;
+      #ecgPen {
+        filter: drop-shadow(0 0 5px rgba(236, 72, 153, 0.9));
       }
       @keyframes splashIn {
-        from {
-          opacity: 0;
-          transform: translateY(10px) scale(0.96);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0) scale(1);
-        }
+        from { opacity: 0; transform: translateY(12px) scale(0.97); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
       }
       @keyframes splashPulse {
-        0%,
-        100% {
-          transform: scale(1);
-          box-shadow:
-            0 16px 48px rgba(99, 102, 241, 0.35),
-            0 0 0 1px rgba(99, 102, 241, 0.25) inset;
-        }
-        50% {
-          transform: scale(1.05);
-          box-shadow:
-            0 22px 60px rgba(139, 92, 246, 0.55),
-            0 0 0 2px rgba(139, 92, 246, 0.4) inset;
-        }
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
       }
-      @keyframes splashSlide {
-        0% {
-          left: -40%;
-        }
-        100% {
-          left: 100%;
-        }
+      @keyframes splashGlow {
+        0%, 100% { opacity: 0.4; }
+        50% { opacity: 0.85; }
+      }
+      @keyframes auroraDrift {
+        0% { transform: translate3d(-4%, -2%, 0) rotate(0deg); }
+        100% { transform: translate3d(4%, 3%, 0) rotate(8deg); }
       }
       html[data-theme="light"] .app-splash {
         background:
           radial-gradient(ellipse at top right, rgba(99, 102, 241, 0.12), transparent 50%),
           linear-gradient(180deg, #f1f5f9 0%, #e2e8f0 100%);
       }
-      html[data-theme="light"] .splash-tag {
-        color: #64748b;
-      }
-      html[data-theme="light"] .splash-brand {
+      html[data-theme="light"] .app-splash::before { opacity: 0.4; }
+      html[data-theme="light"] .splash-tag { color: #64748b; }
+      html[data-theme="light"] .splash-brand,
+      html[data-theme="light"] .splash-counter {
         background: linear-gradient(135deg, #1e293b, #6366f1);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      html[data-theme="light"] .splash-counter i { -webkit-text-fill-color: #7c3aed; }
+      @media (prefers-reduced-motion: reduce) {
+        .app-splash::before,
+        .splash-logo,
+        .splash-logo::after,
+        .splash-stage { animation: none !important; }
+        .app-splash.hidden { clip-path: none; transform: none; }
       }
     </style>
     <script>
@@ -236,9 +303,94 @@
           settled: false,
         };
         window.__appLoading = state;
+        window.__modelFrac = 0;
+        (function () {
+          var WF = ["dom", "load", "fonts", "images", "model", "cleanup", "cleanupCb"];
+          var reduceM = false;
+          try { reduceM = matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
+          var dna = document.getElementById("splashDna");
+          var ctx = dna && dna.getContext ? dna.getContext("2d") : null;
+          var ecg = document.getElementById("ecgPath");
+          var pen = document.getElementById("ecgPen");
+          var pct = document.getElementById("splashPct");
+          var stat = document.getElementById("splashStatus");
+          var LEN = ecg && ecg.getTotalLength ? ecg.getTotalLength() : 0;
+          if (ecg) { ecg.style.strokeDasharray = LEN; ecg.style.strokeDashoffset = LEN; }
+          var STATUS = ["Se pregatește scena", "Se secvențiază modelul 3D", "Se asamblează țesuturile", "Aproape gata"];
+          var N = 22, p = 0, disp = 0, t = 0;
+          var C1 = [99, 102, 241], C2 = [139, 92, 246], C3 = [236, 72, 153];
+          function targetP() {
+            var n = 0; for (var i = 0; i < WF.length; i++) if (state[WF[i]]) n++;
+            var base = n / WF.length;
+            if (!state.model) base += (1 / WF.length) * Math.min(window.__modelFrac || 0, 0.98);
+            return Math.min(base, 1);
+          }
+          function sizeCanvas() {
+            if (!dna) return;
+            var dpr = Math.min(window.devicePixelRatio || 1, 2);
+            var w = dna.clientWidth || 300, h = dna.clientHeight || 300;
+            dna.width = w * dpr; dna.height = h * dpr;
+            if (ctx) ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+          }
+          sizeCanvas();
+          function mix(a, b, f) { return "rgb(" + Math.round(a[0] + (b[0] - a[0]) * f) + "," + Math.round(a[1] + (b[1] - a[1]) * f) + "," + Math.round(a[2] + (b[2] - a[2]) * f) + ")"; }
+          function grad(f) { return f < 0.5 ? mix(C1, C2, f * 2) : mix(C2, C3, (f - 0.5) * 2); }
+          function dot(x, y, r, col, a) { ctx.globalAlpha = a; ctx.fillStyle = col; ctx.beginPath(); ctx.arc(x, y, r, 0, 6.2832); ctx.fill(); ctx.globalAlpha = 1; }
+          function drawHelix(frac) {
+            if (!ctx) return;
+            var w = dna.clientWidth || 300, h = dna.clientHeight || 300;
+            ctx.clearRect(0, 0, w, h);
+            var cx = w / 2, amp = 46, top = 26, bottom = h - 26, span = bottom - top;
+            var vis = Math.max(0.0001, frac * N), p1 = null, p2 = null;
+            for (var i = 0; i <= N; i++) {
+              if (i > vis) break;
+              var fy = i / N, y = bottom - fy * span, ph = i * 0.5 + t;
+              var x1 = cx + amp * Math.sin(ph), x2 = cx + amp * Math.sin(ph + Math.PI);
+              var d1 = Math.cos(ph) * 0.5 + 0.5, d2 = Math.cos(ph + Math.PI) * 0.5 + 0.5;
+              var col = grad(fy);
+              ctx.globalAlpha = 0.32; ctx.strokeStyle = col; ctx.lineWidth = 1.3;
+              ctx.beginPath(); ctx.moveTo(x1, y); ctx.lineTo(x2, y); ctx.stroke();
+              ctx.globalAlpha = 0.85; ctx.lineWidth = 2; ctx.strokeStyle = col;
+              if (p1) { ctx.beginPath(); ctx.moveTo(p1.x, p1.y); ctx.lineTo(x1, y); ctx.stroke(); }
+              if (p2) { ctx.beginPath(); ctx.moveTo(p2.x, p2.y); ctx.lineTo(x2, y); ctx.stroke(); }
+              ctx.shadowColor = col; ctx.shadowBlur = 10;
+              dot(x1, y, 2 + 2.4 * d1, col, 0.5 + 0.5 * d1);
+              dot(x2, y, 2 + 2.4 * d2, col, 0.5 + 0.5 * d2);
+              ctx.shadowBlur = 0;
+              p1 = { x: x1, y: y }; p2 = { x: x2, y: y };
+            }
+            ctx.globalAlpha = 1;
+          }
+          function frame() {
+            var tp = targetP();
+            p += (tp - p) * 0.08;
+            disp += (p - disp) * 0.1;
+            t += 0.03;
+            if (pct) pct.textContent = Math.round(disp * 100);
+            if (stat) stat.textContent = STATUS[Math.min(STATUS.length - 1, Math.floor(disp * STATUS.length))];
+            if (ecg) {
+              ecg.style.strokeDashoffset = LEN * (1 - disp);
+              if (pen && ecg.getPointAtLength) { var pt = ecg.getPointAtLength(LEN * disp); pen.setAttribute("cx", pt.x); pen.setAttribute("cy", pt.y); }
+            }
+            drawHelix(disp);
+            if (!state.settled) window.__splashRaf = requestAnimationFrame(frame);
+          }
+          window.addEventListener("resize", sizeCanvas);
+          if (reduceM) { drawHelix(0.15); if (pct) pct.textContent = "0"; }
+          else { window.__splashRaf = requestAnimationFrame(frame); }
+          window.__splashFinish = function () {
+            try { if (window.__splashRaf) cancelAnimationFrame(window.__splashRaf); } catch (e) {}
+            if (pct) pct.textContent = "100";
+            if (ecg) ecg.style.strokeDashoffset = 0;
+            if (pen && ecg && ecg.getPointAtLength) { var pt = ecg.getPointAtLength(LEN); pen.setAttribute("cx", pt.x); pen.setAttribute("cy", pt.y); }
+            if (stat) stat.textContent = "Gata";
+            drawHelix(1);
+          };
+        })();
         function hide() {
           if (state.settled) return;
           state.settled = true;
+          try { if (window.__splashFinish) window.__splashFinish(); } catch (e) {}
           var elapsed = Date.now() - startedAt;
           var wait = Math.max(SPLASH_GRACE_MS, SPLASH_MIN_MS - elapsed);
           setTimeout(function () {
@@ -2678,6 +2830,19 @@
             </div>
             <div class="profile-badges-grid" id="profileBadgesGrid"></div>
           </div>
+          <div class="profile-borders-wrap">
+            <div class="profile-badges-head">
+              <span class="profile-borders-ic" aria-hidden="true">🖼️</span>
+              <h2 class="profile-badges-title" data-i18n="profile.borders.h">CHENAR AVATAR</h2>
+              <div class="profile-badges-count">
+                <b id="bxBorderCount">0</b><span data-i18n="profile.borders.unlocked">deblocate</span>
+              </div>
+            </div>
+            <p class="profile-borders-sub" data-i18n="profile.borders.sub">
+              Deblochezi un chenar nou la fiecare nivel atins. Alege-l pe cel preferat.
+            </p>
+            <div class="profile-borders-grid" id="bxBorderGrid"></div>
+          </div>
         </section>
         <section class="profile-section" id="profileSec-setari">
           <div class="settings-block">
@@ -3041,10 +3206,10 @@
       <span class="msf-ic">🔍</span><span data-i18n="mob.structures">Structuri</span>
     </button>
 
-    <script src="i18n-content.js?v=23"></script>
-    <script src="script.js?v=23"></script>
-    <script src="supabase-integration.js?v=23"></script>
-    <script src="router.js?v=23"></script>
+    <script src="i18n-content.js?v=30"></script>
+    <script src="script.js?v=30"></script>
+    <script src="supabase-integration.js?v=30"></script>
+    <script src="router.js?v=30"></script>
   </body>
 </html>
 
