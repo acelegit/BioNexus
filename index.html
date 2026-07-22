@@ -60,7 +60,7 @@
       href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="style.css?v=34" />
+    <link rel="stylesheet" href="style.css?v=35" />
     <script
       src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.7"
       integrity="sha384-BmlQlKlDvXvKoxkn5OQuUo/aJQCTXeB+Kls6EccBmG4Kf8AXvp89RtO9MtPxP/r5"
@@ -2765,6 +2765,29 @@
             <span class="home-contact-by" data-i18n="home.contact.by">Realizat de</span>
             <span class="home-contact-names">Dobrota Ryan &amp; Gheorghe Alexandru</span>
           </div>
+          <form class="contact-form" onsubmit="return bxSubmitContact(event)">
+            <div class="contact-form-row">
+              <div class="contact-field">
+                <label class="report-lbl" for="contactName" data-i18n="contact.name">Nume</label>
+                <input type="text" id="contactName" data-i18n-ph="contact.namePh" placeholder="Numele tău" />
+              </div>
+              <div class="contact-field">
+                <label class="report-lbl" for="contactEmailF" data-i18n="contact.email">Email</label>
+                <input type="email" id="contactEmailF" placeholder="tu@email.com" />
+              </div>
+            </div>
+            <label class="report-lbl" for="contactType" data-i18n="contact.type">Tip</label>
+            <select id="contactType" class="contact-select">
+              <option value="suggestion" data-i18n="contact.type.suggestion">💡 Sugestie</option>
+              <option value="question" data-i18n="contact.type.question">❓ Întrebare</option>
+              <option value="other" data-i18n="contact.type.other">❔ Altceva</option>
+            </select>
+            <label class="report-lbl" for="contactMsg" data-i18n="contact.msg">Mesaj</label>
+            <textarea id="contactMsg" rows="4" maxlength="1500" data-i18n-ph="contact.msgPh" placeholder="Scrie mesajul tău..."></textarea>
+            <input type="text" id="contactHp" tabindex="-1" autocomplete="off" aria-hidden="true" style="position: absolute; left: -9999px; opacity: 0" />
+            <div class="contact-status" id="contactStatus" role="status"></div>
+            <button type="submit" class="contact-send" id="contactSend" data-i18n="contact.send">Trimite mesajul</button>
+          </form>
         </div>
       </div>
     </div>
@@ -3067,7 +3090,6 @@
             <div class="bx-rselect-list" id="reportTypeList" role="listbox">
               <div class="bx-rselect-opt" role="option" data-value="bug"><span class="bx-emoji bx-rselect-ic">🐞</span><span class="bx-rselect-txt" data-rep="bug"></span></div>
               <div class="bx-rselect-opt" role="option" data-value="content"><span class="bx-emoji bx-rselect-ic">📄</span><span class="bx-rselect-txt" data-rep="content"></span></div>
-              <div class="bx-rselect-opt" role="option" data-value="suggestion"><span class="bx-emoji bx-rselect-ic">💡</span><span class="bx-rselect-txt" data-rep="suggestion"></span></div>
               <div class="bx-rselect-opt" role="option" data-value="other"><span class="bx-emoji bx-rselect-ic">❓</span><span class="bx-rselect-txt" data-rep="other"></span></div>
             </div>
           </div>
@@ -3248,10 +3270,10 @@
       <span class="msf-ic">🔍</span><span data-i18n="mob.structures">Structuri</span>
     </button>
 
-    <script src="i18n-content.js?v=34"></script>
-    <script src="script.js?v=34"></script>
-    <script src="supabase-integration.js?v=34"></script>
-    <script src="router.js?v=34"></script>
+    <script src="i18n-content.js?v=35"></script>
+    <script src="script.js?v=35"></script>
+    <script src="supabase-integration.js?v=35"></script>
+    <script src="router.js?v=35"></script>
   </body>
 </html>
 

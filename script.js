@@ -1216,7 +1216,7 @@ gltfLoader.load(
         h +=
           '<li class="bone-item" data-bone="' +
           id +
-          '" onclick="selectBoneById(\'' +
+          '" onclick="focusBoneById(\'' +
           id +
           '\')"><span class="bone-label-text">' +
           (d ? d.name : id) +
@@ -2959,6 +2959,16 @@ var I18N = {
     "home.contact.sub": "Ai o întrebare, o sugestie sau ai găsit o greșeală? Scrie-ne oricând.",
     "home.contact.by": "Realizat de",
     "contact.copy": "Copiază",
+    "contact.name": "Nume",
+    "contact.namePh": "Numele tău",
+    "contact.email": "Email",
+    "contact.type": "Tip",
+    "contact.type.suggestion": "💡 Sugestie",
+    "contact.type.question": "❓ Întrebare",
+    "contact.type.other": "❔ Altceva",
+    "contact.msg": "Mesaj",
+    "contact.msgPh": "Scrie mesajul tău...",
+    "contact.send": "Trimite mesajul",
     "home.nav.login": "Conectare",
     "home.hero.badge": "Anatomia umană 3D &nbsp;&middot;&nbsp; <span>România</span>",
     "home.hero.title": 'Anatomia umană în <span class="home-hero-grad">3D interactiv</span>',
@@ -3164,6 +3174,16 @@ var I18N = {
     "home.contact.sub": "Have a question, suggestion, or found a mistake? Write to us anytime.",
     "home.contact.by": "Made by",
     "contact.copy": "Copy",
+    "contact.name": "Name",
+    "contact.namePh": "Your name",
+    "contact.email": "Email",
+    "contact.type": "Type",
+    "contact.type.suggestion": "💡 Suggestion",
+    "contact.type.question": "❓ Question",
+    "contact.type.other": "❔ Other",
+    "contact.msg": "Message",
+    "contact.msgPh": "Write your message...",
+    "contact.send": "Send message",
     "home.nav.login": "Login",
     "home.hero.badge": "Human anatomy 3D &nbsp;&middot;&nbsp; <span>Romania</span>",
     "home.hero.title": 'Human anatomy in <span class="home-hero-grad">interactive 3D</span>',
@@ -4740,7 +4760,7 @@ var ACHIEVEMENTS = [
   {
     id: "mentor",
     name: "MENTOR",
-    sub: "10 întrebări AI puse",
+    sub: "Scrie 10 mesaje chatbotului (tastate manual)",
     icon: "💡",
     c1: "#facc15",
     c2: "#a16207",
@@ -4780,7 +4800,7 @@ var ACHIEVEMENTS = [
   {
     id: "curios",
     name: "CURIOS",
-    sub: "Chatbot folosit 25 ori",
+    sub: "Cere-i chatbotului 25 de curiozități",
     icon: "🔍",
     c1: "#22d3ee",
     c2: "#0e7490",
@@ -6043,6 +6063,8 @@ function ensureProgress(p) {
   p.quizPerfect = p.quizPerfect || { easy: 0, medium: 0, hard: 0 };
   p.quizCompleted = p.quizCompleted || 0;
   p.chatbotUses = p.chatbotUses || 0;
+  p.manualChats = p.manualChats || 0;
+  p.curiosityAsks = p.curiosityAsks || 0;
   p.daysActive = p.daysActive || [];
   p.joinDate = p.joinDate || Date.now();
   p.xp = p.xp || 0;
@@ -6141,8 +6163,8 @@ function unlockedAchievements() {
     chirurg: p.quizPerfect.medium >= 1,
     maestru: p.quizPlays.hard >= 1,
     colectionar: p.sectionsVisited.length >= totalSections,
-    mentor: p.chatbotUses >= 10,
-    curios: p.chatbotUses >= 25,
+    mentor: (p.manualChats || 0) >= 10,
+    curios: (p.curiosityAsks || 0) >= 25,
     veteran: p.daysActive.length >= 30,
     legenda: p.quizPerfect.hard >= 1,
     constant: streak >= 7,
@@ -6287,8 +6309,8 @@ function bxBadgeProgress(id) {
     var M = {
       explorator: [(p.bonesViewed || []).length, 25],
       colectionar: [(p.sectionsVisited || []).length, 4],
-      mentor: [p.chatbotUses || 0, 10],
-      curios: [p.chatbotUses || 0, 25],
+      mentor: [p.manualChats || 0, 10],
+      curios: [p.curiosityAsks || 0, 25],
       veteran: [(p.daysActive || []).length, 30],
       constant: [streak, 7],
       sarcomer: [(p.musclesViewed || []).length, 30],
@@ -6352,6 +6374,20 @@ window.bxTryBadge = function (id) {
     var origC = window.sendChat;
     window.sendChat = function () {
       trackEvent("chatbot");
+      try {
+        var inp = document.getElementById("chatInput");
+        var txt = inp ? inp.value.trim() : "";
+        if (txt) {
+          var isCurio = /curiozit|stiai|fapt interesant|surprinde ma|fun fact|did you know/i.test(txt.toLowerCase());
+          var u = getCurrentUser();
+          if (u) {
+            var p = ensureProgress(getProgress(u.user));
+            if (isCurio) p.curiosityAsks = (p.curiosityAsks || 0) + 1;
+            else p.manualChats = (p.manualChats || 0) + 1;
+            saveProgress(p, u.user);
+          }
+        }
+      } catch (e) {}
       return origC.apply(this, arguments);
     };
   }
@@ -7937,7 +7973,7 @@ window.renderBoneList = function () {
         h +=
           '<li class="bone-item" data-bone="' +
           id +
-          '" onclick="selectBoneById(\'' +
+          '" onclick="focusBoneById(\'' +
           id +
           '\')"><span class="bone-label-text">' +
           (d ? d.name : id) +
@@ -8921,6 +8957,14 @@ if (typeof window.openCuriozitati === "function") {
   window.openCuriozitati = function () {
     origOpen();
     trackDaily("curiozitate");
+    try {
+      var u = getCurrentUser();
+      if (u) {
+        var p = ensureProgress(getProgress(u.user));
+        p.curiosityAsks = (p.curiosityAsks || 0) + 1;
+        saveProgress(p, u.user);
+      }
+    } catch (e) {}
   };
 }
 
@@ -19164,6 +19208,59 @@ window.DUEL_BANKS = {"muscular":[{"text_ro":"Prin contracția unilaterală, ster
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(email).then(done, fallback);
     } else fallback();
+  };
+  window.bxSubmitContact = function (e) {
+    if (e && e.preventDefault) e.preventDefault();
+    var en = window.CUR_LANG === "en";
+    var name = (document.getElementById("contactName") || {}).value || "";
+    var email = (document.getElementById("contactEmailF") || {}).value || "";
+    var typeSel = document.getElementById("contactType");
+    var typeVal = typeSel ? typeSel.value : "other";
+    var typeLbl = typeSel && typeSel.selectedOptions[0] ? typeSel.selectedOptions[0].textContent.trim() : typeVal;
+    var msg = ((document.getElementById("contactMsg") || {}).value || "").trim();
+    var hp = document.getElementById("contactHp");
+    var status = document.getElementById("contactStatus");
+    var btn = document.getElementById("contactSend");
+    if (hp && hp.value) return false;
+    function setStatus(cls, txt) { if (status) { status.className = "contact-status " + cls; status.textContent = txt; } }
+    if (msg.length < 5) { setStatus("err", en ? "Please write a longer message." : "Scrie un mesaj mai lung."); return false; }
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { setStatus("err", en ? "Enter a valid email." : "Introdu un email valid."); return false; }
+    var subject = "BioNexus — contact: " + typeLbl;
+    if (btn) { btn.disabled = true; btn.textContent = en ? "Sending..." : "Se trimite..."; }
+    setStatus("", en ? "Sending..." : "Se trimite...");
+    var payload = {
+      _subject: subject,
+      Nume: name || "—",
+      Email: email,
+      Tip: typeLbl,
+      Mesaj: msg,
+      Pagina: location.href,
+      Limba: typeof CUR_LANG !== "undefined" ? CUR_LANG : "ro",
+      _template: "table",
+    };
+    function reset(okTxt, cls) {
+      if (btn) { btn.disabled = false; btn.textContent = en ? "Send message" : "Trimite mesajul"; }
+      setStatus(cls, okTxt);
+    }
+    fetch("https://formsubmit.co/ajax/bionexusdevs@gmail.com", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify(payload),
+    })
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        if (data && String(data.success) === "true") {
+          reset(en ? "Message sent — thank you!" : "Mesaj trimis — mulțumim!", "ok");
+          var mEl = document.getElementById("contactMsg"); if (mEl) mEl.value = "";
+          var nEl = document.getElementById("contactName"); if (nEl) nEl.value = "";
+        } else {
+          reset(en ? "Could not send. Try the email above." : "Nu s-a putut trimite. Încearcă emailul de mai sus.", "err");
+        }
+      })
+      .catch(function () {
+        reset(en ? "Could not send. Try the email above." : "Nu s-a putut trimite. Încearcă emailul de mai sus.", "err");
+      });
+    return false;
   };
 
 
