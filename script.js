@@ -2139,6 +2139,19 @@ function adminPickSystem() {
   var structRow = document.getElementById("adminStructRow");
   var fields = document.getElementById("adminFields");
   var promptWrap = document.getElementById("adminPromptWrap");
+  var reviewsBox = document.getElementById("adminReviews");
+  var actions = document.querySelector("#adminEditor .admin-actions");
+  if (reviewsBox) reviewsBox.style.display = "none";
+  if (actions) actions.style.display = "";
+  if (sys === "reviews") {
+    if (structRow) structRow.style.display = "none";
+    if (fields) fields.style.display = "none";
+    if (promptWrap) promptWrap.style.display = "none";
+    if (actions) actions.style.display = "none";
+    if (reviewsBox) reviewsBox.style.display = "block";
+    if (typeof window.adminLoadReviews === "function") window.adminLoadReviews();
+    return;
+  }
   if (sys === "ai") {
     if (structRow) structRow.style.display = "none";
     if (fields) fields.style.display = "none";
@@ -2194,6 +2207,7 @@ window.adminLogin = async function () {
     ["respiratory", "Sistem Respirator"],
     ["digestive", "Sistem Digestiv"],
     ["ai", "Asistent AI — prompt sistem"],
+    ["reviews", "Recenzii — moderare"],
   ]
     .map(function (o) {
       return '<option value="' + o[0] + '">' + o[1] + "</option>";
@@ -2203,6 +2217,62 @@ window.adminLogin = async function () {
   var structSel = document.getElementById("adminStructSel");
   if (structSel) structSel.onchange = adminLoadStruct;
   adminPickSystem();
+};
+window.adminLoadReviews = async function () {
+  var box = document.getElementById("adminReviews");
+  if (!box) return;
+  var esc = typeof escapeHTML === "function" ? escapeHTML : function (s) { return String(s == null ? "" : s); };
+  box.innerHTML = '<div class="admin-rev-loading">Se încarcă recenziile…</div>';
+  if (!window.sb) {
+    box.innerHTML = '<div class="admin-rev-empty">Recenziile sunt disponibile doar online (Supabase).</div>';
+    return;
+  }
+  try {
+    var res = await window.sb.from("reviews").select("*").order("created_at", { ascending: false });
+    if (res.error) {
+      box.innerHTML = '<div class="admin-rev-empty">Eroare: ' + esc(res.error.message) + "</div>";
+      return;
+    }
+    var all = res.data || [];
+    if (!all.length) {
+      box.innerHTML = '<div class="admin-rev-empty">Nicio recenzie.</div>';
+      return;
+    }
+    box.innerHTML =
+      '<div class="admin-rev-count">' + all.length + " recenzii</div>" +
+      all.map(function (r) {
+        return (
+          '<div class="admin-rev-item">' +
+          '<div class="admin-rev-main"><div class="admin-rev-name">' +
+          esc(r.username || "?") + " · " + (Number(r.rating) || 0) + "★</div>" +
+          '<div class="admin-rev-text">' + esc(r.text || "") + "</div></div>" +
+          '<button class="admin-rev-del" type="button" data-id="' + esc(r.id) + '">Șterge</button>' +
+          "</div>"
+        );
+      }).join("");
+    box.querySelectorAll(".admin-rev-del").forEach(function (b) {
+      b.addEventListener("click", function () {
+        window.adminDeleteReview(b.getAttribute("data-id"));
+      });
+    });
+  } catch (e) {
+    box.innerHTML = '<div class="admin-rev-empty">Eroare la încărcarea recenziilor.</div>';
+  }
+};
+window.adminDeleteReview = async function (id) {
+  if (!window.sb || !id) return;
+  if (!confirm("Ștergi această recenzie?")) return;
+  var del = await window.sb.from("reviews").delete().eq("id", id).select();
+  if (del.error) {
+    alert(del.error.message);
+    return;
+  }
+  if (!del.data || del.data.length === 0) {
+    alert("Nu s-a putut șterge — baza de date are nevoie de o politică de ștergere pentru admin (RLS).");
+    return;
+  }
+  if (typeof window.refreshReviewsList === "function") try { window.refreshReviewsList(); } catch (e) {}
+  window.adminLoadReviews();
 };
 window.adminSave = function () {
   if (!ADMIN_AUTHED) return;
