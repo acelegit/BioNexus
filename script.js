@@ -2628,7 +2628,7 @@ function kbLookup(q) {
 function chatbotReply(input) {
   var q = strip(input);
   if (
-    /curiozit|stiai|fapt interesant|spune mi ceva|surprinde ma|fun fact|did you know|tell me something|amazing/i.test(
+    /curiozit|stiai|fapt interesant|surprinde ma|fun fact|did you know/i.test(
       q
     ) &&
     typeof CURIOZITATI !== "undefined" &&
@@ -2958,6 +2958,7 @@ var I18N = {
     "home.contact.h": "Contact",
     "home.contact.sub": "Ai o întrebare, o sugestie sau ai găsit o greșeală? Scrie-ne oricând.",
     "home.contact.by": "Realizat de",
+    "contact.copy": "Copiază",
     "home.nav.login": "Conectare",
     "home.hero.badge": "Anatomia umană 3D &nbsp;&middot;&nbsp; <span>România</span>",
     "home.hero.title": 'Anatomia umană în <span class="home-hero-grad">3D interactiv</span>',
@@ -3162,6 +3163,7 @@ var I18N = {
     "home.contact.h": "Contact",
     "home.contact.sub": "Have a question, suggestion, or found a mistake? Write to us anytime.",
     "home.contact.by": "Made by",
+    "contact.copy": "Copy",
     "home.nav.login": "Login",
     "home.hero.badge": "Human anatomy 3D &nbsp;&middot;&nbsp; <span>Romania</span>",
     "home.hero.title": 'Human anatomy in <span class="home-hero-grad">interactive 3D</span>',
@@ -8832,6 +8834,10 @@ window.bxOpenDailyQuiz = function (system, mode, diff) {
   if (typeof enterApp === "function") enterApp("quiz");
   setTimeout(function () {
     try {
+      document.body.classList.remove(
+        "mode-skeleton", "mode-muscular", "mode-cardio", "mode-nervous", "mode-respiratory", "mode-digestive"
+      );
+      document.body.classList.add("mode-quiz");
       if (window.QUIZ) QUIZ.system = system;
       if (typeof pickQuizSystem === "function") pickQuizSystem(system);
       if (typeof pickQuizMode === "function") pickQuizMode(mode);
@@ -19109,8 +19115,10 @@ window.DUEL_BANKS = {"muscular":[{"text_ro":"Prin contracția unilaterală, ster
     if (!p) return;
     var s = document.getElementById("systemsPage");
     var f = document.getElementById("featuresPage");
+    var ct = document.getElementById("contactPage");
     if (s) s.classList.remove("active", "bx-closing");
     if (f) f.classList.remove("active", "bx-closing");
+    if (ct && ct !== p) ct.classList.remove("active", "bx-closing");
     p.classList.remove("bx-closing");
     p.classList.add("active");
     document.body.style.overflow = "hidden";
@@ -19134,6 +19142,29 @@ window.DUEL_BANKS = {"muscular":[{"text_ro":"Prin contracția unilaterală, ster
   window.closeSystemsPage = function () { closePage("systemsPage"); };
   window.openFeaturesPage = function () { openPage("featuresPage"); };
   window.closeFeaturesPage = function () { closePage("featuresPage"); };
+  window.openContactPage = function () { openPage("contactPage"); };
+  window.closeContactPage = function () { closePage("contactPage"); };
+  window.bxCopyEmail = function (btn) {
+    var email = (btn && btn.getAttribute("data-email")) || "bionexusdevs@gmail.com";
+    var lbl = btn && btn.querySelector(".cc-lbl");
+    var orig = lbl ? lbl.textContent : "";
+    function done() {
+      if (btn) btn.classList.add("copied");
+      if (lbl) lbl.textContent = window.CUR_LANG === "en" ? "Copied!" : "Copiat!";
+      setTimeout(function () { if (btn) btn.classList.remove("copied"); if (lbl) lbl.textContent = orig; }, 1600);
+    }
+    function fallback() {
+      try {
+        var ta = document.createElement("textarea");
+        ta.value = email; ta.style.position = "fixed"; ta.style.opacity = "0";
+        document.body.appendChild(ta); ta.focus(); ta.select();
+        document.execCommand("copy"); document.body.removeChild(ta); done();
+      } catch (e) {}
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(email).then(done, fallback);
+    } else fallback();
+  };
 
 
   document.addEventListener("click", function (e) {

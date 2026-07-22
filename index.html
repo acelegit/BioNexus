@@ -60,7 +60,7 @@
       href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="style.css?v=33" />
+    <link rel="stylesheet" href="style.css?v=34" />
     <script
       src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.7"
       integrity="sha384-BmlQlKlDvXvKoxkn5OQuUo/aJQCTXeB+Kls6EccBmG4Kf8AXvp89RtO9MtPxP/r5"
@@ -531,7 +531,7 @@
           <a href="#" onclick="openSystemsPage();return false;" data-i18n="home.nav.systems">Sisteme</a>
           <a href="#" onclick="openFeaturesPage();return false;" data-i18n="home.nav.features">Funcționalități</a>
           <a href="#invata" data-i18n="home.nav.learn">Învață</a>
-          <a href="#contact" data-i18n="home.nav.contact">Contact</a>
+          <a href="#" onclick="openContactPage();return false;" data-i18n="home.nav.contact">Contact</a>
         </div>
         <button class="home-hamburger" onclick="toggleHomeMenu()" aria-label="Meniu" aria-expanded="false">
           <span></span><span></span><span></span>
@@ -1034,22 +1034,6 @@
         </div>
       </section>
 
-      <section class="home-contact" id="contact">
-        <div class="home-contact-card">
-          <div class="home-contact-ic" aria-hidden="true">&#9993;</div>
-          <h2 class="home-section-title" data-i18n-html="home.contact.h">
-            Contact
-          </h2>
-          <p class="home-contact-sub" data-i18n="home.contact.sub">
-            Ai o întrebare, o sugestie sau ai găsit o greșeală? Scrie-ne oricând.
-          </p>
-          <a class="home-contact-email" href="mailto:bionexusdevs@gmail.com">bionexusdevs@gmail.com</a>
-          <div class="home-contact-people">
-            <span class="home-contact-by" data-i18n="home.contact.by">Realizat de</span>
-            <span class="home-contact-names">Dobrota Ryan &amp; Gheorghe Alexandru</span>
-          </div>
-        </div>
-      </section>
       <footer class="home-footer">
         <div class="home-footer-links">
           <button class="home-footer-link" type="button" onclick="showTerms('terms')" data-i18n="footer.terms">
@@ -2753,6 +2737,38 @@
       </div>
     </div>
 
+    <div class="subpage" id="contactPage">
+      <button class="subpage-back" onclick="closeContactPage()">
+        <span aria-hidden="true">&larr;</span> <span data-i18n="subpage.back">Înapoi</span>
+      </button>
+      <div class="subpage-inner contact-page-inner">
+        <div class="home-contact-card">
+          <div class="home-contact-ic" aria-hidden="true">&#9993;</div>
+          <h1 class="subpage-title" data-i18n="home.contact.h">Contact</h1>
+          <p class="subpage-sub" data-i18n="home.contact.sub">
+            Ai o întrebare, o sugestie sau ai găsit o greșeală? Scrie-ne oricând.
+          </p>
+          <div class="contact-email-row">
+            <a class="home-contact-email" href="mailto:bionexusdevs@gmail.com">bionexusdevs@gmail.com</a>
+            <button
+              class="contact-copy-btn"
+              type="button"
+              onclick="bxCopyEmail(this)"
+              data-email="bionexusdevs@gmail.com"
+              title="Copiază adresa"
+            >
+              <span class="cc-ic" aria-hidden="true">&#128203;</span>
+              <span class="cc-lbl" data-i18n="contact.copy">Copiază</span>
+            </button>
+          </div>
+          <div class="home-contact-people">
+            <span class="home-contact-by" data-i18n="home.contact.by">Realizat de</span>
+            <span class="home-contact-names">Dobrota Ryan &amp; Gheorghe Alexandru</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="profile-page" id="profilePage">
       <button class="profile-back" onclick="closeProfile()">
         &larr; <span data-i18n="profile.back">Înapoi</span>
@@ -3232,10 +3248,10 @@
       <span class="msf-ic">🔍</span><span data-i18n="mob.structures">Structuri</span>
     </button>
 
-    <script src="i18n-content.js?v=33"></script>
-    <script src="script.js?v=33"></script>
-    <script src="supabase-integration.js?v=33"></script>
-    <script src="router.js?v=33"></script>
+    <script src="i18n-content.js?v=34"></script>
+    <script src="script.js?v=34"></script>
+    <script src="supabase-integration.js?v=34"></script>
+    <script src="router.js?v=34"></script>
   </body>
 </html>
 
