@@ -1484,9 +1484,9 @@ body.mode-quiz .quiz-end-stage {
   transform: none;
   margin-left: auto;
   margin-right: auto;
-  max-width: min(940px, calc(100vw - 24px));
+  max-width: min(1080px, calc(100vw - 20px));
   padding: 8px 10px 8px 22px;
-  gap: 18px;
+  gap: 14px;
   background: rgba(15, 23, 42, 0.94);
   border: 1px solid rgba(99, 102, 241, 0.4);
   border-radius: 999px;
@@ -1533,6 +1533,10 @@ body.mode-quiz .quiz-end-stage {
 }
 .home-nav.scrolled .home-nav-center {
   flex: 0 0 auto;
+  gap: 2px;
+}
+.home-nav.scrolled .home-nav-center a {
+  padding: 8px 12px;
 }
 .home-nav-center a {
   padding: 9px 18px;
@@ -4276,6 +4280,12 @@ html[data-theme="light"] .auth-art-bg {
 .user-menu {
   position: relative;
   display: inline-flex;
+}
+.user-menu-name {
+  max-width: 130px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .user-menu-trigger {
   display: inline-flex;

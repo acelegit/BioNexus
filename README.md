@@ -46,8 +46,10 @@ Proiectul este construit pe o **arhitectură serverless** (Supabase + Cloudflare
 - Rulează printr-un **proxy server-side securizat** — cheia API nu ajunge niciodată în browser.
 
 ### 🔥 Progres și motivație
-- **Provocări zilnice** cu XP, streak (zile consecutive) și buton care te duce direct unde trebuie ca să le completezi.
-- **Insigne / achievements** pentru toate cele 6 sisteme (explorare, primul quiz, quiz Greu perfect etc.).
+- **Sistem de niveluri (XP)** — câștigi XP din explorare, quiz-uri, provocări și activitate zilnică; urci în nivel constant (300 XP / nivel), cu bară de progres și „XP până la nivelul următor" afișate în profil.
+- **Provocări zilnice** cu XP, streak (zile consecutive), calendar pe 14 zile și buton care te duce direct unde trebuie ca să le completezi.
+- **Insigne / achievements** — peste 40 de insigne pentru toate cele 6 sisteme (explorare, primul quiz, quiz Greu perfect, mentor AI, constanță etc.), fiecare acordând XP în funcție de dificultate.
+- **Chenare de avatar (avatar borders)** — 10 chenare metalice deblocate progresiv odată cu nivelul (Fier → Argint → Platină → Aur), pe care le alegi din profil și care apar pe avatarul tău la profil, în recenzii și în meniul de utilizator.
 - **Profil de utilizator** cu progres sincronizat în cont.
 
 ### 📓 Instrumente de studiu
