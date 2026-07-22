@@ -645,9 +645,17 @@
 
   window.deleteReview = async function (id) {
     if (!confirm("Ștergi această recenzie?")) return;
-    var del = await sb.from("reviews").delete().eq("id", id);
+    var del = await sb.from("reviews").delete().eq("id", id).select();
     if (del.error) {
       alert(del.error.message);
+      return;
+    }
+    if (!del.data || del.data.length === 0) {
+      alert(
+        window.CUR_LANG === "en"
+          ? "Could not delete this review — the database needs an admin delete policy."
+          : "Nu s-a putut șterge recenzia — baza de date are nevoie de o politică de ștergere pentru admin."
+      );
       return;
     }
     await refreshReviewsList();
@@ -687,8 +695,9 @@
           if (CURRENT_USER && r.user_id === CURRENT_USER.id && typeof window.bxCurrentBorderClass === "function")
             bcls = window.bxCurrentBorderClass();
           else if (typeof window.bxBorderClassForXp === "function") {
-            var rxp = typeof r.xp === "number" ? r.xp : __xpMap[r.user_id];
-            bcls = window.bxBorderClassForXp(rxp || 0);
+            var live = __xpMap[r.user_id];
+            var rxp = typeof live === "number" ? live : (typeof r.xp === "number" ? r.xp : 0);
+            bcls = window.bxBorderClassForXp(rxp);
           }
         } catch (e) {}
         var avInline = "";
@@ -697,12 +706,14 @@
             ' style="background-image:url(' +
             escHTML(r.avatar_url) +
             ');background-size:cover;background-position:center"';
-        var delBtn =
-          CURRENT_USER && CURRENT_USER.id === r.user_id
-            ? '<button class="review-delete" onclick="deleteReview(\'' +
-              r.id +
-              '\')" title="Șterge">&times;</button>'
-            : "";
+        var canDelete =
+          (CURRENT_USER && CURRENT_USER.id === r.user_id) ||
+          (typeof window.bxIsAdmin === "function" && window.bxIsAdmin());
+        var delBtn = canDelete
+          ? '<button class="review-delete" onclick="deleteReview(\'' +
+            r.id +
+            '\')" title="Șterge">&times;</button>'
+          : "";
         card.innerHTML =
           '<div class="review-head"><div class="review-avatar bxb ' +
           bcls +

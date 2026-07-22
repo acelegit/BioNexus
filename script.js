@@ -2021,6 +2021,9 @@ var ADMIN_PASS_HASH = "";
   ADMIN_PASS_HASH = await sha256("ryanbubu67");
 })();
 var ADMIN_AUTHED = false;
+window.bxIsAdmin = function () {
+  return typeof ADMIN_AUTHED !== "undefined" && !!ADMIN_AUTHED;
+};
 function loadBoneOverrides() {
   try {
     var o = JSON.parse(localStorage.getItem("bionexus_bone_overrides") || "{}");
@@ -2179,6 +2182,7 @@ window.adminLogin = async function () {
   }
   ADMIN_AUTHED = true;
   err.textContent = "";
+  if (typeof window.refreshReviewsList === "function") try { window.refreshReviewsList(); } catch (e) {}
   document.getElementById("adminAuth").style.display = "none";
   document.getElementById("adminEditor").style.display = "block";
   var sysSel = document.getElementById("adminSysSel");
