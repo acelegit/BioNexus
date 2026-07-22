@@ -609,13 +609,18 @@
       if (!confirm("Ai deja o recenzie publicată. Suprascrii cu cea nouă?")) return;
       await sb.from("reviews").delete().eq("user_id", CURRENT_USER.id);
     }
-    var ins = await sb.from("reviews").insert({
+    var basePayload = {
       user_id: CURRENT_USER.id,
       username: CURRENT_USER.user,
       avatar_url: CURRENT_PROFILE ? CURRENT_PROFILE.avatar_url : null,
       rating: REVIEW_SELECTED_RATING,
       text: txt,
-    });
+    };
+    var myXp = CURRENT_PROFILE && typeof CURRENT_PROFILE.xp === "number" ? CURRENT_PROFILE.xp : 0;
+    var ins = await sb.from("reviews").insert(Object.assign({ xp: myXp }, basePayload));
+    if (ins.error && /xp|column|schema/i.test(ins.error.message || "")) {
+      ins = await sb.from("reviews").insert(basePayload);
+    }
     if (ins.error) {
       msg.classList.add("err");
       msg.textContent = ins.error.message;
@@ -661,9 +666,31 @@
       } else {
         if (empty) empty.style.display = "none";
       }
+      var __xpMap = {};
+      try {
+        var __ids = [];
+        all.forEach(function (r) {
+          if (r.user_id && __ids.indexOf(r.user_id) < 0) __ids.push(r.user_id);
+        });
+        if (__ids.length) {
+          var pr = await sb.from("profiles").select("id,xp").in("id", __ids);
+          (pr.data || []).forEach(function (p) {
+            __xpMap[p.id] = p.xp || 0;
+          });
+        }
+      } catch (e) {}
       all.forEach(function (r) {
         var card = document.createElement("div");
         card.className = "review-card";
+        var bcls = "bxb-1";
+        try {
+          if (CURRENT_USER && r.user_id === CURRENT_USER.id && typeof window.bxCurrentBorderClass === "function")
+            bcls = window.bxCurrentBorderClass();
+          else if (typeof window.bxBorderClassForXp === "function") {
+            var rxp = typeof r.xp === "number" ? r.xp : __xpMap[r.user_id];
+            bcls = window.bxBorderClassForXp(rxp || 0);
+          }
+        } catch (e) {}
         var avInline = "";
         if (r.avatar_url)
           avInline =
@@ -677,7 +704,9 @@
               '\')" title="Șterge">&times;</button>'
             : "";
         card.innerHTML =
-          '<div class="review-head"><div class="review-avatar"' +
+          '<div class="review-head"><div class="review-avatar bxb ' +
+          bcls +
+          '"' +
           avInline +
           ">" +
           (r.avatar_url ? "" : escHTML(r.username.charAt(0).toUpperCase())) +
@@ -694,6 +723,15 @@
           "</div>";
         list.appendChild(card);
       });
+      try {
+        if (CURRENT_USER && CURRENT_PROFILE && typeof CURRENT_PROFILE.xp === "number") {
+          all.forEach(function (r) {
+            if (r.user_id === CURRENT_USER.id && r.xp !== CURRENT_PROFILE.xp) {
+              sb.from("reviews").update({ xp: CURRENT_PROFILE.xp }).eq("id", r.id).then(function () {}, function () {});
+            }
+          });
+        }
+      } catch (e) {}
       var avg = 0;
       var sumR = 0;
       if (all.length) {

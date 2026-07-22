@@ -4813,6 +4813,9 @@ html[data-theme="light"] .profile-placeholder {
   margin: 0;
   flex-shrink: 0;
 }
+.profile-badges-head .profile-badges-title {
+  margin: 0;
+}
 .profile-badges-count {
   margin-left: auto;
   display: flex;
@@ -12833,33 +12836,31 @@ html[data-theme="light"] .auth-page {
   }
 }
 
-.bxb-1 { box-shadow: 0 0 0 2px #475569; }
-.bxb-2 { box-shadow: 0 0 0 2px #0d1117, 0 0 0 4px #cd7f32; }
-.bxb-3 { box-shadow: 0 0 0 2px #0d1117, 0 0 0 4px #cbd5e1; }
-.bxb-4 { box-shadow: 0 0 0 2px #0d1117, 0 0 0 4px #fbbf24, 0 0 10px rgba(251, 191, 36, 0.5); }
-.bxb-5 { box-shadow: 0 0 0 2px #0d1117, 0 0 0 4px #10b981, 0 0 12px rgba(16, 185, 129, 0.55); }
-.bxb-6 { box-shadow: 0 0 0 2px #0d1117, 0 0 0 4px #3b82f6, 0 0 12px rgba(59, 130, 246, 0.6); }
-.bxb-7 { box-shadow: 0 0 0 2px #0d1117, 0 0 0 4px #a78bfa, 0 0 0 6px #6d28d9, 0 0 14px rgba(167, 139, 250, 0.6); }
-.bxb-8 { box-shadow: 0 0 0 2px #0d1117, 0 0 0 4px #fb7185, 0 0 0 6px #be123c, 0 0 16px rgba(251, 113, 133, 0.65); }
-.bxb-9 {
-  box-shadow: 0 0 0 2px #0d1117, 0 0 0 4px #67e8f9, 0 0 0 6px #0891b2, 0 0 12px rgba(103, 232, 249, 0.55);
-  animation: bxbGlow9 2.6s ease-in-out infinite;
+.bxb {
+  position: relative !important;
+  border-radius: 16% !important;
+  overflow: visible !important;
 }
-.bxb-10 {
-  box-shadow: 0 0 0 2px #0d1117, 0 0 0 4px #fbbf24, 0 0 0 6px #a78bfa, 0 0 0 8px #ec4899, 0 0 12px rgba(236, 72, 153, 0.5);
-  animation: bxbGlow10 2.4s ease-in-out infinite;
+.bxb img { border-radius: 14%; }
+.bxb::after {
+  content: "";
+  position: absolute;
+  inset: -21%;
+  background: var(--bxframe) center / 100% 100% no-repeat;
+  pointer-events: none;
+  z-index: 4;
 }
-@keyframes bxbGlow9 {
-  0%, 100% { box-shadow: 0 0 0 2px #0d1117, 0 0 0 4px #67e8f9, 0 0 0 6px #0891b2, 0 0 8px rgba(103, 232, 249, 0.4); }
-  50% { box-shadow: 0 0 0 2px #0d1117, 0 0 0 4px #67e8f9, 0 0 0 6px #0891b2, 0 0 20px rgba(103, 232, 249, 0.95); }
-}
-@keyframes bxbGlow10 {
-  0%, 100% { box-shadow: 0 0 0 2px #0d1117, 0 0 0 4px #fbbf24, 0 0 0 6px #a78bfa, 0 0 0 8px #ec4899, 0 0 10px rgba(236, 72, 153, 0.5); }
-  50% { box-shadow: 0 0 0 2px #0d1117, 0 0 0 4px #fbbf24, 0 0 0 6px #a78bfa, 0 0 0 8px #ec4899, 0 0 26px rgba(236, 72, 153, 1); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .bxb-9, .bxb-10 { animation: none !important; }
-}
+.bxb-1 { --bxframe: url("images/borders/border-1.png"); }
+.bxb-2 { --bxframe: url("images/borders/border-2.png"); }
+.bxb-3 { --bxframe: url("images/borders/border-3.png"); }
+.bxb-4 { --bxframe: url("images/borders/border-4.png"); }
+.bxb-5 { --bxframe: url("images/borders/border-5.png"); }
+.bxb-6 { --bxframe: url("images/borders/border-6.png"); }
+.bxb-7 { --bxframe: url("images/borders/border-7.png"); }
+.bxb-8 { --bxframe: url("images/borders/border-8.png"); }
+.bxb-9 { --bxframe: url("images/borders/border-9.png"); }
+.bxb-10 { --bxframe: url("images/borders/border-10.png"); }
+.profile-avatar-wrap .profile-avatar-edit { z-index: 6; }
 .profile-borders-wrap { padding: 26px 0 4px; }
 .profile-borders-ic { font-size: 24px; filter: drop-shadow(0 2px 6px rgba(139, 92, 246, 0.5)); }
 .profile-borders-sub { font-size: 13px; color: var(--t2, #94a3b8); margin: 4px 0 20px; }
@@ -12882,9 +12883,10 @@ html[data-theme="light"] .auth-page {
 .bx-border-item.selected { background: rgba(99, 102, 241, 0.16); }
 .bx-border-item.locked { cursor: default; }
 .bx-border-swatch {
+  position: relative;
   width: 46px;
   height: 46px;
-  border-radius: 50%;
+  border-radius: 16%;
   background: radial-gradient(circle at 35% 30%, #263449, #0d1117);
   display: flex;
   align-items: center;
@@ -12893,6 +12895,15 @@ html[data-theme="light"] .auth-page {
   font-weight: 800;
   font-size: 15px;
   flex: none;
+  overflow: visible;
+}
+.bx-border-swatch::after {
+  content: "";
+  position: absolute;
+  inset: -21%;
+  background: var(--bxframe) center / 100% 100% no-repeat;
+  pointer-events: none;
+  z-index: 2;
 }
 .bx-border-item.locked .bx-border-swatch { filter: grayscale(0.9) brightness(0.55); }
 .bx-border-lbl { font-size: 11.5px; font-weight: 600; color: var(--t2, #cbd5e1); text-align: center; }
