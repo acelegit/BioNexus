@@ -2955,6 +2955,9 @@ var I18N = {
     "home.nav.features": "Funcționalități",
     "home.nav.learn": "Învață",
     "home.nav.contact": "Contact",
+    "home.contact.h": "Contact",
+    "home.contact.sub": "Ai o întrebare, o sugestie sau ai găsit o greșeală? Scrie-ne oricând.",
+    "home.contact.by": "Realizat de",
     "home.nav.login": "Conectare",
     "home.hero.badge": "Anatomia umană 3D &nbsp;&middot;&nbsp; <span>România</span>",
     "home.hero.title": 'Anatomia umană în <span class="home-hero-grad">3D interactiv</span>',
@@ -3156,6 +3159,9 @@ var I18N = {
     "home.nav.features": "Features",
     "home.nav.learn": "Learn",
     "home.nav.contact": "Contact",
+    "home.contact.h": "Contact",
+    "home.contact.sub": "Have a question, suggestion, or found a mistake? Write to us anytime.",
+    "home.contact.by": "Made by",
     "home.nav.login": "Login",
     "home.hero.badge": "Human anatomy 3D &nbsp;&middot;&nbsp; <span>Romania</span>",
     "home.hero.title": 'Human anatomy in <span class="home-hero-grad">interactive 3D</span>',
@@ -17160,7 +17166,9 @@ window.scrollToSection = function (id) {
 
   window.__extraResetCam = function (key) {
     var S = STATES[key];
-    if (!S || !S._homeCam) return;
+    if (!S) return;
+    try { clearExtraSelection(key); } catch (e) {}
+    if (!S._homeCam) return;
     var startPos = S.camera.position.clone();
     var startTgt = S.controls.target.clone();
     var endPos = S._homeCam.pos;
@@ -17748,6 +17756,7 @@ window.scrollToSection = function (id) {
           dopts.appendChild(b);
         });
       }
+      if (typeof startQuestionTimer === "function") startQuestionTimer();
       return;
     }
     var hint = document.querySelector(".quiz-q-text");
@@ -17775,6 +17784,7 @@ window.scrollToSection = function (id) {
       try {
         window.__extraQuizHi(window.QUIZ.system, q.mesh);
       } catch (e) {}
+    if (typeof startQuestionTimer === "function") startQuestionTimer();
   }
 
   function answer(opt, btn) {
@@ -19675,15 +19685,15 @@ window.DUEL_BANKS = {"muscular":[{"text_ro":"Prin contracția unilaterală, ster
 (function bxAvatarBorders() {
   var BORDERS = [
     { id: "iron", lvl: 1, cls: "bxb-1", ro: "Fier", en: "Iron" },
-    { id: "silver1", lvl: 2, cls: "bxb-2", ro: "Argint 1", en: "Silver 1" },
-    { id: "silver2", lvl: 3, cls: "bxb-3", ro: "Argint 2", en: "Silver 2" },
-    { id: "platinum1", lvl: 4, cls: "bxb-4", ro: "Platină 1", en: "Platinum 1" },
-    { id: "platinum2", lvl: 6, cls: "bxb-5", ro: "Platină 2", en: "Platinum 2" },
-    { id: "gold1", lvl: 8, cls: "bxb-6", ro: "Aur 1", en: "Gold 1" },
-    { id: "gold2", lvl: 11, cls: "bxb-7", ro: "Aur 2", en: "Gold 2" },
-    { id: "gold3", lvl: 14, cls: "bxb-8", ro: "Aur 3", en: "Gold 3" },
-    { id: "gold4", lvl: 18, cls: "bxb-9", ro: "Aur 4", en: "Gold 4" },
-    { id: "gold5", lvl: 25, cls: "bxb-10", ro: "Aur 5", en: "Gold 5" },
+    { id: "silver1", lvl: 2, cls: "bxb-2", ro: "Argint level 1", en: "Silver level 1" },
+    { id: "silver2", lvl: 3, cls: "bxb-3", ro: "Argint level 2", en: "Silver level 2" },
+    { id: "platinum1", lvl: 4, cls: "bxb-4", ro: "Platină level 1", en: "Platinum level 1" },
+    { id: "platinum2", lvl: 6, cls: "bxb-5", ro: "Platină level 2", en: "Platinum level 2" },
+    { id: "gold1", lvl: 8, cls: "bxb-6", ro: "Aur level 1", en: "Gold level 1" },
+    { id: "gold2", lvl: 11, cls: "bxb-7", ro: "Aur level 2", en: "Gold level 2" },
+    { id: "gold3", lvl: 14, cls: "bxb-8", ro: "Aur level 3", en: "Gold level 3" },
+    { id: "gold4", lvl: 18, cls: "bxb-9", ro: "Aur level 4", en: "Gold level 4" },
+    { id: "gold5", lvl: 25, cls: "bxb-10", ro: "Aur level 5", en: "Gold level 5" },
   ];
   window.BX_BORDERS = BORDERS;
   var ALL_CLS = BORDERS.map(function (b) { return b.cls; });
@@ -19787,4 +19797,34 @@ window.DUEL_BANKS = {"muscular":[{"text_ro":"Prin contracția unilaterală, ster
   function init() { setTimeout(applyAll, 400); }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();
+})();
+
+(function bxPasswordEyes() {
+  var EYE = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>';
+  var EYE_OFF = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.06 10.06 0 0 1 12 20C5 20 1 12 1 12a18.5 18.5 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.7 18.7 0 0 1-2.16 3.19"/><path d="M9.5 9.5a3 3 0 0 0 4.2 4.2"/><line x1="2" y1="2" x2="22" y2="22"/></svg>';
+  function reveal(ro, en) { return (window.CUR_LANG === "en" ? en : ro); }
+  function enhance(id) {
+    var inp = document.getElementById(id);
+    if (!inp || inp.__eyed) return;
+    inp.__eyed = true;
+    var wrap = document.createElement("div");
+    wrap.className = "settings-pass-wrap";
+    inp.parentNode.insertBefore(wrap, inp);
+    wrap.appendChild(inp);
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "settings-pass-eye";
+    btn.innerHTML = EYE;
+    btn.setAttribute("aria-label", reveal("Arată parola", "Show password"));
+    btn.addEventListener("click", function () {
+      var show = inp.type === "password";
+      inp.type = show ? "text" : "password";
+      btn.innerHTML = show ? EYE_OFF : EYE;
+      btn.setAttribute("aria-label", show ? reveal("Ascunde parola", "Hide password") : reveal("Arată parola", "Show password"));
+    });
+    wrap.appendChild(btn);
+  }
+  function run() { ["settingsCurPass", "settingsNewPass", "settingsConfPass"].forEach(enhance); }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", run);
+  else run();
 })();

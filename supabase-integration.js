@@ -510,6 +510,9 @@
     var url = pub.data.publicUrl;
     await sb.from("profiles").update({ avatar_url: url }).eq("id", CURRENT_USER.id);
     if (CURRENT_PROFILE) CURRENT_PROFILE.avatar_url = url;
+    try {
+      await sb.from("reviews").update({ avatar_url: url }).eq("user_id", CURRENT_USER.id);
+    } catch (e) {}
     var avA = document.getElementById("profileAvatar");
     if (avA) {
       avA.style.backgroundImage = "url(" + url + ")";
@@ -518,6 +521,7 @@
       avA.textContent = "";
     }
     if (typeof applyUserBadge === "function") applyUserBadge();
+    if (typeof refreshReviewsList === "function") refreshReviewsList();
   };
 
   window.saveName = async function () {
@@ -660,12 +664,6 @@
       var list = document.getElementById("reviewsList");
       var empty = document.getElementById("reviewsEmpty");
       if (!list) return;
-      list.innerHTML = "";
-      if (all.length === 0) {
-        if (empty) empty.style.display = "block";
-      } else {
-        if (empty) empty.style.display = "none";
-      }
       var __xpMap = {};
       try {
         var __ids = [];
@@ -679,6 +677,8 @@
           });
         }
       } catch (e) {}
+      list.innerHTML = "";
+      if (empty) empty.style.display = all.length === 0 ? "block" : "none";
       all.forEach(function (r) {
         var card = document.createElement("div");
         card.className = "review-card";
@@ -724,11 +724,15 @@
         list.appendChild(card);
       });
       try {
-        if (CURRENT_USER && CURRENT_PROFILE && typeof CURRENT_PROFILE.xp === "number") {
+        if (CURRENT_USER && CURRENT_PROFILE) {
           all.forEach(function (r) {
-            if (r.user_id === CURRENT_USER.id && r.xp !== CURRENT_PROFILE.xp) {
+            if (r.user_id !== CURRENT_USER.id) return;
+            var base = {};
+            if ((CURRENT_PROFILE.avatar_url || null) !== (r.avatar_url || null)) base.avatar_url = CURRENT_PROFILE.avatar_url || null;
+            if (CURRENT_USER.user && r.username !== CURRENT_USER.user) base.username = CURRENT_USER.user;
+            if (Object.keys(base).length) sb.from("reviews").update(base).eq("id", r.id).then(function () {}, function () {});
+            if (typeof CURRENT_PROFILE.xp === "number" && r.xp !== CURRENT_PROFILE.xp)
               sb.from("reviews").update({ xp: CURRENT_PROFILE.xp }).eq("id", r.id).then(function () {}, function () {});
-            }
           });
         }
       } catch (e) {}
@@ -793,6 +797,7 @@
     window.applyUserBadge = function () {
       orig.apply(this, arguments);
       if (typeof refreshReviewsList === "function") refreshReviewsList();
+      if (typeof window.renderDailyUI === "function") window.renderDailyUI();
     };
   }
 
