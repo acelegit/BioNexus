@@ -492,6 +492,24 @@
       CURRENT_PROFILE.days_active = p.daysActive;
       CURRENT_PROFILE.xp = p.xp;
     }
+    bxScheduleReviewXpSync();
+  };
+  var __revXpTimer = null;
+  function bxScheduleReviewXpSync() {
+    if (__revXpTimer) clearTimeout(__revXpTimer);
+    __revXpTimer = setTimeout(function () {
+      __revXpTimer = null;
+      if (typeof window.bxSyncOwnReviewXp === "function") window.bxSyncOwnReviewXp();
+    }, 2500);
+  }
+  window.bxSyncOwnReviewXp = function () {
+    if (!CURRENT_USER || !CURRENT_PROFILE || typeof CURRENT_PROFILE.xp !== "number") return;
+    try {
+      sb.from("reviews")
+        .update({ xp: CURRENT_PROFILE.xp })
+        .eq("user_id", CURRENT_USER.id)
+        .then(function () {}, function () {});
+    } catch (e) {}
   };
 
   window.onAvatarPick = async function (ev) {
