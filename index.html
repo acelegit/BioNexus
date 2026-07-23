@@ -60,7 +60,7 @@
       href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="style.css?v=38" />
+    <link rel="stylesheet" href="style.css?v=39" />
     <script
       src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.7"
       integrity="sha384-BmlQlKlDvXvKoxkn5OQuUo/aJQCTXeB+Kls6EccBmG4Kf8AXvp89RtO9MtPxP/r5"
@@ -793,7 +793,7 @@
           Ce poți face cu <span class="home-hero-grad">BioNexus</span>
         </h2>
         <div class="home-features-grid">
-          <div class="home-feat-card home-feat-clickable" onclick="openNotebook()">
+          <div class="home-feat-card home-feat-clickable" data-feat="notebook" onclick="openNotebook()">
             <div
               class="home-feat-icon home-feat-icon-img home-feat-icon-white"
               data-ring="linear-gradient(135deg,#f59e0b,#d97706)"
@@ -810,7 +810,7 @@
               >Deschide notebook &rarr;</span
             >
           </div>
-          <div class="home-feat-card home-feat-clickable" onclick="enterApp('quiz')">
+          <div class="home-feat-card home-feat-clickable" data-feat="quiz" onclick="enterApp('quiz')">
             <div
               class="home-feat-icon home-feat-icon-img home-feat-icon-white"
               data-ring="linear-gradient(135deg,#10b981,#059669)"
@@ -826,7 +826,7 @@
               >Începe minigame &rarr;</span
             >
           </div>
-          <div class="home-feat-card home-feat-clickable" onclick="openAIFromFeature()">
+          <div class="home-feat-card home-feat-clickable" data-feat="ai" onclick="openAIFromFeature()">
             <div
               class="home-feat-icon home-feat-icon-img home-feat-icon-white"
               data-ring="linear-gradient(135deg,#ec4899,#f43f5e)"
@@ -842,7 +842,7 @@
               >Deschide chatbox-ul &rarr;</span
             >
           </div>
-          <div class="home-feat-card home-feat-clickable" onclick="openSystemsPage()">
+          <div class="home-feat-card home-feat-clickable" data-feat="search" onclick="openSystemsPage()">
             <div
               class="home-feat-icon home-feat-icon-img"
               style="background: linear-gradient(135deg, #8b5cf6, #6366f1)"
@@ -858,7 +858,7 @@
               >Caută structuri &rarr;</span
             >
           </div>
-          <div class="home-feat-card home-feat-clickable" onclick="openCuriozitati()">
+          <div class="home-feat-card home-feat-clickable" data-feat="curio" onclick="openCuriozitati()">
             <div
               class="home-feat-icon home-feat-icon-img"
               style="background: linear-gradient(135deg, #14b8a6, #0ea5e9)"
@@ -876,6 +876,7 @@
           </div>
           <div
             class="home-feat-card home-feat-clickable"
+            data-feat="learn"
             onclick="document.getElementById('invata').scrollIntoView({ behavior: 'smooth' })"
           >
             <div
@@ -3267,10 +3268,10 @@
       <span class="msf-ic">🔍</span><span data-i18n="mob.structures">Structuri</span>
     </button>
 
-    <script src="i18n-content.js?v=38"></script>
-    <script src="script.js?v=38"></script>
-    <script src="supabase-integration.js?v=38"></script>
-    <script src="router.js?v=38"></script>
+    <script src="i18n-content.js?v=39"></script>
+    <script src="script.js?v=39"></script>
+    <script src="supabase-integration.js?v=39"></script>
+    <script src="router.js?v=39"></script>
   </body>
 </html>
 

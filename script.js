@@ -4219,11 +4219,10 @@ function endQuiz() {
   if (qFinalTotal) qFinalTotal.textContent = QUIZ.total;
   var qEndMsg = document.getElementById("qEndMsg");
   if (qEndMsg) qEndMsg.textContent = msg;
-  var elapsed = Math.floor((Date.now() - QUIZ.startTime) / 1000);
-  var min = Math.floor(elapsed / 60),
-    sec = elapsed % 60;
+  var elapsed = QUIZ.startTime && QUIZ.startTime > 0 ? Math.floor((Date.now() - QUIZ.startTime) / 1000) : 0;
+  if (elapsed < 0 || elapsed > 86400) elapsed = 0;
   var qTime = document.getElementById("qTime");
-  if (qTime) qTime.textContent = min + ":" + (sec < 10 ? "0" : "") + sec;
+  if (qTime) qTime.textContent = elapsed + "s";
   bxPaintQuizEnd(pct, QUIZ.score, QUIZ.total);
   showQuizStage("quizEnd");
   var qEndStage = document.getElementById("quizEnd");
@@ -4824,7 +4823,7 @@ var ACHIEVEMENTS = [
   {
     id: "colectionar",
     name: "COLECȚIONAR",
-    sub: "Toate secțiunile vizitate",
+    sub: "Explorează toate funcționalitățile site-ului",
     icon: "💎",
     c1: "#60a5fa",
     c2: "#1e40af",
@@ -6133,6 +6132,7 @@ function saveProgress(p, user) {
 function ensureProgress(p) {
   p.bonesViewed = p.bonesViewed || [];
   p.sectionsVisited = p.sectionsVisited || [];
+  p.featuresUsed = p.featuresUsed || [];
   p.quizPlays = p.quizPlays || { easy: 0, medium: 0, hard: 0 };
   p.quizPerfect = p.quizPerfect || { easy: 0, medium: 0, hard: 0 };
   p.quizCompleted = p.quizCompleted || 0;
@@ -6212,6 +6212,13 @@ function trackEvent(type, payload) {
       p.xp += 2;
       dirty = true;
     }
+  } else if (type === "feature" && payload) {
+    p.featuresUsed = p.featuresUsed || [];
+    if (p.featuresUsed.indexOf(payload) < 0) {
+      p.featuresUsed.push(payload);
+      p.xp += 5;
+      dirty = true;
+    }
   }
   var tk = todayKey();
   if (p.daysActive.indexOf(tk) < 0) {
@@ -6222,6 +6229,19 @@ function trackEvent(type, payload) {
   if (dirty) saveProgress(p, u.user);
 }
 window.trackEvent = trackEvent;
+var BX_FEATURES = ["notebook", "quiz", "ai", "search", "curio", "learn"];
+function bxFeaturesDoneCount(p) {
+  var f = (p && p.featuresUsed) || [];
+  var n = 0;
+  for (var i = 0; i < BX_FEATURES.length; i++) if (f.indexOf(BX_FEATURES[i]) >= 0) n++;
+  return n;
+}
+document.addEventListener("click", function (e) {
+  var card = e.target && e.target.closest && e.target.closest(".home-feat-card[data-feat]");
+  if (card && typeof trackEvent === "function") {
+    try { trackEvent("feature", card.getAttribute("data-feat")); } catch (e2) {}
+  }
+});
 
 function unlockedAchievements() {
   var u = getCurrentUser();
@@ -6236,7 +6256,7 @@ function unlockedAchievements() {
     anatomist: p.quizPerfect.easy >= 1,
     chirurg: p.quizPerfect.medium >= 1,
     maestru: p.quizPlays.hard >= 1,
-    colectionar: p.sectionsVisited.length >= totalSections,
+    colectionar: bxFeaturesDoneCount(p) >= BX_FEATURES.length,
     mentor: (p.manualChats || 0) >= 10,
     curios: (p.curiosityAsks || 0) >= 25,
     veteran: p.daysActive.length >= 30,
@@ -6328,7 +6348,7 @@ function bxBadgeAction(id) {
   var MAP = {
     pionier: { fn: "quiz", sys: "osos", mode: "visual" },
     explorator: { fn: "app", arg: "skeleton" },
-    colectionar: { fn: "app", arg: "skeleton" },
+    colectionar: { fn: "features" },
     sarcomer: { fn: "app", arg: "muscular" },
     myolog: { fn: "quiz", sys: "muscular", mode: "visual" },
     sculptor: { fn: "quiz", sys: "muscular", mode: "visual", diff: "medium" },
@@ -6382,7 +6402,7 @@ function bxBadgeProgress(id) {
     var ev = p.extraViewed || {};
     var M = {
       explorator: [(p.bonesViewed || []).length, 25],
-      colectionar: [(p.sectionsVisited || []).length, 4],
+      colectionar: [bxFeaturesDoneCount(p), BX_FEATURES.length],
       mentor: [p.manualChats || 0, 10],
       curios: [p.curiosityAsks || 0, 25],
       veteran: [(p.daysActive || []).length, 30],
@@ -6410,6 +6430,8 @@ window.bxTryBadge = function (id) {
         bxOpenDailyQuiz(act.sys, act.mode, act.diff);
       } else if (act.fn === "app" && typeof enterApp === "function") {
         enterApp(act.arg);
+      } else if (act.fn === "features") {
+        if (typeof window.openFeaturesPage === "function") window.openFeaturesPage();
       } else if (act.fn === "ai") {
         if (typeof openAIFromFeature === "function") openAIFromFeature();
         else if (typeof toggleChatbox === "function") toggleChatbox();
@@ -13372,6 +13394,7 @@ window.scrollToSection = function (id) {
       QUIZ.wrong = [];
       QUIZ.answered = false;
       QUIZ.active = true;
+      QUIZ.startTime = Date.now();
       var count = difficulty === "easy" ? 8 : difficulty === "medium" ? 10 : 12;
       QUIZ.questions = window.__buildMuscleQuiz(QUIZ.mode, difficulty, count);
       QUIZ.playedMode = QUIZ.mode;
@@ -18079,6 +18102,13 @@ window.scrollToSection = function (id) {
         window.__extraQuizClear(window.QUIZ.system);
       } catch (e) {}
     restorePanel();
+    try {
+      var abn = document.querySelector(".app:not(.app-muscular)");
+      if (abn) abn.style.display = "";
+      var pnl = document.getElementById("quizPanel");
+      var bv = document.querySelector(".app:not(.app-muscular) .viewer");
+      if (pnl && bv && !bv.contains(pnl)) bv.appendChild(pnl);
+    } catch (e) {}
     if (typeof stopQuestionTimer === "function") try { stopQuestionTimer(); } catch (e) {}
     if (typeof QUIZ_TIMER !== "undefined" && QUIZ_TIMER.maxPerDiff_backup) {
       QUIZ_TIMER.maxPerDiff = QUIZ_TIMER.maxPerDiff_backup;
