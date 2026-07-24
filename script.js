@@ -4560,13 +4560,25 @@ function bxBadgeIcon(a) {
 window.bxBadgeIcon = bxBadgeIcon;
 
 
+var BX_STOMACH_INNER =
+  '<path d="M33 7C33 13 27 15 25 21" stroke="#fb7185" stroke-width="6.5" stroke-linecap="round"/>' +
+  '<path d="M43 43C47 50 54 51 58 47" stroke="#fb7185" stroke-width="6.5" stroke-linecap="round"/>' +
+  '<g fill="#e0143f">' +
+  '<ellipse cx="24" cy="31" rx="15" ry="17" transform="rotate(-10 24 31)"/>' +
+  '<ellipse cx="40" cy="42" rx="10" ry="8.5" transform="rotate(32 40 42)"/>' +
+  "</g>" +
+  '<ellipse cx="21" cy="26" rx="6.5" ry="9" transform="rotate(-18 21 26)" fill="#fb7185" opacity=".55"/>' +
+  '<path d="M17 23C13 28 13 36 16 41" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".3"/>';
+var BX_STOMACH_SVG =
+  '<svg class="bx-glyph-svg" width="1em" height="1em" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
+  BX_STOMACH_INNER + "</svg>";
 var BX_GLYPH = {
   bone: { emoji: "🦴", color: "#d7dde8" },
   muscle: { emoji: "💪", color: "#f87171" },
   brain: { emoji: "🧠", color: "#c4b5fd" },
   heart: { emoji: "🫀", color: "#fb7185" },
   lungs: { emoji: "🫁", color: "#5ec8f2" },
-  stomach: { emoji: "🍽️", color: "#fbbf24" },
+  stomach: { svg: BX_STOMACH_SVG, color: "#fbbf24" },
 };
 var BX_SYS_TO_ICON = {
   osos: "bone", muscular: "muscle", nervous: "brain",
@@ -4613,6 +4625,7 @@ function bxUseEmoji(emoji) {
 function bxGlyphHTML(iconKey) {
   var g = BX_GLYPH[iconKey];
   if (!g) return BX_ICON(iconKey);
+  if (g.svg) return '<span class="bx-emoji bx-glyph-svg-wrap">' + g.svg + "</span>";
   if (bxUseEmoji(g.emoji)) return '<span class="bx-emoji">' + g.emoji + "</span>";
   return '<span class="bx-ic-color" style="color:' + g.color + '">' + BX_ICON(iconKey) + "</span>";
 }
@@ -4649,7 +4662,11 @@ function BX_CONSTELLATION() {
   var nodes = BX_CONSTELLATION_NODES.map(function (n, i) {
     var g = BX_GLYPH[n.k];
     var glyph;
-    if (g && bxUseEmoji(g.emoji)) {
+    if (g && g.svg) {
+      glyph =
+        '<svg x="' + (n.x - 16) + '" y="' + (n.y - 16) +
+        '" width="32" height="32" viewBox="0 0 64 64" fill="none">' + BX_STOMACH_INNER + "</svg>";
+    } else if (g && bxUseEmoji(g.emoji)) {
       glyph =
         '<text class="qamb-emoji" x="' + n.x + '" y="' + (n.y + 1) +
         '" text-anchor="middle" dominant-baseline="central">' + g.emoji + "</text>";
