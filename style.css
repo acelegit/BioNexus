@@ -12616,6 +12616,22 @@ html[data-theme="light"] .bx-rselect-opt {
   position: static;
   margin: 26px auto auto;
 }
+@media (max-width: 768px) {
+  #featuresPage.active {
+    display: block;
+  }
+  #featuresPage .subpage-inner {
+    order: 0;
+    margin: 0 auto;
+  }
+  #featuresPage .subpage-back {
+    order: 0;
+    position: fixed;
+    top: 14px;
+    left: 14px;
+    margin: 0;
+  }
+}
 
 /* --- HOME GRID BACKGROUND (test) --- to revert: delete .bx-grid + the .bx-orbs hide rule below (orbs return) --- */
 .bx-grid {
