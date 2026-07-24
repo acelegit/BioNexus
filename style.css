@@ -10806,14 +10806,17 @@ body.mode-quiz.quiz-inq #quizAmbient {
 }
 
 
-.bx-glyph-svg-wrap {
+.bx-glyph-img-wrap {
   display: inline-flex;
   align-items: center;
   justify-content: center;
 }
-.bx-glyph-svg-wrap svg,
-svg.bx-glyph-svg {
+.bx-glyph-img {
+  width: 1.15em;
+  height: 1.15em;
+  object-fit: contain;
   display: block;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
 }
 .bx-emoji {
   display: block;

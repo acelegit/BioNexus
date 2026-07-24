@@ -4560,25 +4560,13 @@ function bxBadgeIcon(a) {
 window.bxBadgeIcon = bxBadgeIcon;
 
 
-var BX_STOMACH_INNER =
-  '<path d="M33 7C33 13 27 15 25 21" stroke="#fb7185" stroke-width="6.5" stroke-linecap="round"/>' +
-  '<path d="M43 43C47 50 54 51 58 47" stroke="#fb7185" stroke-width="6.5" stroke-linecap="round"/>' +
-  '<g fill="#e0143f">' +
-  '<ellipse cx="24" cy="31" rx="15" ry="17" transform="rotate(-10 24 31)"/>' +
-  '<ellipse cx="40" cy="42" rx="10" ry="8.5" transform="rotate(32 40 42)"/>' +
-  "</g>" +
-  '<ellipse cx="21" cy="26" rx="6.5" ry="9" transform="rotate(-18 21 26)" fill="#fb7185" opacity=".55"/>' +
-  '<path d="M17 23C13 28 13 36 16 41" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".3"/>';
-var BX_STOMACH_SVG =
-  '<svg class="bx-glyph-svg" width="1em" height="1em" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
-  BX_STOMACH_INNER + "</svg>";
 var BX_GLYPH = {
   bone: { emoji: "🦴", color: "#d7dde8" },
   muscle: { emoji: "💪", color: "#f87171" },
   brain: { emoji: "🧠", color: "#c4b5fd" },
   heart: { emoji: "🫀", color: "#fb7185" },
   lungs: { emoji: "🫁", color: "#5ec8f2" },
-  stomach: { svg: BX_STOMACH_SVG, color: "#fbbf24" },
+  stomach: { img: "images/stomach.png?v=41", color: "#fbbf24" },
 };
 var BX_SYS_TO_ICON = {
   osos: "bone", muscular: "muscle", nervous: "brain",
@@ -4625,7 +4613,7 @@ function bxUseEmoji(emoji) {
 function bxGlyphHTML(iconKey) {
   var g = BX_GLYPH[iconKey];
   if (!g) return BX_ICON(iconKey);
-  if (g.svg) return '<span class="bx-emoji bx-glyph-svg-wrap">' + g.svg + "</span>";
+  if (g.img) return '<span class="bx-emoji bx-glyph-img-wrap"><img src="' + g.img + '" alt="" class="bx-glyph-img"></span>';
   if (bxUseEmoji(g.emoji)) return '<span class="bx-emoji">' + g.emoji + "</span>";
   return '<span class="bx-ic-color" style="color:' + g.color + '">' + BX_ICON(iconKey) + "</span>";
 }
@@ -4662,10 +4650,10 @@ function BX_CONSTELLATION() {
   var nodes = BX_CONSTELLATION_NODES.map(function (n, i) {
     var g = BX_GLYPH[n.k];
     var glyph;
-    if (g && g.svg) {
+    if (g && g.img) {
       glyph =
-        '<svg x="' + (n.x - 16) + '" y="' + (n.y - 16) +
-        '" width="32" height="32" viewBox="0 0 64 64" fill="none">' + BX_STOMACH_INNER + "</svg>";
+        '<image href="' + g.img + '" x="' + (n.x - 19) + '" y="' + (n.y - 19) +
+        '" width="38" height="38"/>';
     } else if (g && bxUseEmoji(g.emoji)) {
       glyph =
         '<text class="qamb-emoji" x="' + n.x + '" y="' + (n.y + 1) +
@@ -15001,9 +14989,9 @@ window.scrollToSection = function (id) {
       .map(function (n) {
         var _en = typeof CUR_LANG !== "undefined" && CUR_LANG === "en";
         var catIc =
-          { bone: "🦴", muscle: "💪", nervous: "🧠", cardio: "❤️", respiratory: "💨", digestive: "🍽️", general: "📌" }[
-            n.category
-          ] || "📌";
+          n.category === "digestive"
+            ? '<img src="images/stomach.png?v=41" alt="" style="width:1.1em;height:1.1em;object-fit:contain;vertical-align:-0.2em">'
+            : { bone: "🦴", muscle: "💪", nervous: "🧠", cardio: "❤️", respiratory: "💨", general: "📌" }[n.category] || "📌";
         var catName =
           {
             bone: _en ? "Bone" : "Os",
