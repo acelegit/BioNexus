@@ -8,7 +8,7 @@
 
 ## 1. Descriere generală
 
-**BioNexus** este o platformă web educațională care transformă studiul anatomiei umane dintr-un proces static — bazat pe text și câteva imagini schematice — într-o experiență interactivă, vizuală și tridimensională. Toate cele șase sisteme majore ale corpului — **osos, muscular, nervos, cardiovascular, respirator și digestiv** — pot fi explorate direct în browser: rotite, mărite și studiate structură cu structură, cu denumiri în **română și latină**.
+**BioNexus** este o platformă web educațională care transformă studiul anatomiei umane dintr-un proces static — bazat pe text și câteva imagini schematice — într-o experiență interactivă, vizuală și tridimensională. Toate cele șase sisteme majore ale corpului — **osos, muscular, nervos, cardiovascular, respirator și digestiv** — pot fi explorate direct în browser: rotite, mărite și studiate structură cu structură, cu denumiri în **română** (și **latină** pentru mușchi și pentru sistemele nervos, cardiovascular, respirator și digestiv).
 
 Dincolo de modelele 3D, BioNexus integrează un ecosistem complet de învățare: minigame-uri de tip quiz pentru fiecare sistem, un mod de **duel online 1v1 în timp real** împotriva altui utilizator, un **asistent conversațional AI**, provocări zilnice cu XP și insigne, un carnet de notițe personal, recenzii și o interfață complet tradusă în 6 limbi. Totul rulează direct din browser, fără instalare, pe orice dispozitiv modern.
 
@@ -20,53 +20,60 @@ Proiectul este construit pe o **arhitectură serverless** (Supabase + Cloudflare
 - **Multiplayer real** — duel 1v1 în timp real prin canale Supabase Realtime, cu lobby de „ready up", nume de utilizator afișate și scor live. Rar întâlnit într-un proiect educațional.
 - **Evaluare instant** — quiz-uri vizuale și de cunoștințe pentru fiecare sistem, plus modul „AI Duel" cu afirmații adevărat/fals.
 - **Securitate reală** — cheile API stau exclusiv server-side, scrierile în baza de date sunt protejate prin Row Level Security, iar site-ul livrează headere de securitate stricte (CSP, HSTS etc.).
-- **Accesibil oricui** — 6 limbi, responsive complet pe telefon, PWA, fără instalare.
+- **Accesibil oricui** — 6 limbi, responsive complet pe telefon, adăugabil pe ecranul de start, fără instalare.
 
 ## 3. Funcționalități
 
 ### 🦴 Modele 3D interactive
-- Cele 6 sisteme majore, fiecare cu modelul său 3D navigabil (rotire, zoom, selectare de structuri).
-- Structurile sunt etichetate cu denumiri **RO + latină**; la selectare se afișează un panou de informații.
+- Cele 6 sisteme majore, fiecare cu modelul său 3D navigabil (rotire, zoom, selectare de structuri prin click, evidențiere la hover).
+- La selectarea unei structuri se afișează un panou de informații. Denumirile sunt în **română**; pentru **mușchi** și pentru sistemele **nervos, cardiovascular, respirator și digestiv** se afișează și **denumirea latină (științifică)**.
 - Grupare pe secțiuni anatomice, listă laterală de structuri și căutare rapidă.
 
 ### 🎮 Minigame-uri (quiz) pentru toate sistemele
 - **Identifică structura** — o structură e evidențiată pe model, alegi denumirea corectă din 4 variante.
-- **Test de Cunoștințe** — întrebări despre descrieri, relații și detalii, pe 3 niveluri de dificultate (Ușor / Mediu / Greu), inclusiv întrebări din manualele universitare la nivel Greu.
-- **AI Duel** — AI-ul propune afirmații despre anatomie, unele corecte, altele cu greșeli subtile; identifici care e adevărată și care falsă (antrenament de gândire critică).
-- Ecran de rezultat premium: inel de scor pe niveluri (bronz/argint/aur/perfect), statistici corecte/greșite/timp și buton de reîncercare.
+- **Test de Cunoștințe** — întrebări despre descrieri, relații și detalii, pe 3 niveluri de dificultate (Ușor / Mediu / Greu); la **sistemul osos**, nivelul Greu include întrebări din manualele universitare (Anatomia Omului, Ștefaneț, Vol. I–III).
+- **AI Duel** — o serie de afirmații adevărat/fals despre anatomie, unele corecte, altele cu greșeli subtile; identifici care e adevărată și care falsă (antrenament de gândire critică).
+- **Timer per întrebare** la nivelurile Mediu și Greu (și mai scurt la AI Duel); nivelul Ușor e fără cronometru.
+- Ecran de rezultat premium: inel de scor pe niveluri (bronz/argint/aur/perfect), statistici corecte/greșite/timp, buton de reîncercare și buton de întoarcere la minijocuri.
 
 ### 🌐 Duel Online 1v1 (timp real)
-- Un jucător creează o cameră (cod de 4 caractere), celălalt intră cu codul.
+- Cel care creează camera alege **sistemul** din care vin întrebările (Toate / osos / muscular / nervos / cardiovascular / respirator / digestiv) și primește un **cod de 4 caractere**; celălalt intră cu codul.
 - **Lobby de „ready up"** unde ambii jucători apar cu numele și confirmă că sunt gata.
 - Aceleași întrebări pentru ambii, scor live, câștigă cine are mai multe corecte; opțiune de revanșă.
 - Comunicare în timp real prin **canale Supabase Realtime (broadcast)** — fără tabele/server dedicat.
 
 ### 🤖 Asistent AI — „BioNexus AI"
-- Chatbot conversațional care răspunde întrebărilor despre anatomie și despre folosirea platformei.
+- Chatbot conversațional care răspunde întrebărilor despre anatomie și despre folosirea platformei, cu **scurtături rapide** („Pornește quiz", „Manuale", „Cum folosesc site-ul") și sugestii contextuale sub formă de butoane.
 - Rulează printr-un **proxy server-side securizat** — cheia API nu ajunge niciodată în browser.
+- Are un **motor local de rezervă** (bază de cunoștințe anatomică internă) care răspunde automat când serverul AI e indisponibil, plus mici utilitare (calcul IMC, oră/dată).
 
 ### 🔥 Progres și motivație
 - **Sistem de niveluri (XP)** — câștigi XP din explorare, quiz-uri, provocări și activitate zilnică; urci în nivel constant (300 XP / nivel), cu bară de progres și „XP până la nivelul următor" afișate în profil.
 - **Provocări zilnice** cu XP, streak (zile consecutive), calendar pe 14 zile și buton care te duce direct unde trebuie ca să le completezi.
-- **Insigne / achievements** — peste 40 de insigne pentru toate cele 6 sisteme (explorare, primul quiz, quiz Greu perfect, mentor AI, constanță etc.), fiecare acordând XP în funcție de dificultate.
-- **Chenare de avatar (avatar borders)** — 10 chenare metalice deblocate progresiv odată cu nivelul (Fier → Argint → Platină → Aur), pe care le alegi din profil și care apar pe avatarul tău la profil, în recenzii și în meniul de utilizator.
+- **Insigne / achievements** — **43 de insigne** pentru toate cele 6 sisteme (explorare, primul quiz, quiz Greu perfect, mentor AI, constanță etc.), fiecare acordând XP în funcție de dificultate.
+- **Chenare de avatar (avatar borders)** — 10 chenare metalice deblocate progresiv odată cu nivelul (Fier → Argint → Platină → Aur), pe care le alegi din profil și care apar pe avatarul tău (la profil și în meniul de utilizator); în secțiunea de recenzii chenarul apare pentru **toți recenzenții**, fiecare în funcție de nivelul său.
 - **Profil de utilizator** cu progres sincronizat în cont.
 
 ### 📓 Instrumente de studiu
-- **Notițe** personale pe orice structură din oricare sistem (marcaje, tag-uri color, căutare).
-- **Recenzii** — utilizatorii autentificați pot lăsa o părere.
-- **Căutare rapidă**, **curiozități** și acces la **manuale/atlase** oficiale (secțiunea Învață).
+- **Notițe** personale pe orice structură din oricare sistem: **coduri de culoare**, **tag-uri** text, **căutare** și **organizare pe categorii** (os, mușchi, nervos, cardiovascular, respirator, digestiv, general) cu filtrare rapidă.
+- **Recenzii** — utilizatorii autentificați pot lăsa un **rating de 1–5 stele** (obligatoriu) plus text (10–600 caractere); secțiunea afișează rating-ul mediu și numărul total de recenzii.
+- **Căutare rapidă**, **curiozități** și acces la **manuale universitare oficiale** (secțiunea Învață).
 
 ### 🌍 Multilingv
 - Interfață complet tradusă în **6 limbi**: română, engleză, franceză, germană, spaniolă, maghiară — comutare instant.
 
 ### 👤 Cont & administrare
-- Autentificare **Supabase Auth** (email + parolă, cu confirmare pe email); notificare de bun venit la login.
-- **Mod administrator** protejat prin parolă, pentru editarea conținutului (structuri, descrieri, prompt AI).
+- Autentificare **Supabase Auth**: email + parolă (cu confirmare pe email) sau **Google (OAuth)**; notificare de bun venit la login.
+- Site-ul poate fi folosit și **fără cont** („Continuă ca vizitator"), cu progresul salvat local pe dispozitiv.
+- **Mod administrator** protejat prin parolă: editarea conținutului (structuri, descrieri, prompt AI) și **moderarea/ștergerea recenziilor** (panou „Recenzii — moderare" + ștergere inline).
 
-### 📱 Mobil & PWA
+### 📨 Contact & feedback
+- Pagină **Contact** dedicată, cu buton de copiere a emailului și formular (Nume / Email / Tip / Mesaj) trimis server-less prin FormSubmit.
+- Buton **„Raportează o problemă"** (bug / conținut / sugestie) în footer, trimis direct echipei.
+
+### 📱 Mobil
 - Responsive complet: meniu hamburger, sertar de structuri, controale adaptate atingerii.
-- PWA (manifest + optimizări) — poate fi „instalat" pe ecranul de start și încarcă rapid.
+- **Web App Manifest** — poate fi adăugat pe ecranul de start (iOS Safari / scurtătură pe desktop).
 
 ## 4. Arhitectură tehnică
 
@@ -76,11 +83,11 @@ BioNexus folosește un model **serverless** (fără server de backend gestionat 
 - **Cloudflare Pages** — găzduiește frontend-ul static, cu CDN global și HTTPS automat.
 - **Cloudflare Pages Functions** — expun un endpoint `/api/chat`, un **proxy securizat** către modelul AI: cheia stă doar server-side, într-o variabilă de mediu.
 - **Supabase** — platforma de date:
-  - **Auth** (email/parolă cu confirmare pe email);
+  - **Auth** (email/parolă cu confirmare pe email + Google OAuth);
   - **Postgres** cu **Row Level Security** pentru profiluri și recenzii;
   - **Storage** pentru avataruri;
   - **Realtime (broadcast)** pentru duelul online 1v1.
-- **Modele 3D** — fișiere GLB; cele non-schelet sunt **comprimate cu Draco** (decodor încărcat din CDN), pentru transfer minim.
+- **Modele 3D** — fișiere GLB, **comprimate cu Draco** (decodor încărcat din CDN), pentru transfer minim.
 - **i18n** — sistem propriu (`I18N` + `applyLanguage`) cu 6 limbi, aplicat prin atribute `data-i18n`.
 
 ## 5. Arhitectură de securitate
@@ -92,6 +99,7 @@ Proiectul a trecut printr-un audit de securitate (black-box) și implementează 
 - **Headere de securitate** (fișier `_headers`) — **Content-Security-Policy**, **HSTS**, **X-Frame-Options: DENY**, **Permissions-Policy**, `X-Content-Type-Options`, `Referrer-Policy`.
 - **Subresource Integrity (SRI)** + versiuni fixate pe scripturile încărcate din CDN.
 - **Proxy AI protejat** — restricționare de origini (allowlist), CORS strict, plus opțiuni de Turnstile / autentificare activabile din configurare.
+- **Anti-bot la înregistrare** — captcha matematic + câmp honeypot pe formularul de cont (măsuri client-side, complementare Turnstile-ului opțional al proxy-ului AI).
 - **Storage** — dezactivarea listării anonime a bucket-ului de avataruri, păstrând accesul public doar la obiectele individuale.
 - **XSS mitigat** — escapare a input-ului utilizatorului și a conținutului randat (recenzii, răspuns AI).
 
@@ -104,11 +112,11 @@ Proiectul a trecut printr-un audit de securitate (black-box) și implementează 
 - **Backend-as-a-Service:** Supabase — Auth, Postgres (RLS), Storage, Realtime
 - **AI:** model lingvistic (LLM) prin proxy server-side securizat
 - **Securitate:** CSP / HSTS / SRI, RLS + RPC `SECURITY DEFINER`
-- **PWA / SEO:** Web App Manifest, Open Graph, JSON-LD, `robots.txt`, pagină 404 custom
+- **Web App / SEO:** Web App Manifest, Open Graph, JSON-LD, `robots.txt`, pagină 404 custom
 
 ## 7. Performanță
 
-- **Modele Draco** — cele 5 modele non-schelet comprimate cu Draco (~−84% dimensiune totală), pentru încărcare rapidă.
+- **Modele Draco** — toate cele 6 modele GLB (inclusiv scheletul) sunt comprimate cu Draco pentru încărcare rapidă (cele 5 modele non-schelet: ~−84% dimensiune).
 - **Render-loop gating** — buclele de randare 3D sunt puse în pauză pentru sistemele care nu sunt vizibile (fila ascunsă sau alt sistem activ), reducând consumul de resurse.
 - **Site 100% static** servit prin CDN global.
 
@@ -121,7 +129,7 @@ Proiectul a trecut printr-un audit de securitate (black-box) și implementează 
 ## 9. Cerințe de sistem
 
 - **Acces:** orice browser modern (Chrome, Firefox, Safari, Edge), pe desktop sau mobil — https://bionexus.ro/
-- **Conexiune internet:** necesară pentru autentificare, sincronizarea progresului, duelul online și asistentul AI
+- **Conexiune internet:** necesară pentru autentificare, sincronizarea progresului, duelul online și răspunsurile complete ale asistentului AI (un motor local oferă răspunsuri de bază și offline)
 - **Instalare:** niciuna — rulează integral în browser
 
 ## 10. Echipă
