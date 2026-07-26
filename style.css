@@ -10812,8 +10812,8 @@ body.mode-quiz.quiz-inq #quizAmbient {
   justify-content: center;
 }
 .bx-glyph-img {
-  width: 1.15em;
-  height: 1.15em;
+  width: 1.45em;
+  height: 1.45em;
   object-fit: contain;
   display: block;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
