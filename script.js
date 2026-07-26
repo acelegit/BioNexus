@@ -3047,7 +3047,7 @@ var I18N = {
     "home.hero.badge": "Anatomia umană 3D &nbsp;&middot;&nbsp; <span>România</span>",
     "home.hero.title": 'Anatomia umană în <span class="home-hero-grad">3D interactiv</span>',
     "home.hero.sub":
-      "Explorează sistematic toate sistemele corpului uman. Acum disponibile toate cele 6: osos, muscular, nervos, cardiovascular, respirator și digestiv.",
+      "Explorează în detaliu toate sistemele corpului uman. Acum disponibile toate cele 6: osos, muscular, nervos, cardiovascular, respirator și digestiv.",
     "home.hero.ctaPrimary": "Vezi modele 3D",
     "home.hero.ctaSecondary": "Insignele mele",
     "home.stats.bones": "Oase modelate",
