@@ -2965,6 +2965,10 @@ async function streamAI(messages, onDelta) {
   return full;
 }
 
+function bxAiErr(s) {
+  return /^\s*\[?\s*an error occurred\b/i.test(s || "");
+}
+
 window.sendChat = function () {
   var inp = document.getElementById("chatInput");
   if (!inp) return;
@@ -2992,6 +2996,7 @@ window.sendChat = function () {
     .concat([{ role: "user", content: txt }]);
 
   streamAI(messages, function (full) {
+    if (bxAiErr(full)) return;
     if (!bubble) {
       removeChatTyping();
       bubble = addBotBubble();
@@ -3004,7 +3009,8 @@ window.sendChat = function () {
   })
     .then(function (full) {
       removeChatTyping();
-      if (!full || !full.trim()) {
+      if (!full || !full.trim() || bxAiErr(full)) {
+        if (bubble && bubble.parentElement) { try { bubble.parentElement.remove(); } catch (e) {} bubble = null; }
         addChatMessage(chatbotReply(txt), false);
         return;
       }
