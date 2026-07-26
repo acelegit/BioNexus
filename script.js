@@ -2502,7 +2502,7 @@ var SITE_KB = [
     ],
     answer:
       'Toate cele <b>6 sisteme</b> sunt <span style="color:#10b981">disponibile acum</span> în 3D interactiv: <b>Osos</b>, <b>Muscular</b>, <b>Nervos</b>, <b>Cardiovascular</b>, <b>Respirator</b> și <b>Digestiv</b>. Fiecare are model 3D, listă de structuri (RO + latină) și quiz propriu.',
-    chips: [{ a: "open-skeleton", label: "Deschide un sistem" }],
+    chips: [{ a: "open-systems", label: "Deschide un sistem" }],
   },
   {
     id: "bio.cell",
@@ -2628,6 +2628,11 @@ window.runChatAction = function (action) {
     closeChatPanelTemp();
     enterApp("skeleton");
     return "OK, te duc la scheletul 3D.";
+  }
+  if (action === "open-systems") {
+    closeChatPanelTemp();
+    if (typeof window.openSystemsPage === "function") window.openSystemsPage();
+    return "Te duc la secțiunea Sisteme 3D.";
   }
   if (action === "open-quiz") {
     closeChatPanelTemp();
