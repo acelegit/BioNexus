@@ -1,7 +1,7 @@
 {
   "name": "bionexus",
   "version": "1.0.0",
-  "main": "ai-config.js",
+  "main": "index.html",
   "directories": {
     "lib": "lib"
   },
