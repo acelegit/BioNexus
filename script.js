@@ -2436,7 +2436,7 @@ var SITE_KB = [
       "cum folosesc|cum se foloseste|ghid|tutorial|ce pot face|inceput|incep|how to use|guide",
     ],
     answer:
-      'Asistentul BioNexus te ghideaza:<br>1) <b>Schelet 3D</b> — card "Schelet 3D complet". Rotesti cu mouse-ul, zoom cu scroll, click pe os pentru detalii.<br>2) <b>Minigame</b> — card "Testul Anatomic". Identifici osul albastru.<br>3) <b>Invata</b> — manuale PDF.<br>4) <b>Insignele mele</b> — buton din homepage. Te duce la profilul tau dupa autentificare.',
+      'Asistentul BioNexus te ghideaza:<br>1) <b>Schelet 3D</b> — card "Schelet 3D complet". Rotesti cu mouse-ul, zoom cu scroll, click pe os pentru detalii.<br>2) <b>Minigame</b> — card "Testul Anatomic". Alegi un sistem (osos, muscular, nervos, cardiovascular, respirator sau digestiv) si te testezi.<br>3) <b>Invata</b> — manuale PDF.<br>4) <b>Insignele mele</b> — buton din homepage. Te duce la profilul tau dupa autentificare.',
     chips: [
       { a: "open-skeleton", label: "Deschide scheletul" },
       { a: "open-quiz", label: "Porneste quiz" },
@@ -2454,7 +2454,7 @@ var SITE_KB = [
     id: "guide.quiz",
     triggers: ["cum pornesc quiz|cum incep quiz|cum joc|minigame|start quiz|test anatomic"],
     answer:
-      'Minigame: cardul "Testul Anatomic" te duce direct in quiz. Dificultate (Usor/Mediu/Greu), camera pozitioneaza automat la fiecare os, alegi denumirea din 4 variante.',
+      'Minigame "Testul Anatomic": alegi mai intai <b>sistemul</b> (osos, muscular, nervos, cardiovascular, respirator sau digestiv), apoi <b>tipul de test</b> — Identifica structura (evidentiata cu albastru, alegi din 4 variante) sau Test de cunostinte. Dificultate: Usor / Mediu / Greu.',
     chips: [{ a: "open-quiz", label: "Porneste quiz" }],
   },
   {
@@ -4619,7 +4619,7 @@ function bxNotoReady() {
   }
 }
 function bxUseEmoji(emoji) {
-  return bxNotoReady() || bxEmojiOK(emoji);
+  return bxNotoReady() && bxEmojiOK(emoji);
 }
 function bxGlyphHTML(iconKey) {
   var g = BX_GLYPH[iconKey];

@@ -427,6 +427,7 @@ html[data-theme="light"] .bionexus-logo {
   top: 12px;
   left: 12px;
   background: rgba(10, 14, 26, 0.85);
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   border: 1px solid var(--brd2);
   padding: 8px 12px;
@@ -483,6 +484,7 @@ html[data-theme="light"] .bionexus-logo {
   pointer-events: none;
   z-index: 200;
   border: 1px solid var(--acc);
+  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   display: none;
   white-space: nowrap;
@@ -530,6 +532,7 @@ html[data-theme="light"] .bionexus-logo {
   background: rgba(0, 0, 0, 0.5);
   border-radius: 5px;
   display: inline-block;
+  -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
 }
 .info-panel {
@@ -626,6 +629,7 @@ html[data-theme="light"] .bionexus-logo {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.85);
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   z-index: 2000;
   align-items: center;
@@ -754,6 +758,7 @@ html[data-theme="light"] .bionexus-logo {
   box-shadow:
     0 8px 32px rgba(0, 0, 0, 0.5),
     0 0 0 1px rgba(99, 102, 241, 0.15) inset;
+  -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   z-index: 30;
   font-family: "Inter", sans-serif;
@@ -1455,8 +1460,8 @@ body.mode-quiz .quiz-end-stage {
   gap: 24px;
   padding: 14px 40px;
   background: rgba(15, 23, 42, 0.88);
-  backdrop-filter: blur(16px) saturate(160%);
   -webkit-backdrop-filter: blur(16px) saturate(160%);
+  backdrop-filter: blur(16px) saturate(160%);
   border: 0;
   border-bottom: 1px solid rgba(99, 102, 241, 0.22);
   border-radius: 0;
@@ -1606,6 +1611,7 @@ body.mode-quiz .quiz-end-stage {
   font-weight: 500;
   color: #cbd5e1;
   margin-bottom: 24px;
+  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
 }
 .home-hero-badge span {
@@ -1679,6 +1685,7 @@ body.mode-quiz .quiz-end-stage {
   font-family: inherit;
   letter-spacing: 0.3px;
   transition: 0.2s;
+  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
 }
 .home-cta-secondary:hover {
@@ -1849,6 +1856,7 @@ body.mode-quiz .quiz-end-stage {
   box-shadow:
     0 5px 16px rgba(0, 0, 0, 0.45),
     0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+  -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
   overflow: hidden;
   font-family: "Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
@@ -1899,6 +1907,7 @@ body.mode-quiz .quiz-end-stage {
   border: 1px solid rgba(99, 102, 241, 0.18);
   border-radius: 16px;
   transition: 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   overflow: hidden;
 }
@@ -2017,6 +2026,7 @@ body.mode-quiz .quiz-end-stage {
   border: 1px solid rgba(99, 102, 241, 0.18);
   border-radius: 18px;
   transition: 0.3s;
+  -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   position: relative;
   overflow: hidden;
@@ -2090,6 +2100,7 @@ body.mode-quiz .quiz-end-stage {
   transition: 0.28s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
+  -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
 }
 .home-learn-card:before {
@@ -2178,6 +2189,7 @@ body.mode-quiz .quiz-end-stage {
   border: 1px solid rgba(99, 102, 241, 0.3);
   border-radius: 24px;
   text-align: center;
+  -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
 }
 .home-cta-box h2 {
@@ -2523,6 +2535,7 @@ html[data-theme="light"] .contact-form .contact-select {
   inset: 0;
   z-index: 6000;
   background: rgba(0, 0, 0, 0.65);
+  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   display: none;
   align-items: center;
@@ -3281,6 +3294,7 @@ body.mode-quiz .quiz-exit {
   border: 1px solid rgba(99, 102, 241, 0.25);
   border-radius: 8px;
   padding: 2px;
+  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
 }
 .lang-btn {
@@ -4052,6 +4066,7 @@ html[data-theme="light"] .login-tab {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   transition: 0.2s;
 }
@@ -4171,6 +4186,7 @@ html[data-theme="light"] .login-tab {
   background: rgba(15, 23, 42, 0.55);
   border-left: 3px solid #a78bfa;
   border-radius: 0 14px 14px 0;
+  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
 }
 .auth-art-quote p {
@@ -4659,6 +4675,7 @@ html[data-theme="light"] .user-menu-divider {
   align-items: center;
   gap: 8px;
   box-shadow: 0 18px 48px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(99, 102, 241, 0.18) inset;
+  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   transition: 0.18s;
 }
@@ -4868,6 +4885,7 @@ html[data-theme="light"] .profile-placeholder {
   border-radius: 14px;
   padding: 6px;
   box-shadow: 0 18px 48px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(99, 102, 241, 0.18) inset;
+  -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
 }
 .profile-tabs-top .profile-tab {
@@ -5208,6 +5226,7 @@ html[data-theme="light"] .profile-placeholder {
   width: 54px;
   height: 54px;
   flex-shrink: 0;
+  -webkit-clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
   clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
   background: linear-gradient(135deg, var(--badge-c1, #fbbf24), var(--badge-c2, #b45309));
   display: flex;
@@ -6610,6 +6629,7 @@ html[data-theme="light"] .quiz-exit:hover {
   inset: 0;
   z-index: 7000;
   background: rgba(0, 0, 0, 0.75);
+  -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
   display: flex;
   align-items: center;
@@ -7330,6 +7350,7 @@ html[data-theme="light"] .quiz-back-pick:hover {
   inset: 0;
   z-index: 7500;
   background: rgba(0, 0, 0, 0.8);
+  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
@@ -8015,6 +8036,7 @@ html[data-theme="light"] .duel-explain {
   box-shadow:
     0 10px 32px rgba(245, 158, 11, 0.18),
     0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+  -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
 }
 .daily-head {
@@ -8320,6 +8342,7 @@ html[data-theme="custom"] .chatbox-toggle {
 .end-badge-hex {
   width: 88px;
   height: 88px;
+  -webkit-clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
   clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
   display: flex;
   align-items: center;
@@ -9702,6 +9725,7 @@ body:not(.mode-muscular) #appMuscular {
   pointer-events: none;
   z-index: 200;
   border: 1px solid var(--acc);
+  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   display: none;
   white-space: nowrap;
@@ -9990,6 +10014,7 @@ body:not(.mode-digestive) #appDigestive {
   position: absolute;
   inset: 0;
   background: rgba(0, 0, 0, 0.78);
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
 }
 .notebook-card {
@@ -11042,6 +11067,7 @@ body.mode-quiz.quiz-inq #quizAmbient {
   position: absolute;
   inset: 0;
   background: rgba(4, 6, 14, 0.72);
+  -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
 }
 .report-card {
@@ -11208,6 +11234,7 @@ html[data-theme="light"] #reportEmail {
   position: absolute;
   inset: 0;
   background: rgba(4, 6, 14, 0.74);
+  -webkit-backdrop-filter: blur(5px);
   backdrop-filter: blur(5px);
 }
 .online-card {
@@ -13225,3 +13252,22 @@ html[data-theme="light"] .auth-page {
 html[data-theme="light"] .profile-borders-sub { color: #64748b; }
 html[data-theme="light"] .bx-border-swatch { background: radial-gradient(circle at 35% 30%, #e2e8f0, #cbd5e1); color: #1e293b; }
 html[data-theme="light"] .bx-border-lbl { color: #475569; }
+
+.system-icon.system-icon-img {
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+}
+.system-card .system-icon.system-icon-img img {
+  object-fit: contain !important;
+  transform: none !important;
+  width: 100% !important;
+  height: 100% !important;
+  padding: 6px;
+  box-sizing: border-box;
+}
+
+.chatbox-toggle-icon img {
+  -webkit-clip-path: circle(50%);
+  clip-path: circle(50%);
+}
