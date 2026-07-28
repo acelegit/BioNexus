@@ -2436,9 +2436,9 @@ var SITE_KB = [
       "cum folosesc|cum se foloseste|ghid|tutorial|ce pot face|inceput|incep|how to use|guide",
     ],
     answer:
-      'Asistentul BioNexus te ghideaza:<br>1) <b>Schelet 3D</b> — card "Schelet 3D complet". Rotesti cu mouse-ul, zoom cu scroll, click pe os pentru detalii.<br>2) <b>Minigame</b> — card "Testul Anatomic". Alegi un sistem (osos, muscular, nervos, cardiovascular, respirator sau digestiv) si te testezi.<br>3) <b>Invata</b> — manuale PDF.<br>4) <b>Insignele mele</b> — buton din homepage. Te duce la profilul tau dupa autentificare.',
+      'Asistentul BioNexus te ghideaza:<br>1) <b>Sisteme 3D</b> — sectiunea "Sisteme anatomice" are 6 carduri: osos, muscular, nervos, cardiovascular, respirator, digestiv. Rotesti cu mouse-ul, zoom cu scroll, click pe o structura pentru detalii.<br>2) <b>Minigame</b> — card "Testul Anatomic". Alegi un sistem si te testezi.<br>3) <b>Invata</b> — 3 manuale oficiale Anatomia Omului (Stefanet).<br>4) <b>Insignele mele</b> — buton din homepage. Te duce la profil dupa autentificare.',
     chips: [
-      { a: "open-skeleton", label: "Deschide scheletul" },
+      { a: "open-systems", label: "Deschide sistemele" },
       { a: "open-quiz", label: "Porneste quiz" },
       { a: "open-learn", label: "Vezi manuale" },
     ],
@@ -2447,7 +2447,7 @@ var SITE_KB = [
     id: "guide.skeleton",
     triggers: ["schelet 3d|scheletul 3d|modelul 3d|cum vad scheletul|deschide schelet|skeleton"],
     answer:
-      "Scheletul 3D: rotesti cu click+drag, zoom cu scroll. Click pe un os → apare denumirea (rosu) langa cursor + detalii in dreapta. Lista cu oasele pe sectiuni.",
+      "In orice viewer 3D (la fel in toate cele 6 sisteme): rotesti cu click+drag, zoom cu scroll, pan cu click-dreapta. Click pe o structura → apare denumirea langa cursor + detalii in dreapta (nume RO + latin). Lista structurilor, grupata pe sectiuni, e in stanga.",
     chips: [{ a: "open-skeleton", label: "Deschide scheletul" }],
   },
   {
@@ -2461,14 +2461,14 @@ var SITE_KB = [
     id: "guide.learn",
     triggers: ["unde gasesc|manuale|pdf|carti|materiale|invata|learn"],
     answer:
-      "Sectiunea <b>Invata</b> are 6 carduri PDF: Biologie cls. VII, Anatomia omului, Atlas anatomic, Curs sistem osos, Articulatii & muschi, Fiziologia osului.",
+      "Sectiunea <b>Invata</b> are 3 manuale oficiale <b>Anatomia Omului (Stefanet)</b> — Volumele I, II si III — care se deschid in fila noua.",
     chips: [{ a: "open-learn", label: "Du-ma la manuale" }],
   },
   {
     id: "guide.search",
     triggers: ["\\bcaut\\b|cauta|search|gasi"],
     answer:
-      'In scheletul 3D, bara de cautare in sidebar-ul stang — tastezi numele osului (ex. "femur") si site-ul il evidentiaza. Enter = focus camera.',
+      'In orice viewer 3D ai o bara de <b>cautare</b> in lista din stanga — tastezi numele structurii (ex. "femur") si o evidentiaza. Enter selecteaza prima potrivire; la oase, lupa apropie si camera.',
     chips: [{ a: "open-skeleton", label: "Du-ma la schelet" }],
   },
   {
@@ -2485,14 +2485,14 @@ var SITE_KB = [
       "\\bcont\\b|conturi|\\binregistrare\\b|\\bregister\\b|\\blogin\\b|\\bconectare\\b|\\bparola\\b|sign up",
     ],
     answer:
-      "Buton <b>Conectare</b> din header. Te poti inregistra cu utilizator+email+parola (min. 4 caractere, criptata SHA-256). Date doar local.",
+      "Buton <b>Conectare</b> din header. Te inregistrezi cu <b>email + parola</b> (min. 8 caractere), acord la Termeni si o verificare (captcha). Contul si progresul se salveaza in cloud (Supabase) si se sincronizeaza intre dispozitive. Ai uitat parola? Link de resetare pe email.",
     chips: [{ a: "open-login", label: "Conecteaza-te" }],
   },
   {
     id: "guide.admin",
     triggers: ["\\badmin\\b|administrator|edit os|modifica os|content edit"],
     answer:
-      "Modul Administrator iti permite sa editezi continutul (nume, categorii, descrieri) si sa exporti JSON. Accesul e restrictionat prin parola si e destinat doar autorilor proiectului.",
+      "Panoul de <b>Administrator</b> (doar pentru autorii proiectului, protejat cu parola) permite moderarea recenziilor. Nu e o functie pentru utilizatorii obisnuiti.",
     chips: [],
   },
   {
@@ -20075,4 +20075,47 @@ window.DUEL_BANKS = {"muscular":[{"text_ro":"Prin contracția unilaterală, ster
   function run() { ["settingsCurPass", "settingsNewPass", "settingsConfPass"].forEach(enhance); }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", run);
   else run();
+})();
+
+(function bxLateReveal() {
+  var reduce = false;
+  try { reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
+  function animate(nodes) {
+    if (reduce || !nodes) return;
+    for (var i = 0; i < nodes.length; i++) {
+      var el = nodes[i];
+      if (!el || el.nodeType !== 1) continue;
+      el.classList.remove("bx-anim-in");
+      el.style.setProperty("--bx-rev-d", i * 70 + "ms");
+      void el.offsetWidth;
+      el.classList.add("bx-anim-in");
+    }
+  }
+  function init() {
+    var list = document.getElementById("reviewsList");
+    if (list) {
+      try {
+        var t = null;
+        var mo = new MutationObserver(function () {
+          if (t) clearTimeout(t);
+          t = setTimeout(function () { animate(list.querySelectorAll(".review-card")); }, 30);
+        });
+        mo.observe(list, { childList: true });
+      } catch (e) {}
+      animate(list.querySelectorAll(".review-card"));
+    }
+    if (typeof window.openFeaturesPage === "function") {
+      var orig = window.openFeaturesPage;
+      window.openFeaturesPage = function () {
+        var r = orig.apply(this, arguments);
+        setTimeout(function () {
+          var pg = document.getElementById("featuresPage");
+          if (pg) animate(pg.querySelectorAll(".home-feat-card"));
+        }, 60);
+        return r;
+      };
+    }
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
+  else init();
 })();

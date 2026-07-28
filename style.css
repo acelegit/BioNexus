@@ -12629,19 +12629,62 @@ html[data-theme="light"] .bx-rselect-opt {
   background-position: center, center, center, center, center;
 }
 #featuresPage.active {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  display: block;
 }
 #featuresPage .subpage-inner {
-  order: 1;
-  margin: auto auto 0;
+  margin: 0 auto;
   width: 100%;
 }
 #featuresPage .subpage-back {
-  order: 2;
-  position: static;
-  margin: 26px auto auto;
+  position: fixed;
+  top: 22px;
+  left: 22px;
+  margin: 0;
+}
+@media (min-width: 769px) {
+  #featuresPage.active {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    padding: 56px 26px 30px;
+  }
+  #featuresPage .subpage-title {
+    font-size: clamp(24px, 3.4vw, 36px);
+    margin-bottom: 20px;
+  }
+  #featuresPage .home-features-grid {
+    gap: 16px;
+  }
+  #featuresPage .home-feat-card {
+    padding: 18px 20px;
+  }
+  #featuresPage .home-feat-icon {
+    width: 46px;
+    height: 46px;
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  #featuresPage .home-feat-card h3 {
+    font-size: 16px;
+    margin-bottom: 6px;
+  }
+  #featuresPage .home-feat-card p {
+    font-size: 12.5px;
+    line-height: 1.45;
+    margin-bottom: 10px;
+  }
+  #featuresPage .home-feat-cta {
+    font-size: 13px;
+  }
+}
+@media (min-width: 769px) and (max-height: 820px) {
+  #featuresPage.active {
+    justify-content: flex-start;
+    overflow-y: auto;
+    padding-top: 72px;
+  }
 }
 @media (max-width: 768px) {
   #featuresPage.active {
@@ -13270,4 +13313,64 @@ html[data-theme="light"] .bx-border-lbl { color: #475569; }
 .chatbox-toggle-icon img {
   -webkit-clip-path: circle(50%);
   clip-path: circle(50%);
+}
+
+body.mode-quiz #quizSystemPick .quiz-modes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 10px 0 2px;
+}
+body.mode-quiz #quizSystemPick .quiz-mode-card {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 10px;
+}
+body.mode-quiz #quizSystemPick .quiz-mode-icon {
+  width: 36px;
+  height: 36px;
+  font-size: 22px;
+  border-radius: 9px;
+}
+body.mode-quiz #quizSystemPick .quiz-mode-sub {
+  font-size: 11px;
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+body.mode-quiz #quizSystemPick .quiz-intro-icon {
+  font-size: 26px;
+  margin-bottom: 4px;
+}
+body.mode-quiz #quizSystemPick > h3 {
+  margin-bottom: 4px;
+}
+body.mode-quiz #quizSystemPick > p {
+  margin-bottom: 8px;
+}
+body.mode-quiz #quizSystemPick .online-entry-btn {
+  margin-bottom: 4px;
+}
+
+@keyframes bxRiseIn {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.bx-anim-in {
+  animation: bxRiseIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--bx-rev-d, 0ms);
+}
+@media (prefers-reduced-motion: reduce) {
+  .bx-anim-in {
+    animation: none;
+  }
 }
