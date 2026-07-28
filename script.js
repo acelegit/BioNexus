@@ -2918,24 +2918,43 @@ function aiConfigured() {
   return typeof fetch !== "undefined" && !!window.ReadableStream;
 }
 
+function bxStripThink(s) {
+  return String(s || "").replace(/<think>[\s\S]*?<\/think>/gi, "").replace(/^\s+/, "");
+}
 async function streamAI(messages, onDelta) {
   var cfg = window.BIONEXUS_AI || {};
   var direct = !!(cfg.apiKey && cfg.baseUrl);
   var url = direct ? cfg.baseUrl.replace(/\/+$/, "") + "/chat/completions" : "/api/chat";
   var headers = { "Content-Type": "application/json" };
   if (direct) headers.Authorization = "Bearer " + cfg.apiKey;
-  var resp = await fetch(url, {
-    method: "POST",
-    headers: headers,
-    body: JSON.stringify({
-      model: (direct && cfg.model) || "gpt-5.4-mini",
-      stream: true,
-      temperature: 0.6,
-      max_tokens: 900,
-      messages: messages,
-    }),
-  });
+  var ctrl = typeof AbortController !== "undefined" ? new AbortController() : null;
+  var idleTimer = null;
+  function resetIdle() {
+    if (!ctrl) return;
+    if (idleTimer) clearTimeout(idleTimer);
+    idleTimer = setTimeout(function () { try { ctrl.abort(); } catch (e) {} }, 45000);
+  }
+  resetIdle();
+  var resp;
+  try {
+    resp = await fetch(url, {
+      method: "POST",
+      headers: headers,
+      signal: ctrl ? ctrl.signal : undefined,
+      body: JSON.stringify({
+        model: (direct && cfg.model) || "kimi-k3",
+        stream: true,
+        temperature: 0.6,
+        max_tokens: 2500,
+        messages: messages,
+      }),
+    });
+  } catch (e) {
+    if (idleTimer) clearTimeout(idleTimer);
+    throw e;
+  }
   if (!resp.ok || !resp.body) {
+    if (idleTimer) clearTimeout(idleTimer);
     var t = "";
     try {
       t = await resp.text();
@@ -2946,10 +2965,8 @@ async function streamAI(messages, onDelta) {
     dec = new TextDecoder(),
     buf = "",
     full = "";
-  while (true) {
-    var r = await reader.read();
-    if (r.done) break;
-    buf += dec.decode(r.value, { stream: true });
+  function handle(chunk) {
+    buf += chunk;
     var parts = buf.split("\n");
     buf = parts.pop();
     for (var i = 0; i < parts.length; i++) {
@@ -2959,15 +2976,27 @@ async function streamAI(messages, onDelta) {
       if (data === "[DONE]") continue;
       try {
         var j = JSON.parse(data);
-        var d = j.choices && j.choices[0] && j.choices[0].delta && j.choices[0].delta.content;
+        var dl = j.choices && j.choices[0] && j.choices[0].delta;
+        var d = dl && dl.content;
         if (d) {
           full += d;
-          if (onDelta) onDelta(full);
+          if (onDelta) onDelta(bxStripThink(full));
         }
       } catch (e) {}
     }
   }
-  return full;
+  try {
+    while (true) {
+      var r = await reader.read();
+      if (r.done) break;
+      resetIdle();
+      handle(dec.decode(r.value, { stream: true }));
+    }
+    handle(dec.decode());
+  } finally {
+    if (idleTimer) clearTimeout(idleTimer);
+  }
+  return bxStripThink(full);
 }
 
 function bxAiErr(s) {
@@ -8455,9 +8484,7 @@ if (typeof pickQuizMode === "function") {
     if (mode === "duel") {
       if (icon) icon.innerHTML = "&#129302;";
       if (title) title.textContent = "AI Duel";
-      if (desc)
-        desc.textContent =
-          "AI-ul îți aruncă afirmații despre anatomie. Unele sunt corecte, altele au erori subtile. Decide rapid: ADEVĂRAT sau FALS? Timer 12 secunde la Mediu, 8 la Greu.";
+      if (desc) desc.textContent = tUI("duelIntro");
       showQuizStage("quizStart");
       return;
     }
@@ -8528,14 +8555,14 @@ if (typeof loadQuizQuestion === "function") {
     var qText = document.querySelector(".quiz-q-text");
     if (qText)
       qText.innerHTML =
-        '<div class="duel-ai-says">AI zice</div><div class="duel-statement">"' +
+        '<div class="duel-ai-says">' + tUI("duelAiSays") + '</div><div class="duel-statement">"' +
         escapeHTML(q.prompt) +
-        '"</div><div style="font-size:13px;color:var(--t2);font-weight:600;margin-top:6px">Este corect sau greșit?</div>';
+        '"</div><div style="font-size:13px;color:var(--t2);font-weight:600;margin-top:6px">' + tUI("duelQ") + '</div>';
     var optsDiv = document.getElementById("qOptions");
     if (optsDiv) {
       optsDiv.className = "quiz-options duel-options";
       optsDiv.innerHTML =
-        '<button class="duel-btn true" data-val="true" onclick="answerDuel(true,this)"><span class="duel-icon">✓</span><span>ADEVĂRAT</span></button><button class="duel-btn false" data-val="false" onclick="answerDuel(false,this)"><span class="duel-icon">✗</span><span>FALS</span></button>';
+        '<button class="duel-btn true" data-val="true" onclick="answerDuel(true,this)"><span class="duel-icon">✓</span><span>' + tUI("duelTrue") + '</span></button><button class="duel-btn false" data-val="false" onclick="answerDuel(false,this)"><span class="duel-icon">✗</span><span>' + tUI("duelFalse") + '</span></button>';
     }
     if (typeof startQuestionTimer === "function") startQuestionTimer();
   };
@@ -13446,10 +13473,10 @@ window.scrollToSection = function (id) {
       var mdh = document.querySelector(".quiz-q-text");
       if (mdh) {
         mdh.innerHTML =
-          '<div class="duel-ai-says">' + (_en ? "AI says" : "AI zice") + "</div>" +
+          '<div class="duel-ai-says">' + tUI("duelAiSays") + "</div>" +
           '<div class="duel-statement"></div>' +
           '<div style="font-size:13px;color:var(--t2);font-weight:600;margin-top:6px">' +
-          (_en ? "Is it true or false?" : "Este corect sau greșit?") + "</div>";
+          tUI("duelQ") + "</div>";
         var mst = mdh.querySelector(".duel-statement");
         if (mst) mst.textContent = '"' + q.prompt + '"';
       }
@@ -13458,8 +13485,8 @@ window.scrollToSection = function (id) {
         mopt.className = "quiz-options duel-options";
         mopt.innerHTML = "";
         [
-          [true, "true", "✓", _en ? "TRUE" : "ADEVĂRAT"],
-          [false, "false", "✗", _en ? "FALSE" : "FALS"],
+          [true, "true", "✓", tUI("duelTrue")],
+          [false, "false", "✗", tUI("duelFalse")],
         ].forEach(function (d) {
           var b = document.createElement("button");
           b.className = "duel-btn " + d[1];
@@ -17659,11 +17686,7 @@ window.scrollToSection = function (id) {
     } else if (mode === "duel") {
       if (icon) icon.innerHTML = "&#129302;";
       if (title) title.textContent = "AI Duel";
-      if (desc)
-        desc.textContent = tr(
-          "Afirmații ADEVĂRAT/FALS despre acest sistem — unele au greșeli subtile. Decide rapid!",
-          "TRUE/FALSE statements about this system — some contain subtle errors. Decide fast!"
-        );
+      if (desc) desc.textContent = tUI("duelIntro");
     } else {
       if (icon) icon.innerHTML = "&#128218;";
       if (title) title.textContent = tr("Test de Cunoștințe", "Knowledge Test");
@@ -17895,10 +17918,10 @@ window.scrollToSection = function (id) {
       var dh = document.querySelector(".quiz-q-text");
       if (dh) {
         dh.innerHTML =
-          '<div class="duel-ai-says">' + tr("AI zice", "AI says") + "</div>" +
+          '<div class="duel-ai-says">' + tUI("duelAiSays") + "</div>" +
           '<div class="duel-statement"></div>' +
           '<div style="font-size:13px;color:var(--t2);font-weight:600;margin-top:6px">' +
-          tr("Este corect sau greșit?", "Is it true or false?") + "</div>";
+          tUI("duelQ") + "</div>";
         var st = dh.querySelector(".duel-statement");
         if (st) st.textContent = '"' + q.prompt + '"';
       }
@@ -17907,8 +17930,8 @@ window.scrollToSection = function (id) {
         dopts.className = "quiz-options duel-options";
         dopts.innerHTML = "";
         [
-          [true, "true", "✓", tr("ADEVĂRAT", "TRUE")],
-          [false, "false", "✗", tr("FALS", "FALSE")],
+          [true, "true", "✓", tUI("duelTrue")],
+          [false, "false", "✗", tUI("duelFalse")],
         ].forEach(function (d) {
           var b = document.createElement("button");
           b.className = "duel-btn " + d[1];
@@ -18018,7 +18041,7 @@ window.scrollToSection = function (id) {
       Q.score++;
       if (fb) {
         fb.className = "quiz-feedback fb-correct";
-        fb.innerHTML = "&#9989; <b>" + tr("Corect!", "Correct!") + "</b> " + (q.explain || "");
+        fb.innerHTML = "&#9989; <b>" + tUI("duelCorrect") + "</b> " + (q.explain || "");
         fb.style.display = "block";
       }
     } else {
@@ -18027,7 +18050,7 @@ window.scrollToSection = function (id) {
         fb.className = "quiz-feedback fb-wrong";
         fb.innerHTML =
           "&#10060; <b>" +
-          (q.correct ? tr("Era ADEVĂRAT.", "It was TRUE.") : tr("Era FALS.", "It was FALSE.")) +
+          (q.correct ? tUI("duelWasTrue") : tUI("duelWasFalse")) +
           "</b> " +
           (q.explain || "");
         fb.style.display = "block";
@@ -18074,9 +18097,7 @@ window.scrollToSection = function (id) {
         fbd.className = "quiz-feedback fb-wrong";
         fbd.innerHTML =
           "&#9197; " +
-          (q.correct
-            ? tr("Sărit. Era ADEVĂRAT.", "Skipped. It was TRUE.")
-            : tr("Sărit. Era FALS.", "Skipped. It was FALSE.")) +
+          (q.correct ? tUI("duelSkippedTrue") : tUI("duelSkippedFalse")) +
           " " +
           (q.explain || "");
         fbd.style.display = "block";
@@ -18099,7 +18120,7 @@ window.scrollToSection = function (id) {
     if (fb) {
       fb.className = "quiz-feedback fb-wrong";
       fb.innerHTML =
-        "&#9197; " + tr("Sărit. Răspuns:", "Skipped. Answer:") + " <b>" + q.answer + "</b>";
+        "&#9197; " + tUI("quizSkipped") + " <b>" + q.answer + "</b>";
       fb.style.display = "block";
     }
     var nb = document.getElementById("qNextBtn");
@@ -18759,7 +18780,7 @@ window.DUEL_BANKS = {"muscular":[{"text_ro":"Prin contracția unilaterală, ster
     if (!q) { finish(); return; }
     document.getElementById("onlineQNum").textContent = OD.cur + 1;
     var stt = document.getElementById("onlineStatement");
-    if (stt) stt.textContent = '"' + (EN() ? q.e : q.r) + '"';
+    if (stt) stt.textContent = '"' + (CUR_LANG === "ro" ? q.r : (q.e || q.r)) + '"';
     var fb = document.getElementById("onlineFeedback");
     if (fb) { fb.style.display = "none"; fb.innerHTML = ""; }
     var tf = document.querySelector("#onlineGame .online-tf");
@@ -18786,7 +18807,7 @@ window.DUEL_BANKS = {"muscular":[{"text_ro":"Prin contracția unilaterală, ster
     if (fb) {
       fb.style.display = "block";
       fb.className = "online-feedback " + (correct ? "ok" : "err");
-      fb.innerHTML = (correct ? "&#9989; " : "&#10060; ") + esc(EN() ? q.ee : q.er);
+      fb.innerHTML = (correct ? "&#9989; " : "&#10060; ") + esc(CUR_LANG === "ro" ? q.er : (q.ee || q.er));
     }
     bcast("progress", { score: OD.score, cur: OD.cur, name: OD.myName });
     setTimeout(function () {

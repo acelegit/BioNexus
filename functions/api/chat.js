@@ -51,7 +51,7 @@ export async function onRequestPost(context) {
 
   const key = env.VOIDAI_API_KEY;
   const baseUrl = (env.VOIDAI_BASE_URL || "https://api.voidai.app/v1").replace(/\/+$/, "");
-  const model = env.VOIDAI_MODEL || "gpt-5.4-mini";
+  const model = env.VOIDAI_MODEL || "kimi-k3";
 
   if (!key) {
     return json({ error: { message: "VOIDAI_API_KEY nu este configurată pe server." } }, 500, cors);
@@ -88,7 +88,7 @@ export async function onRequestPost(context) {
     model: model,
     stream: payload.stream !== false,
     temperature: typeof payload.temperature === "number" ? payload.temperature : 0.6,
-    max_tokens: Math.min(Number(payload.max_tokens) || 900, 1200),
+    max_tokens: Math.min(Number(payload.max_tokens) || 2000, 3000),
     messages: messages,
   };
 
