@@ -8170,6 +8170,9 @@ window.showInfo = function (id) {
     "</h4><p>" +
     d.details +
     "</p></div>";
+  var __bit = document.getElementById("info-title");
+  if (__bit && d.name) __bit.textContent = d.name;
+  if (typeof window.notebookRenderInto === "function") window.notebookRenderInto(ct, d.name);
 };
 
 if (typeof window.showOverlay === "function") {
@@ -10985,6 +10988,7 @@ window.scrollToSection = function (id) {
     }
     var title = document.getElementById("mu-info-title");
     if (title) title.textContent = displayName;
+    if (typeof window.notebookRenderInto === "function" && ct) window.notebookRenderInto(ct, displayName);
     var label = document.getElementById("mu-cur-label");
     if (label) label.textContent = displayName;
   }
@@ -15310,6 +15314,43 @@ window.scrollToSection = function (id) {
   window.notebookAddForStructure = function (name, category) {
     openNotebookEditor(null, name, category || "general");
   };
+  window.notebookRenderInto = function (container, subject) {
+    try {
+      if (!container) return;
+      var prev = container.querySelector(".nb-existing");
+      if (prev) prev.remove();
+      var subj = String(subject || "").trim().toLowerCase();
+      if (!subj) return;
+      var mine = loadNotes().filter(function (n) {
+        return n && n.subject && String(n.subject).trim().toLowerCase() === subj;
+      });
+      if (!mine.length) return;
+      var en = typeof CUR_LANG !== "undefined" && CUR_LANG === "en";
+      var wrap = document.createElement("div");
+      wrap.className = "info-section nb-existing";
+      var html = "<h4>&#128221; " + (en ? "My notes" : "Notițele mele") + " (" + mine.length + ")</h4>";
+      for (var i = 0; i < mine.length; i++) {
+        var n = mine[i];
+        html +=
+          '<div class="nb-existing-item" data-nbid="' + escH(n.id) +
+          '" style="cursor:pointer;padding:8px 10px;margin:6px 0;border:1px solid rgba(139,92,246,.28);border-radius:8px;background:rgba(139,92,246,.07)">' +
+          (n.starred ? "⭐ " : "") +
+          "<b>" + escH(n.title || (en ? "Note" : "Notiță")) + "</b>" +
+          (n.content
+            ? '<div style="font-size:12.5px;color:var(--t2,#94a3b8);margin-top:4px;white-space:pre-wrap">' + escH(n.content) + "</div>"
+            : "") +
+          "</div>";
+      }
+      wrap.innerHTML = html;
+      wrap.addEventListener("click", function (e) {
+        var it = e.target && e.target.closest && e.target.closest(".nb-existing-item");
+        if (it && it.getAttribute("data-nbid") && typeof openNotebookEditor === "function") {
+          openNotebookEditor(it.getAttribute("data-nbid"));
+        }
+      });
+      container.appendChild(wrap);
+    } catch (e) {}
+  };
 
   (function injectViewerButton() {
     function ensureBtn() {
@@ -17041,6 +17082,10 @@ window.scrollToSection = function (id) {
     }
     var title = document.getElementById(ids.infoTitle);
     if (title) title.textContent = name;
+    if (typeof window.notebookRenderInto === "function") {
+      var __exct = document.getElementById(ids.infoCt);
+      if (__exct) window.notebookRenderInto(__exct, name);
+    }
     var curLabel = document.getElementById(ids.curLabel);
     if (curLabel) curLabel.textContent = name;
     var listEl = document.getElementById(ids.list);
@@ -18609,6 +18654,11 @@ window.DUEL_BANKS = {"muscular":[{"text_ro":"Prin contracția unilaterală, ster
   }
 
   window.openOnlineDuel = function () {
+    var u = typeof getCurrentUser === "function" ? getCurrentUser() : null;
+    if (!u) {
+      if (typeof openLogin === "function") openLogin();
+      return;
+    }
     var m = document.getElementById("onlineModal");
     if (!m) return;
     reset();

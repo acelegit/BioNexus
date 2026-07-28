@@ -11983,7 +11983,7 @@ html[data-theme="light"] #reportEmail {
   .nav-tabs,
   .nav-tabs-muscle,
   .nav-tabs-extra {
-    justify-content: center !important;
+    justify-content: flex-start !important;
   }
   body.mode-skeleton:not(.mode-quiz) .vctrls,
   body.mode-muscular:not(.mode-quiz) .vctrls,
@@ -13372,5 +13372,11 @@ body.mode-quiz #quizSystemPick .online-entry-btn {
 @media (prefers-reduced-motion: reduce) {
   .bx-anim-in {
     animation: none;
+  }
+}
+
+@media (max-width: 768px) {
+  #infoToggleBtn {
+    display: none !important;
   }
 }

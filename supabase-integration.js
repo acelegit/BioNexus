@@ -458,7 +458,7 @@
       quizPlays: CURRENT_PROFILE.quiz_plays || { easy: 0, medium: 0, hard: 0 },
       quizPerfect: CURRENT_PROFILE.quiz_perfect || { easy: 0, medium: 0, hard: 0 },
       daysActive: CURRENT_PROFILE.days_active || [],
-      xp: CURRENT_PROFILE.xp || 0,
+      xp: Math.max(CURRENT_PROFILE.xp || 0, (local && local.xp) || 0),
       joinDate: CURRENT_PROFILE.created_at
         ? new Date(CURRENT_PROFILE.created_at).getTime()
         : Date.now(),
@@ -471,6 +471,15 @@
       if (k) localStorage.setItem(k, JSON.stringify(p));
     } catch (e) {}
     if (!CURRENT_USER) return;
+    if (CURRENT_PROFILE) {
+      CURRENT_PROFILE.bones_viewed = p.bonesViewed;
+      CURRENT_PROFILE.sections_visited = p.sectionsVisited;
+      CURRENT_PROFILE.chatbot_uses = p.chatbotUses;
+      CURRENT_PROFILE.quiz_plays = p.quizPlays;
+      CURRENT_PROFILE.quiz_perfect = p.quizPerfect;
+      CURRENT_PROFILE.days_active = p.daysActive;
+      CURRENT_PROFILE.xp = p.xp;
+    }
     await sb
       .from("profiles")
       .update({
@@ -483,15 +492,6 @@
         xp: p.xp,
       })
       .eq("id", CURRENT_USER.id);
-    if (CURRENT_PROFILE) {
-      CURRENT_PROFILE.bones_viewed = p.bonesViewed;
-      CURRENT_PROFILE.sections_visited = p.sectionsVisited;
-      CURRENT_PROFILE.chatbot_uses = p.chatbotUses;
-      CURRENT_PROFILE.quiz_plays = p.quizPlays;
-      CURRENT_PROFILE.quiz_perfect = p.quizPerfect;
-      CURRENT_PROFILE.days_active = p.daysActive;
-      CURRENT_PROFILE.xp = p.xp;
-    }
     bxScheduleReviewXpSync();
   };
   var __revXpTimer = null;
