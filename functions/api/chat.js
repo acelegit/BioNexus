@@ -96,7 +96,15 @@ export async function onRequestPost(context) {
   try {
     upstream = await fetch(baseUrl + "/chat/completions", {
       method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: "Bearer " + key },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + key,
+        Accept: "text/event-stream, application/json",
+        "User-Agent":
+          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+        Referer: "https://api.voidai.app/",
+        Origin: "https://api.voidai.app",
+      },
       body: JSON.stringify(body),
     });
   } catch (e) {
