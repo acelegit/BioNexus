@@ -3528,6 +3528,9 @@ function applyLanguage(lang) {
 
   if (typeof window.refreshReviewsList === "function") window.refreshReviewsList();
   else if (typeof window.refreshReviewsUI === "function") window.refreshReviewsUI();
+
+  if (typeof window.__rebuildQuizBank === "function") { try { window.__rebuildQuizBank(); } catch (e) {} }
+  if (typeof window.renderDailyUI === "function") { try { window.renderDailyUI(); } catch (e) {} }
 }
 window.applyLanguage = applyLanguage;
 
@@ -3930,6 +3933,7 @@ function startQuiz() {
     ct = document.getElementById("info-ct");
   if (ph) ph.style.display = "flex";
   if (ct) ct.style.display = "none";
+  if (typeof __rebuildQuizBank === "function") __rebuildQuizBank();
   var bank = quizBank[QUIZ.difficulty] || quizBank.medium;
   var pool = shuffle(bank);
   QUIZ.total = Math.min(10, pool.length);
