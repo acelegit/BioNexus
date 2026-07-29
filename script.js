@@ -20235,3 +20235,83 @@ window.DUEL_BANKS = {"muscular":[{"text_ro":"Prin contracția unilaterală, ster
     try { applyLanguage(CUR_LANG); } catch (e) {}
   }
 })();
+
+(function bxFillMissingI18n() {
+  if (typeof I18N === "undefined") return;
+  var add = {
+    fr: {
+      "home.contact.h": "Contact",
+      "home.contact.sub": "Une question, une suggestion ou une erreur repérée ? Écris-nous à tout moment.",
+      "home.contact.by": "Réalisé par",
+      "contact.name": "Nom",
+      "contact.namePh": "Ton nom",
+      "contact.email": "E-mail",
+      "contact.type": "Type",
+      "contact.type.suggestion": "💡 Suggestion",
+      "contact.type.question": "❓ Question",
+      "contact.type.other": "❔ Autre",
+      "contact.msg": "Message",
+      "contact.msgPh": "Écris ton message...",
+      "contact.send": "Envoyer le message",
+      "contact.copy": "Copier",
+      "report.mailto": "Ton application e-mail vient de s'ouvrir avec le rapport pré-rempli — appuie sur <b>Envoyer</b> là-bas.<br><small style=\"color:var(--t3)\">Rien ne s'est ouvert ? Écris-nous directement à <b>bionexusdevs@gmail.com</b></small>",
+    },
+    de: {
+      "home.contact.h": "Kontakt",
+      "home.contact.sub": "Eine Frage, ein Vorschlag oder einen Fehler gefunden? Schreib uns jederzeit.",
+      "home.contact.by": "Erstellt von",
+      "contact.name": "Name",
+      "contact.namePh": "Dein Name",
+      "contact.email": "E-Mail",
+      "contact.type": "Typ",
+      "contact.type.suggestion": "💡 Vorschlag",
+      "contact.type.question": "❓ Frage",
+      "contact.type.other": "❔ Sonstiges",
+      "contact.msg": "Nachricht",
+      "contact.msgPh": "Schreib deine Nachricht...",
+      "contact.send": "Nachricht senden",
+      "contact.copy": "Kopieren",
+      "report.mailto": "Deine E-Mail-App wurde mit dem ausgefüllten Bericht geöffnet — tippe dort auf <b>Senden</b>.<br><small style=\"color:var(--t3)\">Nichts geöffnet? Schreib uns direkt an <b>bionexusdevs@gmail.com</b></small>",
+    },
+    es: {
+      "home.contact.h": "Contacto",
+      "home.contact.sub": "¿Tienes una pregunta, sugerencia o encontraste un error? Escríbenos cuando quieras.",
+      "home.contact.by": "Hecho por",
+      "contact.name": "Nombre",
+      "contact.namePh": "Tu nombre",
+      "contact.email": "Correo",
+      "contact.type": "Tipo",
+      "contact.type.suggestion": "💡 Sugerencia",
+      "contact.type.question": "❓ Pregunta",
+      "contact.type.other": "❔ Otro",
+      "contact.msg": "Mensaje",
+      "contact.msgPh": "Escribe tu mensaje...",
+      "contact.send": "Enviar mensaje",
+      "contact.copy": "Copiar",
+      "report.mailto": "Se acaba de abrir tu aplicación de correo con el informe rellenado — pulsa <b>Enviar</b> allí.<br><small style=\"color:var(--t3)\">¿No se abrió? Escríbenos directamente a <b>bionexusdevs@gmail.com</b></small>",
+    },
+    hu: {
+      "home.contact.h": "Kapcsolat",
+      "home.contact.sub": "Kérdésed, javaslatod van, vagy hibát találtál? Írj nekünk bármikor.",
+      "home.contact.by": "Készítette",
+      "contact.name": "Név",
+      "contact.namePh": "A neved",
+      "contact.email": "E-mail",
+      "contact.type": "Típus",
+      "contact.type.suggestion": "💡 Javaslat",
+      "contact.type.question": "❓ Kérdés",
+      "contact.type.other": "❔ Egyéb",
+      "contact.msg": "Üzenet",
+      "contact.msgPh": "Írd meg az üzeneted...",
+      "contact.send": "Üzenet küldése",
+      "contact.copy": "Másolás",
+      "report.mailto": "Megnyílt az e-mail alkalmazásod a kitöltött jelentéssel — nyomd meg ott a <b>Küldés</b> gombot.<br><small style=\"color:var(--t3)\">Nem nyílt meg? Írj nekünk közvetlenül: <b>bionexusdevs@gmail.com</b></small>",
+    },
+  };
+  ["fr", "de", "es", "hu"].forEach(function (lg) {
+    if (I18N[lg]) Object.assign(I18N[lg], add[lg]);
+  });
+  if (typeof applyLanguage === "function" && typeof CUR_LANG !== "undefined") {
+    try { applyLanguage(CUR_LANG); } catch (e) {}
+  }
+})();
