@@ -20194,3 +20194,20 @@ window.DUEL_BANKS = {"muscular":[{"text_ro":"Prin contracția unilaterală, ster
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();
 })();
+
+(function bxContactTeamI18n() {
+  if (typeof I18N === "undefined") return;
+  var T = {
+    "contact.team.title": { ro: "Echipă", en: "Team", fr: "Équipe", de: "Team", es: "Equipo", hu: "Csapat" },
+    "contact.team.role": { ro: "Dezvoltator", en: "Developer", fr: "Développeur", de: "Entwickler", es: "Desarrollador", hu: "Fejlesztő" },
+  };
+  ["ro", "en", "fr", "de", "es", "hu"].forEach(function (lg) {
+    if (!I18N[lg]) return;
+    Object.keys(T).forEach(function (k) {
+      if (I18N[lg][k] == null) I18N[lg][k] = T[k][lg] || T[k].en;
+    });
+  });
+  if (typeof applyLanguage === "function" && typeof CUR_LANG !== "undefined") {
+    try { applyLanguage(CUR_LANG); } catch (e) {}
+  }
+})();
