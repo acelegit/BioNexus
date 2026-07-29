@@ -2291,6 +2291,73 @@ html[data-theme="light"] .home-contact-names {
   justify-content: center;
   min-height: 68vh;
 }
+@media (min-width: 760px) {
+  #contactPage {
+    overflow: hidden;
+    padding: 0;
+  }
+  #contactPage .contact-page-inner {
+    min-height: 100dvh;
+    padding: 64px 22px 22px;
+    box-sizing: border-box;
+  }
+  .contact-card-2col {
+    max-width: 920px;
+    display: flex;
+    gap: 30px;
+    align-items: stretch;
+    text-align: left;
+  }
+  .contact-col-left {
+    flex: 0 0 288px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding-right: 30px;
+    border-right: 1px solid rgba(99, 102, 241, 0.18);
+  }
+  .contact-col-right {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .contact-card-2col .subpage-title {
+    font-size: 32px;
+    margin-bottom: 6px;
+  }
+  .contact-card-2col .subpage-sub {
+    font-size: 13px;
+    margin-bottom: 16px;
+  }
+  .contact-card-2col .contact-team {
+    margin-top: 18px;
+  }
+  .contact-card-2col .contact-team-grid {
+    gap: 24px;
+  }
+  .contact-card-2col .team-avatar {
+    width: 74px;
+    height: 74px;
+  }
+  .contact-card-2col .contact-form {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
+  }
+  .contact-card-2col .contact-form .report-lbl {
+    margin: 8px 0 5px;
+  }
+  .contact-card-2col .contact-form textarea {
+    min-height: 74px;
+  }
+  html[data-theme="light"] .contact-col-left {
+    border-right-color: rgba(99, 102, 241, 0.16);
+  }
+}
 .contact-email-row {
   display: flex;
   align-items: center;

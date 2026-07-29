@@ -60,7 +60,7 @@
       href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="style.css?v=59" />
+    <link rel="stylesheet" href="style.css?v=60" />
     <script
       src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.7"
       integrity="sha384-BmlQlKlDvXvKoxkn5OQuUo/aJQCTXeB+Kls6EccBmG4Kf8AXvp89RtO9MtPxP/r5"
@@ -2752,7 +2752,8 @@
         <span aria-hidden="true">&larr;</span> <span data-i18n="subpage.back">Înapoi</span>
       </button>
       <div class="subpage-inner contact-page-inner">
-        <div class="home-contact-card">
+        <div class="home-contact-card contact-card-2col">
+          <div class="contact-col contact-col-left">
           <div class="home-contact-ic" aria-hidden="true">&#9993;</div>
           <h1 class="subpage-title" data-i18n="home.contact.h">Contact</h1>
           <p class="subpage-sub" data-i18n="home.contact.sub">
@@ -2775,17 +2776,19 @@
             <span class="home-contact-by" data-i18n="contact.team.title">Echipă</span>
             <div class="contact-team-grid">
               <figure class="team-member">
-                <img class="team-avatar" src="images/team-ryan.jpg?v=59" alt="Dobrota Ryan" loading="lazy" />
+                <img class="team-avatar" src="images/team-ryan.jpg?v=60" alt="Dobrota Ryan" loading="lazy" />
                 <figcaption class="team-name">Dobrota Ryan</figcaption>
                 <span class="team-role" data-i18n="contact.team.role">Dezvoltator</span>
               </figure>
               <figure class="team-member">
-                <img class="team-avatar" src="images/team-alex.jpg?v=59" alt="Gheorghe Alexandru" loading="lazy" />
+                <img class="team-avatar" src="images/team-alex.jpg?v=60" alt="Gheorghe Alexandru" loading="lazy" />
                 <figcaption class="team-name">Gheorghe Alexandru</figcaption>
                 <span class="team-role" data-i18n="contact.team.role">Dezvoltator</span>
               </figure>
             </div>
           </div>
+          </div>
+          <div class="contact-col contact-col-right">
           <form class="contact-form" onsubmit="return bxSubmitContact(event)">
             <div class="contact-form-row">
               <div class="contact-field">
@@ -2809,6 +2812,7 @@
             <div class="contact-status" id="contactStatus" role="status"></div>
             <button type="submit" class="contact-send" id="contactSend" data-i18n="contact.send">Trimite mesajul</button>
           </form>
+          </div>
         </div>
       </div>
     </div>
@@ -3291,10 +3295,10 @@
       <span class="msf-ic">🔍</span><span data-i18n="mob.structures">Structuri</span>
     </button>
 
-    <script src="i18n-content.js?v=59"></script>
-    <script src="script.js?v=59"></script>
-    <script src="supabase-integration.js?v=59"></script>
-    <script src="router.js?v=59"></script>
+    <script src="i18n-content.js?v=60"></script>
+    <script src="script.js?v=60"></script>
+    <script src="supabase-integration.js?v=60"></script>
+    <script src="router.js?v=60"></script>
   </body>
 </html>
 
