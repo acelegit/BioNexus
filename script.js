@@ -4232,26 +4232,27 @@ function endQuiz() {
   setQuizFadedSkeleton(false);
   var pct = (QUIZ.score / QUIZ.total) * 100;
   var badge, title, msg;
+  var __tk = typeof tUI === "function" ? tUI : function () { return ""; };
   if (pct === 100) {
     badge = "🏆";
-    title = "PERFECT!";
-    msg = "Anatomie la nivel de medic. Impresionant!";
+    title = __tk("quizEndPerfectT");
+    msg = __tk("quizEndPerfectM");
   } else if (pct >= 90) {
     badge = "🥇";
-    title = "Aur!";
-    msg = "Excelent! Cunosti scheletul ca pe podul palmei.";
+    title = __tk("quizEndGoldT");
+    msg = __tk("quizEndGoldM");
   } else if (pct >= 70) {
     badge = "🥈";
-    title = "Argint";
-    msg = "Foarte bine! Mai e putin pana la perfectiune.";
+    title = __tk("quizEndSilverT");
+    msg = __tk("quizEndSilverM");
   } else if (pct >= 50) {
     badge = "🥉";
-    title = "Bronz";
-    msg = "Nu rau. Mai exerseaza si vei stapani perfect.";
+    title = __tk("quizEndBronzeT");
+    msg = __tk("quizEndBronzeM");
   } else {
     badge = "📚";
-    title = "Continua sa inveti!";
-    msg = "Studiaza modelul 3D si revino. Reusesti!";
+    title = __tk("quizEndLowT");
+    msg = __tk("quizEndLowM");
   }
   var qBadge = document.getElementById("qBadge");
   if (qBadge) qBadge.innerHTML = badge;
@@ -6781,13 +6782,13 @@ function failByTimeout() {
   var qBadge = document.getElementById("qBadge");
   if (qBadge) qBadge.innerHTML = "⏰";
   var qEndTitle = document.getElementById("qEndTitle");
-  if (qEndTitle) qEndTitle.textContent = "Timp expirat!";
+  if (qEndTitle) qEndTitle.textContent = typeof tUI === "function" ? tUI("quizTimeUp") : "Timp expirat!";
   var qFinalScore = document.getElementById("qFinalScore");
   if (qFinalScore) qFinalScore.textContent = QUIZ.score;
   var qFinalTotal = document.getElementById("qFinalTotal");
   if (qFinalTotal) qFinalTotal.textContent = QUIZ.total;
   var qEndMsg = document.getElementById("qEndMsg");
-  if (qEndMsg) qEndMsg.textContent = "Ai eșuat testul — nu ai răspuns la timp.";
+  if (qEndMsg) qEndMsg.textContent = typeof tUI === "function" ? tUI("quizTimeoutMsg") : "Ai eșuat testul — nu ai răspuns la timp.";
   var qTime = document.getElementById("qTime");
   if (qTime) qTime.textContent = "—";
   var qPct = QUIZ.total ? (QUIZ.score / QUIZ.total) * 100 : 0;
@@ -8637,6 +8638,26 @@ if (typeof endQuiz === "function") {
     "quiz.mode.duel.d":
       "The AI throws anatomy statements at you — some correct, some with subtle errors. Spot which is true and which is false. Critical thinking training.",
   });
+  if (I18N.fr) Object.assign(I18N.fr, {
+    "quiz.mode.duel.t": "Duel IA",
+    "quiz.mode.duel.d":
+      "L'IA t'envoie des affirmations d'anatomie — certaines correctes, d'autres avec des erreurs subtiles. Repère laquelle est vraie et laquelle est fausse. Entraînement à l'esprit critique.",
+  });
+  if (I18N.de) Object.assign(I18N.de, {
+    "quiz.mode.duel.t": "KI-Duell",
+    "quiz.mode.duel.d":
+      "Die KI wirft dir Anatomie-Aussagen zu — einige richtig, andere mit feinen Fehlern. Erkenne, welche wahr und welche falsch ist. Training fürs kritische Denken.",
+  });
+  if (I18N.es) Object.assign(I18N.es, {
+    "quiz.mode.duel.t": "Duelo IA",
+    "quiz.mode.duel.d":
+      "La IA te lanza afirmaciones de anatomía — algunas correctas, otras con errores sutiles. Detecta cuál es verdadera y cuál falsa. Entrenamiento del pensamiento crítico.",
+  });
+  if (I18N.hu) Object.assign(I18N.hu, {
+    "quiz.mode.duel.t": "MI-párbaj",
+    "quiz.mode.duel.d":
+      "A MI anatómiai állításokat dob feléd — némelyik helyes, másokban apró hibák vannak. Ismerd fel, melyik igaz és melyik hamis. A kritikai gondolkodás edzése.",
+  });
 })();
 
 var DAILY_CHALLENGES = [
@@ -9400,7 +9421,8 @@ else setTimeout(renderDailyUI, 150);
       }
       if (qEndTitle) {
         qEndTitle.innerHTML =
-          'Insignă nouă: <span class="end-badge-name">' + badge.name + "</span>";
+          (typeof tUI === "function" ? tUI("quizBadgeNew") : "Insignă nouă:") +
+          ' <span class="end-badge-name">' + badge.name + "</span>";
       }
       if (qEndMsg) {
         qEndMsg.innerHTML =
@@ -9408,7 +9430,9 @@ else setTimeout(renderDailyUI, 150);
           badge.sub +
           "</b> · Lvl " +
           badge.lvl +
-          '<br><small style="color:var(--t3)">Ai deblocat o insignă nouă! O găsești în secțiunea Profil → Insignele mele.</small>';
+          '<br><small style="color:var(--t3)">' +
+          (typeof tUI === "function" ? tUI("quizBadgeUnlocked") : "Ai deblocat o insignă nouă! O găsești în secțiunea Profil → Insignele mele.") +
+          "</small>";
       }
     }
   }
